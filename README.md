@@ -14,7 +14,7 @@ Please note that the current release is a Beta version and does not yet have a m
 _Cerullo E, Freeman SC, Kerby CR, Sutton AJ, Cooper NJ, Quinn TJ, Wu O. MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)._
 
 
-Furthermore, please cite the following papers associated with the previous version of the app - MetaDTA - whenever outputs from MetaBayesDTA are used:P
+Furthermore, please cite the following papers associated with the previous version of the app - MetaDTA - whenever outputs from MetaBayesDTA are used:
 
 _Patel A, Cooper NJ, Freeman SC, Sutton AJ. Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439._
 
