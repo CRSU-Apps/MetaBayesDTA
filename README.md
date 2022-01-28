@@ -8,7 +8,7 @@ Please note that the current release is a Beta version and does not yet have a m
  
  We kindly ask you to cite this app as:
  
-_Cerullo E, Freeman SC, Kerby CR, Sutton AJ, Cooper NJ, Quinn TJ, Wu O. MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU). _
+_Cerullo E, Freeman SC, Kerby CR, Sutton AJ, Cooper NJ, Quinn TJ, Wu O. MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)._
 
 
 Furthermore, please cite the following papers associated with the previous version of the app - MetaDTA - whenever outputs from MetaBayesDTA are used:P
