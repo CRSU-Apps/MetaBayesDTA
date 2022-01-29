@@ -53,13 +53,16 @@ tabItem(
                          tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x", "Freeman SC, Kerby CR, Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81
                            "),
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
-                      h4("If you use MetaBayesDTA please cite these papers."),
+                      h4("If you use MetaBayesDTA please cite these papers, as well as the following citation for MetaBayesDTA itself: 
+                         Cerullo E, Freeman SC, Kerby CR, Patel A, Quinn TJ, Sutton AJ, Cooper NJ, Wu O. 
+                         MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, 
+                         with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)."),
                       img(height=400,
                           width=600, 
                           src="roc_curve.png"),
                       br(),
-                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Nicola Cooper, Terry Quinn, Alex Sutton"),
-                      p("For feedback/questions about this app please contact Alex Sutton at ajs22@leicester.ac.uk"),
+                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Kerby, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
+                      p("For feedback/questions about this app please contact Enzo Cerullo at enzo.cerullo@bath.edu"),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"),
                       br(),
@@ -822,26 +825,56 @@ tabItem(
   tabName = "refs", 
   tabPanel("References", h1("References"),
            br(),
+           
            p(a("Reitsma JB, Glas AS, Rutjes AW, Scholten RJ, Bossuyt PM, Zwinderman AH. 
                     Bivariate analysis of sensitivity andspecificity produces informative summary
                     measures in diagnostic reviews. Journal of Clinical Epidemiology, 2005",
                href = "https://linkinghub.elsevier.com/retrieve/pii/S0895435605001629", target = "_blank")),
+           
+           p(a("Carolyn M. Rutter and Constantine A. Gatsonis. “A hierarchical regression approach to meta-
+                analysis of diagnostic test accuracy evaluations”. In: Statistics in Medicine (2001). issn: 02776715.
+                doi: 10.1002/sim.942",
+               href = "https://pubmed.ncbi.nlm.nih.gov/11568945/", target = "_blank")),
+           
+           
+           p(a("Harbord R. A unification of models for meta-analysis of diagnostic accuracy studies. Biostatistics. 2007;8:239-251",
+               href = "https://www.ncbi.nlm.nih.gov/pubmed/16698768", target = "_blank")),
+           
+           p(a("Haitao Chu, Sining Chen, and Thomas A. Louis. “Random effects models in a meta-analysis
+                of the accuracy of two diagnostic tests without a gold standard”. In: Journal of the American
+                Statistical Association (2009). issn: 01621459. doi: 10.1198/jasa.2009.0017",
+               href = "https://pubmed.ncbi.nlm.nih.gov/19562044/", target = "_blank")),
+           
+           p(a(" J. Menten, M. Boelaert, and E. Lesaffre. “Bayesian meta-analysis of diagnostic tests allowing for
+                 imperfect reference standards”. In: Statistics in Medicine (2013). issn: 10970258. doi: 10.1002/
+                 sim.5959.",
+               href = "https://pubmed.ncbi.nlm.nih.gov/24003003/", target = "_blank")),
+           
            p(a("Burke DL, Ensor J, Snell KI, van der Windt D, Riley RD. Guidance for deriving and presenting percentage
                         study weights in meta-analysis o
                             tagList(f test accuracy studies. Research synthesis methods. 2018 Jun.", 
                href = "https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1283", target = "_blank")),
-           p(a("Harbord R. A unification of models for meta-analysis of diagnostic accuracy studies. Biostatistics. 2007;8:239-251",
-               href = "https://www.ncbi.nlm.nih.gov/pubmed/16698768", target = "_blank")),
+
            p(a("Harrison, J.K., Fearon, P., Noel-Storr, A.H., McShane, R., Stott, D.J. and Quinn, T.J., 2015. Informant 
                         Questionnaire on Cognitive Decline in the Elderly (IQCODE) for the diagnosis of dementia within a secondary 
                         care setting. Cochrane database of systematic reviews, (3).", href = "https://www.ncbi.nlm.nih.gov/pubmed/25754745", 
                target = "_blank")),
+           
            p(a("Partlett C, Takwoingi Y. Meta-analysis of test accuracy studies in R: a summary of user-written
                       programs and step-by-step guide to using glmer. Version 1.0. August 2016.",
                href = "http://methods.cochrane.org/sdt/", target="_blank")),
+           
            p(a("QUADAS-2 tool", href = "https://www.bristol.ac.uk/population-health-sciences/projects/quadas/quadas-2/", target = "_blank")),
            br(),
            
+           p(a("Bob Carpenter et al. “Stan: A probabilistic programming language”. In: Journal of Statistical
+                Software (2017). issn: 15487660. doi: 10.18637/jss.v076.i01.",
+               href = "https://www.jstatsoft.org/article/view/v076i01", target = "_blank")),
+           
+           p(a(" Stan Modeling Language Users Guide and Reference Manual. https://mc-stan.org/docs/2_
+                 25/reference-manual/. 2020.",
+               href = "https://mc-stan.org/docs/2_25/stan-users-guide/index.html", target = "_blank")),
+
            h4("Code"),
            p(a("The R code for the app is available on GitHub here", 
                href="https://github.com/CRSU-Apps/MetaBayesDTA", target="_blank")),

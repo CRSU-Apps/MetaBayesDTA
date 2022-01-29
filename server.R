@@ -3,8 +3,8 @@
 server <- function(input, output, session) {
   
   shinyalert(title = "Important message",
-             text =  paste("Note that this is a beta release and a manual and youtube tutorials will be coming soon. 
-                              Please report any bugs or suggestions for new features to Enzo Cerullo (enzo.cerullo@bath.edu)"),
+             text =  paste("Note that this is a beta release. A manual and youtube tutorial(s) will be coming soon. 
+                            Please report any bugs or suggestions for new features to Enzo Cerullo (enzo.cerullo@bath.edu)"),
              type = "info",
              confirmButtonText = "I consent",
              html = TRUE)
@@ -14,7 +14,9 @@ server <- function(input, output, session) {
                         use our website: We collect your usage data within the MetaBayesDTA app to perform analytics of usage and
                         improve our app.  By clicking",   tags$i(tags$u("I consent")), "below, you consent to the use of data
                         by us through Google Analytics.  For details of policy, please check 'Privacy notice' tab within the app,
-               and ", tags$a(href="https://policies.google.com/privacy?hl=en", "Google Privacy & Terms.",target="_blank") ),
+               and ", 
+                             tags$a(href="https://policies.google.com/privacy?hl=en", "Google Privacy & Terms.",target="_blank") 
+                             ),
                type = "info",
                confirmButtonText = "I consent",
                html = TRUE)
