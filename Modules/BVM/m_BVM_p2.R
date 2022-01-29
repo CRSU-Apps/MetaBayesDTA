@@ -200,7 +200,12 @@ MA_run_model <- function(id,
       observeEvent(button(), {
         shinyalert("Note",
                    "Be sure to check the Model Diagnostics tab
-                    once the model has finished running",
+                    once the model has finished running.
+                   For some guidance on how posterior and trace plots should look like, please see:", 
+                   tags$a(href="https://policies.google.com/privacy?hl=en", "this link",target="_blank"), 
+                   "Note that informative priors may be needed for normal model diagnostics, particularly for 
+                   models not assuming a gold standard. In general, known information on the sensitivity and 
+                   specificity of tests should be incorporated into the models whnever possible",
                    type = "info")
       })
       

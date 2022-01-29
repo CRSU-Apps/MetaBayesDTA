@@ -1104,8 +1104,8 @@ sampler_options_server <- function(id) {
               numericInput(inputId = ns("MA_max_treedepth"), label=h5("Set the maximum treedepth"), value = 10),
               numericInput(inputId = ns("MA_adapt_delta"), label=h5("Set the adapt_delta"), value = 0.80),
               numericInput(inputId = ns("MA_num_chains"), label=h5("Total number of chains"), value = 2),
-              numericInput(inputId = ns("MA_warmup_iter"), label=h5("Number of warmup iterations"), value = 100),
-              numericInput(inputId = ns("MA_total_iter"), label=h5("Total number of iterations"), value = 200),
+              numericInput(inputId = ns("MA_warmup_iter"), label=h5("Number of warmup iterations"), value = 500),
+              numericInput(inputId = ns("MA_total_iter"), label=h5("Total number of iterations"), value = 1500),
               numericInput(inputId = ns("MA_seed"), label=h5("Set the seed"), value = 123)
           )
         )

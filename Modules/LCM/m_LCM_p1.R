@@ -32,8 +32,8 @@ LCM_model_options_inputModule_renderUI_server <- function(id) {
                           value = "Index"), 
                 h4("Model options:"),
                 awesomeCheckbox(inputId = ns("LCM_conditional_independence_indicator"), "Assume conditional independence between tests?", FALSE),
-                awesomeCheckbox(inputId = ns("LCM_SeR_fixed_indicator"), "Assume reference test sensitivity fixed between studies?", FALSE),
-                awesomeCheckbox(inputId = ns("LCM_SpR_fixed_indicator"), "Assume reference test specificity fixed between studies?", FALSE),
+                awesomeCheckbox(inputId = ns("LCM_SeR_fixed_indicator"), "Assume reference test sensitivity fixed between studies?", TRUE),
+                awesomeCheckbox(inputId = ns("LCM_SpR_fixed_indicator"), "Assume reference test specificity fixed between studies?", TRUE),
                 awesomeCheckbox(inputId = ns("LCM_SeI_fixed_indicator"), "Assume index test sensitivity fixed between studies?", FALSE),
                 awesomeCheckbox(inputId = ns("LCM_SpI_fixed_indicator"), "Assume index test specificity fixed between studies?", FALSE),
                 h4("Initial values:"),
@@ -84,17 +84,6 @@ LCM_model_options_inputModule_server <- function(id) {
   )
   
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -188,13 +177,6 @@ LCM_correlation_residual_plot_server <- function(id,
     }
   )
 }
-
-
-
-
-
-
-
 
 
 
@@ -609,11 +591,11 @@ LCM_model_priors_table_server <- function(id, draws, data) {
                                         estimate = c(Sens_refs[,5], Spec_refs[,5], 
                                                      1 - Spec_refs[,5]), 
                                                                     
-                                        lci = c(Sens_refs[,5], Spec_refs[,5], 
-                                                1 - Spec_refs[,5]), 
+                                        lci = c(Sens_refs[,4], Spec_refs[,4], 
+                                                1 - Spec_refs[,6]), 
                                         
-                                        uci = c(Sens_refs[,5], Spec_refs[,5], 
-                                                1 - Spec_refs[,5]), 
+                                        uci = c(Sens_refs[,6], Spec_refs[,6], 
+                                                1 - Spec_refs[,4]), 
                                         
                                         row.names=c(paste0("Sensitivity_ref","_",refs_names),
                                                     paste0("Specificity_ref","_",refs_names),

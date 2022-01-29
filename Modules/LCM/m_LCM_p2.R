@@ -322,11 +322,15 @@ LCM_run_model <- function( id,
                          type = "error")
             }
             else { 
-            
-            shinyalert("Note",
-                       "Be sure to check the Model Diagnostics tab once
-                                                       the model has finished running",
-                       type = "info")
+              shinyalert(title = "Note",
+                         text = "Be sure to check the Model Diagnostics tab
+                    once the model has finished running.
+                   For some guidance on how posterior and trace plots should look like, please see: 
+                   https://mmeredith.net/blog/2019/MCMC_diagnostics.htm.
+                   Note that informative priors may be needed for normal model diagnostics, particularly for 
+                   models not assuming a gold standard. In general, known information on the sensitivity and 
+                   specificity of tests should be incorporated into the models whnever possible",
+                         type = "info")
             }
    
       
