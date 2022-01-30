@@ -14,11 +14,11 @@ menuItem("Data", id = "dataID", tabName = "data", icon = icon("table"),
          menuSubItem("File Upload", tabName = "load_data_subtab_fileupload"), 
          menuSubItem("Example Datasets", tabName = "load_data_subtab_example_datasets"), 
          menuSubItem("Data for Analysis", tabName = "load_data_subtab_data_for_analysis")),
-menuItem("Meta-Analysis assuming\n a gold standard", tabName = "meta_analysis_gs", icon = icon("table"), 
+menuItem("Perfect gold standard", tabName = "meta_analysis_gs", icon = icon("table"), 
          menuSubItem("Meta-analysis", tabName = "meta_analysis_bivariate"), 
          menuSubItem("Meta-regression", tabName = "meta_regression_bivariate"), 
          menuSubItem("Subgroup analysis", tabName = "SG_bivariate")), 
-menuItem("Meta-Analysis without\n a gold standard", tabName = "meta_analysis_igs", icon = icon("table"), 
+menuItem("Imperfect gold standard", tabName = "meta_analysis_igs", icon = icon("table"), 
          menuSubItem("Latent class meta-analysis", tabName = "meta_analysis_latent_class")), 
 menuItem("References", tabName = "refs", icon = icon("table")),
 menuItem("Privacy Notice", tabName = "privacy_notice", icon = icon("table"))
@@ -30,7 +30,6 @@ dashboardBody(
   
 useShinyjs(),
 useSweetAlert(), 
-#useShinyalert(force = TRUE),
 useShinyalert(),
 
 tabItems(
@@ -41,21 +40,26 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home", 
-                      h1("MetaBayesDTA v1.0"),
+                      h1("MetaBayesDTA (BETA v1.0)"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
-                         tags$a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1439", "Patel A, Cooper NJ, Freeman SC, Sutton AJ. Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
+                         tags$a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1439", "Patel A, Cooper NJ, Freeman SC, Sutton AJ. 
+                         Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting
+                         of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
                            "), 
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v2/", "MetaDTA version 2.0")),
                       br(),
                       h4("Which builds on the previous version as described in the paper:",
-                         tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x", "Freeman SC, Kerby CR, Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81
+                         tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x", "Freeman SC, Kerby CR, 
+                         Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate 
+                         meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81
                            "),
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
-                      h4("If you use MetaBayesDTA please cite these papers, as well as the following citation for MetaBayesDTA itself: 
+                      h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following citation for 
+                         MetaBayesDTA itself: 
                          Cerullo E, Freeman SC, Kerby CR, Patel A, Quinn TJ, Sutton AJ, Cooper NJ, Wu O. 
-                         MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, 
+                         MetaBayesDTA: Codeayesian meta-analysis of diagnostic test accuracy data, 
                          with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)."),
                       img(height=400,
                           width=600, 
@@ -64,7 +68,7 @@ tabItem(
                       h4("Enzo Cerullo, Suzanne Freeman, Clareece Kerby, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
                       p("For feedback/questions about this app please contact Enzo Cerullo at enzo.cerullo@bath.edu"),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
-                      tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"),
+                      p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
                       br(),
                       p("An interactive primer on diagnostic test accuracy can be found at:"),
                       tags$a(href="https://crsu.shinyapps.io/diagprimer/", "https://crsu.shinyapps.io/diagprimer/", target="_blank"),
@@ -100,12 +104,10 @@ tabItem(
           )
   ), 
 
-
 # Tab 3: load data tab -----------------------------------------------  ------------------------------------------------------------------------------------------------------------------
 tabItem(
   tabName = "load_data_subtab_fileupload", 
   tabPanel("File Upload", 
-                               
                    box(width = 3,
                        dataset_import_ui(id = "dataset_id")
                    ),
@@ -208,20 +210,6 @@ tabItem(
                                 )
          )
 ),
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -357,20 +345,6 @@ tabItem(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  
 # Tab 5: Bivariate MA - Meta-regression (MR) ---------------------------------------  ----------------------------------------------------------------------------------------------------------
 tabItem(
@@ -496,17 +470,6 @@ tabItem(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # Tab 6: Bivariate MA - Subgroup analysis (SG) -------------------------------------- ------------------------------------------------------------------------------------------------------------------
 tabItem(
   tabName = "SG_bivariate",
@@ -615,32 +578,6 @@ tabItem(
                                               )
                                             ) # end of second tab box 
 ), # end of tab item
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -776,50 +713,6 @@ tabItem(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Tab 8: References ----------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------------------------------------------------
 tabItem(
   tabName = "refs", 
@@ -880,11 +773,6 @@ tabItem(
                href="https://github.com/CRSU-Apps/MetaBayesDTA", target="_blank")),
            
   )), 
-
-
-
-
-
 
 
 

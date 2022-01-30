@@ -45,7 +45,7 @@ require(shinybusy)
 
 
 # Set working directory ---------------------------------------------------
-setwd("/home/enzo/Documents/CRSU") # Home PC (Linux Mint)
+setwd("/home/enzo/Documents/CRSU/MetaBayesDTA") # Home PC (Linux Mint)
 #setwd("Z:/My Documents/CRSU") # Work PC (windows)
 #setwd("C:/Users/Enzo/Documents/CRSU") # Home PC - windows
 
