@@ -1,7 +1,5 @@
 
 
-
-
 HSROC_curve_type_renderUI  <- function(id) {  
   
   moduleServer(
@@ -163,13 +161,13 @@ model_priors_plot_UI <- function(id) {
                     label = "Change size of plot - height", 
                     min = 1,
                     max = 2000, 
-                    value = 300, 
+                    value = 600, 
                     ticks = FALSE),
         sliderInput(inputId = ns("model_priors_plot_dimension_slider_width"), 
                     label = "Change size of plot - width", 
                     min = 1, 
                     max = 2000, 
-                    value = 500,
+                    value = 1000,
                     ticks = FALSE),
         downloadButton(outputId = ns("download_priors_plot"), 
                        label = "Download Plot")
@@ -939,12 +937,12 @@ model_priors_plot_settings_UI <- function(id) {
     sliderInput(inputId = ns("priors_plot_dimension_slider_height"), 
                 label = "Change size of plot - height", 
                 min = 1, max = 2000, 
-                value = 300,
+                value = 600,
                 ticks = FALSE),
     sliderInput(inputId = ns("priors_plot_dimension_slider_width"), 
                 label = "Change size of plot - width", 
                 min = 1, max = 2000, 
-                value = 500,
+                value = 1000,
                 ticks = FALSE)
   )
   
