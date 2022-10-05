@@ -233,7 +233,7 @@ tabItem(
                          Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting
                          of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
                            "), 
-                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v2/", "MetaDTA version 2.0")),
+                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma/", "MetaDTA version 2.0")),
                       br(),
                       h4("Which builds on the previous version as described in the paper:",
                          tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x", "Freeman SC, Kerby CR, 
@@ -243,14 +243,14 @@ tabItem(
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
                       h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following citation for 
                          MetaBayesDTA itself: 
-                         Cerullo E, Freeman SC, Kerby CR, Patel A, Quinn TJ, Sutton AJ, Cooper NJ, Wu O. 
+                         Cerullo E, Freeman SC, Nevill CR, Patel A, Quinn TJ, Sutton AJ, Cooper NJ, Wu O. 
                          MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, 
                          with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)."),
                       img(height=400,
                           width=600, 
                           src="roc_curve.png"),
                       br(),
-                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Kerby, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
+                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
                       p("For feedback/questions about this app please contact Enzo Cerullo at enzo.cerullo@bath.edu"),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
