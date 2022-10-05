@@ -1276,29 +1276,29 @@ LCM_parameter_estimates_table_server <- function(id,
           for (i in 1:num_refs) {
                               Z_group[[i]] <- data.frame(
                                                   estimate = c(
-                                                                Sens_ref[,5], Spec_ref[,5],
-                                                                fp_ref[,5], 
-                                                                DOR_ref[,5], LRp_ref[,5] , LRn_ref[,5], 
-                                                                Theta_ref[,5], Lambda_ref[,5]),
+                                                                Sens_ref[,5][i], Spec_ref[,5][i],
+                                                                fp_ref[,5][i], 
+                                                                DOR_ref[,5][i], LRp_ref[,5][i] , LRn_ref[,5][i], 
+                                                                Theta_ref[,5][i], Lambda_ref[,5][i]),
                                                               lci = c(
-                                                                Sens_ref[,4], Spec_ref[,4],
-                                                                fp_ref[,6], 
-                                                                DOR_ref[,4], LRp_ref[,4] , LRn_ref[,4], 
-                                                                Theta_ref[,4], Lambda_ref[,4]),
+                                                                Sens_ref[,4][i], Spec_ref[,4][i],
+                                                                fp_ref[,6][i], 
+                                                                DOR_ref[,4][i], LRp_ref[,4][i] , LRn_ref[,4][i], 
+                                                                Theta_ref[,4][i], Lambda_ref[,4][i]),
                                                               uci = c(
-                                                                Sens_ref[,6], Spec_ref[,6],
-                                                                fp_ref[,4], 
-                                                                DOR_ref[,6], LRp_ref[,6] , LRn_ref[,6], 
-                                                                Theta_ref[,6], Lambda_ref[,6]),
+                                                                Sens_ref[,6][i], Spec_ref[,6][i],
+                                                                fp_ref[,4][i], 
+                                                                DOR_ref[,6][i], LRp_ref[,6][i] , LRn_ref[,6][i], 
+                                                                Theta_ref[,6][i], Lambda_ref[,6][i]),
                                                               row.names=c(
-                                                                    paste0("Sensitivity_ref","_",refs_names),
-                                                                    paste0("Specificity_ref","_",refs_names), 
-                                                                    paste0("DOR_ref","_",refs_names),
-                                                                    paste0("LR+_ref","_",refs_names),
-                                                                    paste0("LR-_ref","_",refs_names),
-                                                                    paste0("Theta","_",refs_names),
-                                                                    paste0("Lambda","_",refs_names),
-                                                                    paste0("FPR_ref","_",refs_names))
+                                                                    paste0("Sensitivity_ref","_",refs_names[i]),
+                                                                    paste0("Specificity_ref","_",refs_names[i]), 
+                                                                    paste0("FPR_ref","_",refs_names[i]),
+                                                                    paste0("DOR_ref","_",refs_names[i]),
+                                                                    paste0("LR+_ref","_",refs_names[i]),
+                                                                    paste0("LR-_ref","_",refs_names[i]),
+                                                                    paste0("Theta","_",refs_names[i]),
+                                                                    paste0("Lambda","_",refs_names[i]))
                               )
           }
           
@@ -1313,11 +1313,11 @@ LCM_parameter_estimates_table_server <- function(id,
             s.matrix.group[[i]][1,1] <-  paste0("Sensitivity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>1</sub>"),"[", refs_names[i],"]", ")",  ")") 
             s.matrix.group[[i]][2,1] <-  paste0("Specificity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"),"[", refs_names[i],"]", ")",  ")") 
             s.matrix.group[[i]][3,1] <-  paste0("False Positive Rate (1 - specificity)   - ","[", refs_names[i],"]") 
-            s.matrix.group[[i]][4,1] <-  paste0("Cutpoint parameter ", "( ", HTML("&Theta;"),"[", refs_names[i],"]", " )")
-            s.matrix.group[[i]][5,1] <-  paste0("Accuracy parameter ", "( ", HTML("&Lambda;"),"[", refs_names[i],"]", " )")
-            s.matrix.group[[i]][6,1] <-  paste0("Diagnostic Odds Ratio  - ","[", refs_names[i],"]") 
-            s.matrix.group[[i]][7,1] <-  paste0("Likelihood Ratio +ve  - ","[", refs_names[i],"]") 
-            s.matrix.group[[i]][8,1] <-  paste0("Likelihood Ratio -ve  - ","[", refs_names[i],"]") 
+            s.matrix.group[[i]][4,1] <-  paste0("Diagnostic Odds Ratio  - ","[", refs_names[i],"]")  
+            s.matrix.group[[i]][5,1] <-  paste0("Likelihood Ratio +ve  - ","[", refs_names[i],"]")    
+            s.matrix.group[[i]][6,1] <-  paste0("Likelihood Ratio -ve  - ","[", refs_names[i],"]") 
+            s.matrix.group[[i]][7,1] <-  paste0("Cutpoint parameter ", "( ", HTML("&Theta;"),"[", refs_names[i],"]", " )")  
+            s.matrix.group[[i]][8,1] <-  paste0("Accuracy parameter ", "( ", HTML("&Lambda;"),"[", refs_names[i],"]", " )")   
             
           for (k in 1:3) {
               for (j in 1:(nrow)-1) { 
