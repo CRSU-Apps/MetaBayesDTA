@@ -349,25 +349,25 @@ MR_priors_options_server <- function(id,
                 tagList(
                     h4("Prior Distributions (For categorical / discrete covariate):"),
                     numericInput(inputId = ns("MRcat_prior_mean_sens_mu"), label=h5("Prior mean of pooled sensitivities - mean"), value = 0),
-                    numericInput(inputId = ns("MRcat_prior_mean_sens_sd"), label=h5("Prior mean of pooled sensitivities - SD"), value = 2),
+                    numericInput(inputId = ns("MRcat_prior_mean_sens_sd"), label=h5("Prior mean of pooled sensitivities - SD"), value = 1.5),
                     numericInput(inputId = ns("MRcat_prior_mean_spec_mu"), label=h5("Prior mean of pooled specificities - mean"), value = 0),
-                    numericInput(inputId = ns("MRcat_prior_mean_spec_sd"), label=h5("Prior mean of pooled specificities - SD"), value = 2),
-                    numericInput(inputId = ns("MRcat_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1),
-                    numericInput(inputId = ns("MRcat_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1)
+                    numericInput(inputId = ns("MRcat_prior_mean_spec_sd"), label=h5("Prior mean of pooled specificities - SD"), value = 1.5),
+                    numericInput(inputId = ns("MRcat_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1),
+                    numericInput(inputId = ns("MRcat_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1)
                 )
               }
               else { 
                 tagList(
                   h4("Prior Distributions (For categorical / discrete covariate):"),
                   h5("Sensitivity - 95% credible interval:"),
-                  numericInputRow(inputId =  ns("MRcat_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                  numericInputRow(inputId =  ns("MRcat_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MRcat_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MRcat_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                   h5("Specificity - 95% credible interval:"),
-                  numericInputRow(inputId =  ns("MRcat_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                  numericInputRow(inputId =  ns("MRcat_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MRcat_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MRcat_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                   h5("Standard deviation (SD) priors:"),
-                  numericInput(inputId = ns("MRcat_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1),
-                  numericInput(inputId = ns("MRcat_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1)
+                  numericInput(inputId = ns("MRcat_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1),
+                  numericInput(inputId = ns("MRcat_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1)
                 )
               }
       )
@@ -375,16 +375,16 @@ MR_priors_options_server <- function(id,
         else {
           div(id = ns("priors_options_div"),
               h4("Prior Distributions (For continuous covariate):"),
-              numericInput(inputId = ns("MRcts_prior_mean_sens_mu"), label=h5("Prior mean of pooled sensitivity intercept - mean"), value = 0),
-              numericInput(inputId = ns("MRcts_prior_mean_sens_sd"), label=h5("Prior mean of pooled sensitivity intercept - SD"), value = 5),
-              numericInput(inputId = ns("MRcts_prior_mean_spec_mu"), label=h5("Prior mean of pooled specificity intercept - mean"), value = 0),
-              numericInput(inputId = ns("MRcts_prior_mean_spec_sd"), label=h5("Prior mean of pooled specificity intercept - SD"), value = 5),
-              numericInput(inputId = ns("MRcts_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1),
-              numericInput(inputId = ns("MRcts_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1),
-              numericInput(inputId = ns("MRcts_prior_coeff_sens_mean"), label=h5("Prior for coefficient of sensitivity - mean"), value = 0),
-              numericInput(inputId = ns("MRcts_prior_coeff_sens_sd"), label=h5("Prior for coefficient of sensitivity- SD"), value = 5),
-              numericInput(inputId = ns("MRcts_prior_coeff_spec_mean"), label=h5("Prior for coefficient of specificity - mean"), value = 0),
-              numericInput(inputId = ns("MRcts_prior_coeff_spec_sd"), label=h5("Prior for coefficient of specificity- SD"), value = 5)
+              numericInput(inputId = ns("MRcts_prior_mean_sens_mu"), label=h5("Prior mean of pooled logit(sensitivity) intercept - mean"), value = 0),
+              numericInput(inputId = ns("MRcts_prior_mean_sens_sd"), label=h5("Prior mean of pooled logit(sensitivity) intercept - SD"), value = 1.5),
+              numericInput(inputId = ns("MRcts_prior_mean_spec_mu"), label=h5("Prior mean of pooled logit(specificity) intercept - mean"), value = 0),
+              numericInput(inputId = ns("MRcts_prior_mean_spec_sd"), label=h5("Prior mean of pooled logit(specificity) intercept - SD"), value = 1.5),
+              numericInput(inputId = ns("MRcts_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1),
+              numericInput(inputId = ns("MRcts_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1),
+              numericInput(inputId = ns("MRcts_prior_coeff_sens_mean"), label=h5("Prior for coefficient of logit(sensitivity) - mean"), value = 0),
+              numericInput(inputId = ns("MRcts_prior_coeff_sens_sd"), label=h5("Prior for coefficient of logit(sensitivity) - SD"), value = 1),
+              numericInput(inputId = ns("MRcts_prior_coeff_spec_mean"), label=h5("Prior for coefficient of logit(specificity) - mean"), value = 0),
+              numericInput(inputId = ns("MRcts_prior_coeff_spec_sd"), label=h5("Prior for coefficient of logit(specificity) - SD"), value = 1)
               )
         }
         
@@ -424,7 +424,7 @@ MR_model_priors_plot_server <- function(id,
                           
                           params <- rstan::extract(draws_PO())
 
-                          n_samps <- (400 - 200)*4
+                          n_samps <- (2000 - 200)*4
                           
                           cts_cov_indicator <-  cts_cov_indicator$cts_cov_indicator
                           
@@ -441,8 +441,8 @@ MR_model_priors_plot_server <- function(id,
                                       Parameter = c(rep("Sensitivity (for each level)", n_samps), 
                                                     rep("Specificity (for each level)", n_samps), 
                                                     rep("Between-study correlation", n_samps),
-                                                    rep("Between-study SD for sensitivity", n_samps), 
-                                                    rep("Between-study SD for specificity", n_samps)))
+                                                    rep("Between-study SD for logit(sensitivity)", n_samps), 
+                                                    rep("Between-study SD for logit(specificity)", n_samps)))
                                     
                                     g <-    ggplot(data = data, aes(x=Samples)) + 
                                       geom_density(alpha = 0.50) + 
@@ -470,15 +470,15 @@ MR_model_priors_plot_server <- function(id,
                                       Samples = c(logit_intercept_se, logit_intercept_sp, 
                                                   logit_coeff_se, logit_coeff_sp, 
                                                   se, sp, corr, sd_se, sd_sp), 
-                                      Parameter = c(rep("Pooled sensitivity intercept", n_samps), 
-                                                    rep("Pooled specificity intercept", n_samps), 
-                                                    rep("Pooled sensitivity coefficient", n_samps), 
-                                                    rep("Pooled specificity coefficient", n_samps), 
+                                      Parameter = c(rep("Pooled logit(sensitivity) intercept", n_samps), 
+                                                    rep("Pooled logit(specificity) intercept", n_samps), 
+                                                    rep("Pooled logit(sensitivity) coefficient", n_samps), 
+                                                    rep("Pooled logit(specificity) coefficient", n_samps), 
                                                     rep("Sensitivity at inputted value of covariate", n_samps),
                                                     rep("Specificity  at inputted value of covariate", n_samps),
                                                     rep("Between-study correlation", n_samps),
-                                                    rep("Between-study SD for sensitivity", n_samps), 
-                                                    rep("Between-study SD for specificity", n_samps)))
+                                                    rep("Between-study SD for logit(sensitivity)", n_samps), 
+                                                    rep("Between-study SD for logit(specificity)", n_samps)))
                                     
                                     g <-    ggplot(data = data, aes(x=Samples)) + 
                                       geom_density(alpha = 0.50) + 
@@ -535,7 +535,19 @@ MR_model_priors_plot_server <- function(id,
 
 MR_model_priors_table_UI <- function(id) {
   ns <- NS(id)   
-  tableOutput(outputId =  ns("model_priors_table")) 
+  tagList(
+    tableOutput(outputId =  ns("model_priors_table")) ,
+  p("NOTE: The default priors are:"),  
+  p("For continuous meta-regression:"),
+  p("For logit sensitivity and specificity intercepts - normal distribution with mean 0 and SD of 1.5, equivalent to a 95% prior interval of (-2.97, 2.9) "),
+  p("For logit sensitivity and specificity coefficients - normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (-1.96, 1.96) "),
+  p("For between-study SD's of logit sensitivities and specificities - truncated (at 0) normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.03, 2.25) "),
+  p("For between-study correlation between study-specific logit sensitivities and specificities - LKJ(2) prior, equivalent to 95% prior interval of (-0.8, 0.8)"),
+  p("For categorical meta-regression:"),
+  p("For logit sensitivities and specificities - normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.05, 0.95) on the probability scale"),
+  p("For between-study SD's of logit sensitivities and specificities - truncated (at 0) normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.03, 2.25) "),
+  p("For between-study correlation between study-specific logit sensitivities and specificities - LKJ(2) prior, equivalent to 95% prior interval of (-0.8, 0.8)")
+  )
 }
 
 
@@ -606,8 +618,8 @@ MR_model_priors_table_server <- function(id,
                                   s.matrix[2,1] <- paste0("Specificity [same prior across all levels of covariate] ", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"), ")",  ")")
                                   s.matrix[3,1] <- "False positive rate (1 - specificity) [same prior across all levels of covariate] "
                                   s.matrix[4,1] <- paste0("Between-study Correlation [same prior and parameter across all levels of covariate] " , "( ", HTML("&rho;"), " )")
-                                  s.matrix[5,1] <- paste0("Between-study SD for Sensitivity [same prior and parameter across all levels of covariate] ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                                  s.matrix[6,1] <- paste0("Between-study SD for Sensitivity [same prior and parameter across all levels of covariate] ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                                  s.matrix[5,1] <- paste0("Between-study SD for logit(Sensitivity) [same prior and parameter across all levels of covariate] ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                                  s.matrix[6,1] <- paste0("Between-study SD for logit(Specificity) [same prior and parameter across all levels of covariate] ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                                   
                                   for (i in 1:3) {
                                     for (j in 1:(nrow)-1) { 
@@ -673,8 +685,8 @@ MR_model_priors_table_server <- function(id,
                                   s.matrix[5,1] <- paste0("Sensitivity at inputted value of coefficient", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&alpha;<sub>1</sub>"), "+", input$MRcts_input_cov, HTML("&nu;<sub>1</sub>"), ")",  ")")
                                   s.matrix[6,1] <- paste0("Specificity at inputted value of coefficient", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&alpha;<sub>0</sub>"), "+", input$MRcts_input_cov, HTML("&nu;<sub>0</sub>"), ")",  ")")
                                   s.matrix[7,1] <-  paste0("Between-study Correlation" , "( ", HTML("&rho;"), " )")
-                                  s.matrix[8,1] <-  paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                                  s.matrix[9,1] <-  paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                                  s.matrix[8,1] <-  paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                                  s.matrix[9,1] <-  paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                                   
                                   
                                   for (i in 1:3) {
@@ -982,7 +994,12 @@ MR_parameter_estimates_table_renderUI <- function(id,
             br(),
             h4("Group-specific parameters"),
             tableOutput(ns("table_2")),
-            downloadButton(ns("download_table_2"), "Download Table")
+            downloadButton(ns("download_table_2"), "Download Table"),
+            br(),
+            br(),
+            h4("Table of pairwise accuracy differences and ratios"),
+            tableOutput(ns("table_3")),
+            downloadButton(ns("download_table_3"), "Download Table")
           ) 
         } else { # cts covariate 
           tagList(
@@ -1146,8 +1163,8 @@ MR_parameter_estimates_table_server <- function(id,
                       s.matrix.shared <- matrix(nrow=nrow, ncol=5)
                       
                       s.matrix.shared[1,1] <- paste0("Between-study Correlation" , "( ", HTML("&rho;"), " )")
-                      s.matrix.shared[2,1] <- paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                      s.matrix.shared[3,1] <- paste0("Between-study SD for Specificity ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                      s.matrix.shared[2,1] <- paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                      s.matrix.shared[3,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                       s.matrix.shared[4,1] <- paste0("Shape parameter ", "( ", HTML("&beta;"), " )")
                       s.matrix.shared[5,1] <- paste0("SD of cutpoint parameter ", "( ", HTML("&sigma;<sub>&theta;</sub>"), " )")
                       s.matrix.shared[6,1] <- paste0("SD of accuracy parameter ", "( ", HTML("&sigma;<sub>&alpha;</sub>"), " )")
@@ -1356,8 +1373,8 @@ MR_parameter_estimates_table_server <- function(id,
                 s.matrix[4,1] <- paste0("intercept for logit(sensitivity) ", "( ", HTML("&alpha;<sub>1</sub>"), " )")
                 s.matrix[5,1] <- paste0("intercept for logit(specificity) ", "( ", HTML("&alpha;<sub>0</sub>"), " )")
                 s.matrix[6,1] <- paste0("Between-study Correlation" , "( ", HTML("&rho;"), " )")
-                s.matrix[7,1] <- paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                s.matrix[8,1] <- paste0("Between-study SD for Specificity ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                s.matrix[7,1] <- paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                s.matrix[8,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                 
                 for (i in 1:3) {
                   for (j in 1:(nrow-1)) { 
@@ -1377,6 +1394,234 @@ MR_parameter_estimates_table_server <- function(id,
                 }
             
           })
+          
+          # MR: table 3 - table of pairwise differences and ratio's of Se/Sp's (only for  categorical covariate) --------------------------------------------------------------------------------------
+
+          table_obj_3 <- reactive({
+            
+            req(draws(), input$covcheck_model, cancelOutput = TRUE)
+            
+
+            
+            
+            mod <- draws()
+            cov_index <-  as.integer(as.double(input$covcheck_model)) - 1
+            
+            C <-  ncol(data())
+            Names <-  colnames(data()) 
+            X <- data()
+            
+            if (C > 8 & Names[7] != "rob_PS") {   m <<- 6  } else { m <<- 13  }
+            
+            
+            s.matrix.group.dataframes <- list()
+            num_levels <- length(rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Se"))$summary[,5])
+            n_comparisons <- choose(num_levels, 2)
+            
+            validate(
+              need(num_levels <= 10, "This table only displays for covariates with less than or equal to 10 groups")
+            )
+            
+            
+           # print(n_comparisons)
+            
+            diffs_sens <-  rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("diffs_Se"))$summary 
+            diffs_spec <-  rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("diffs_Sp"))$summary
+            ratios_sens <- rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("ratios_Se"))$summary
+            ratios_spec <- rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("ratios_Sp"))$summary
+
+            
+            Z_group <- list()
+            
+            # we have n_comparisons lots of estimates for each of the 4 variables (diffs / ratios of Se/Sp's)
+            # therefore will have n_comparisons separate "tables" to display (display each set of 4 estimates in sep. table)
+            
+            
+            for (i in 1:n_comparisons) {
+              Z_group[[i]] <- data.frame(estimate = c(diffs_sens[,5][i], 
+                                                      diffs_spec[,5][i], 
+                                                      ratios_sens[,5][i],
+                                                      ratios_spec[,5][i]), 
+                                         lci  = c(diffs_sens[,4][i], 
+                                                  diffs_spec[,4][i], 
+                                                  ratios_sens[,4][i],
+                                                  ratios_spec[,4][i]), 
+                                         uci =  c(diffs_sens[,6][i], 
+                                                  diffs_spec[,6][i], 
+                                                  ratios_sens[,6][i],
+                                                  ratios_spec[,6][i]), 
+                                         row.names = c("Difference in sensitivities", 
+                                                       "Difference in specificities", 
+                                                       "Ratio of sensitivities",
+                                                       "Ratio of specificities")
+              )
+            }
+            
+            s.matrix.group <- vector("list", n_comparisons)
+            statticks <- list()
+            
+            comparisons <- tibble(comparisons = rep(NA, n_comparisons))
+            
+           # print(comparisons)
+            
+           # print(levels(factor(X[, m + cov_index])))
+            
+           # print(levels(factor(X[, m + cov_index]))[1])
+            
+            
+            if (num_levels == 2) { # 1 comparison
+              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
+            }
+            if (num_levels == 3) { # 3 comparisons
+              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
+              comparisons$comparisons[2] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[3] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
+            }
+            if (num_levels == 4) { # 6 comparisons
+              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
+              comparisons$comparisons[2] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[3] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[4] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[5] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[6] <- (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
+            }
+            if (num_levels == 5) { # 10 comparisons
+              comparisons$comparisons[1] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
+              comparisons$comparisons[2] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[3] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[4] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[5] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[6] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[7] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[8] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[9] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[10] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5] ))
+            }
+            if (num_levels == 6) { # 15 comparisons
+              comparisons$comparisons[1] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
+              comparisons$comparisons[2] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[3] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[4] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[5] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[6] ))
+              comparisons$comparisons[6] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
+              comparisons$comparisons[7] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[8] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[9] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[6] ))
+              comparisons$comparisons[10] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
+              comparisons$comparisons[11] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[12] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[6] ))
+              comparisons$comparisons[13] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5] ))
+              comparisons$comparisons[14] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[6] ))
+              comparisons$comparisons[15] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6] ))
+            }
+            if (num_levels == 7) { # 21 comparisons
+              comparisons$comparisons[1:6]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:7] ))
+              comparisons$comparisons[7:11]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:7] ))
+              comparisons$comparisons[12:15] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:7] ))
+              comparisons$comparisons[16:18] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:7] ))
+              comparisons$comparisons[19:20] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:7] ))
+              comparisons$comparisons[21]    <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7] ))
+            }
+            if (num_levels == 8) { # 28 comparisons
+              comparisons$comparisons[1:7]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:8] ))
+              comparisons$comparisons[8:13]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:8] ))
+              comparisons$comparisons[14:18] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:8] ))
+              comparisons$comparisons[19:22] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:8] ))
+              comparisons$comparisons[23:25] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:8] ))
+              comparisons$comparisons[26:27] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:8] ))
+              comparisons$comparisons[28]    <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8] ))
+            }
+            if (num_levels == 9) { # 36 comparisons
+              comparisons$comparisons[1:8]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:9] ))
+              comparisons$comparisons[9:15]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:9] ))
+              comparisons$comparisons[16:21] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:9] ))
+              comparisons$comparisons[22:26] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:9] ))
+              comparisons$comparisons[27:30] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:9] ))
+              comparisons$comparisons[31:33] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:9] ))
+              comparisons$comparisons[34:35] <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8:9] ))
+              comparisons$comparisons[36]    <-  (paste(  levels(factor(X[, m + cov_index]))[8], "vs", levels(factor(X[, m + cov_index]))[9] ))
+            }
+            if (num_levels == 10) { # 45 comparisons
+              comparisons$comparisons[1:9]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:10] ))
+              comparisons$comparisons[10:17] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:10] ))
+              comparisons$comparisons[18:24] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:10] ))
+              comparisons$comparisons[25:30] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:10] ))
+              comparisons$comparisons[31:35] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:10] ))
+              comparisons$comparisons[36:39] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:10] ))
+              comparisons$comparisons[40:42] <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8:10] ))
+              comparisons$comparisons[43:44] <-  (paste(  levels(factor(X[, m + cov_index]))[8], "vs", levels(factor(X[, m + cov_index]))[9:10] ))
+              comparisons$comparisons[45]    <-  (paste(  levels(factor(X[, m + cov_index]))[9], "vs", levels(factor(X[, m + cov_index]))[10] ))
+            }
+            
+            print(comparisons)
+            
+            for (i in 1:n_comparisons) {
+              nrow <- 5
+              s.matrix.group[[i]] <- matrix(nrow=nrow, ncol=5)
+              
+              s.matrix.group[[i]][1,1] <-   paste0("Difference in sensitivities") # , "( ", HTML("&mu;<sub>1</sub>"), "L=", levels(factor(X[, m + cov_index]))[i], " )")
+              s.matrix.group[[i]][2,1] <-   paste0("Difference in specificities")
+              s.matrix.group[[i]][3,1] <-   paste0("Ratio of sensitivities")
+              s.matrix.group[[i]][4,1] <-   paste0("Ratio of specificities") 
+
+              
+              for (k in 1:3) {
+                for (j in 1:(nrow)-1) { 
+                  s.matrix.group[[i]][j,k+1] <- sprintf('%4.3f', Z_group[[i]][j,k])
+                }
+              }
+              s.matrix.group[[i]][nrow, 1:4] <- ""
+              
+              s.matrix.group[[i]][,5] <- paste0("(", s.matrix.group[[i]][,3], ", ", s.matrix.group[[i]][,4], ")")
+              s.matrix.group[[i]][nrow, 1:5] <- ""
+              s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
+              
+              
+              s.matrix.group.dataframes[[i]] <- data.frame(s.matrix.group[[i]])
+              
+              
+              colnames(s.matrix.group.dataframes[[i]]) <- c( paste("Parameters for comparison ",
+                                                                   comparisons$comparisons[i]), # ((  levels(factor(X[, m + cov_index])    )[i]))) , 
+                                                             "Posterior Median", 
+                                                             "95% Posterior Interval")
+              
+            }
+            
+            s.matrix.group.dataframe_allgroups <- tibble(rbindlist(s.matrix.group.dataframes))
+            
+            
+            s.matrix.group.dataframe_allgroups2 <- s.matrix.group.dataframe_allgroups %>% 
+              dplyr::mutate( " "
+                             # = (lag(!!as.name(paste("Parameters for comparison",
+                             #                        comparisons$comparisons[i])))), 
+                             = (lag((paste("Parameters for comparison ",
+                                                    comparisons$comparisons[i])))), 
+                             `Posterior Median` = lag(`Posterior Median`), 
+                             `95% Posterior Interval` = lag(`95% Posterior Interval`))
+            
+            s.matrix.group.dataframe_allgroups3 <- s.matrix.group.dataframe_allgroups2 %>%
+              dplyr::select(" ",
+                            `Posterior Median`, 
+                            `95% Posterior Interval` )
+            
+            s.matrix.group.dataframe_allgroups3
+            s.matrix.group.dataframe_allgroups3[1,2] <- ""
+            s.matrix.group.dataframe_allgroups3[1,3] <- ""
+            
+            for (i in 1:n_comparisons) {
+              s.matrix.group.dataframe_allgroups3[(i-1)*nrow+1,1] <- (paste0("<b> Parameters for comparison ",
+                                                                             comparisons$comparisons[i], # ((levels(factor(X[, m + cov_index]) )[i])),
+                                                                             ":", " </b>"))
+              #s.matrix.group.dataframe_allgroups3[(2+(5*(i-1))):(5+(5*(i-1))), 1] <- " "
+              s.matrix.group.dataframe_allgroups3[(2+(5*(i-1))), 1] <- "Difference in sensitivities"
+              s.matrix.group.dataframe_allgroups3[(3+(5*(i-1))), 1] <- "Difference in specificities"
+              s.matrix.group.dataframe_allgroups3[(4+(5*(i-1))), 1] <- "Ratio of sensitivities"
+              s.matrix.group.dataframe_allgroups3[(5+(5*(i-1))), 1] <- "Ratio of specificities"
+            }
+            return(s.matrix.group.dataframe_allgroups3)
+            
+            
+          })
 
         # output tables
         output$table_1 <- renderTable({
@@ -1390,6 +1635,13 @@ MR_parameter_estimates_table_server <- function(id,
         output$table_2 <- renderTable({
           req(data(), draws(), cancelOutput = TRUE)
                                          table_obj_2()
+        }
+        , sanitize.text.function = function(x) x)
+        
+        
+        output$table_3 <- renderTable({
+          req(data(), draws(), cancelOutput = TRUE)
+          table_obj_3()
         }
         , sanitize.text.function = function(x) x)
         
@@ -1410,6 +1662,14 @@ MR_parameter_estimates_table_server <- function(id,
           }
         )
         
+        output$download_table_3 <- downloadHandler(
+          filename =  "MR_parameter_estimates_table_3.csv",
+          content = function(file){
+            write.csv(table_obj_3(), file, sep=",", row.names=FALSE) 
+          }
+        )
+        
+        
       }
      )    
 }
@@ -1424,7 +1684,18 @@ MR_rhat_table_UI <- function(id) {
     verbatimTextOutput(ns("rhats_summary_msg")),
     DT::dataTableOutput(ns("rhats_table")),
     downloadButton(ns("download_rhat_table"), 
-                   "Download Table")
+                   "Download Table"),
+    p("NOTE:"), 
+    p("If there are any R-hat values > 1.05, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),  
+    p("Increasing the number of iterations above the default of 1500,"), 
+    p("Using more informative priors"), 
+    p(" "), 
+    p("If there are any divergent transitions, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),
+    p("Using more informative priors"),
+    p(" "), 
+    p("If there are any iterations that have exceeded the maximum treedepth, try increasing the treedepth above the default of 10")
   )
 }
 

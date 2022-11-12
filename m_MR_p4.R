@@ -34,11 +34,7 @@ MR_plot_2_renderUI    <- function(id,
                from the bivariate model;
                the black points represent the study-specific data points for sensitivity (left panel) and specificity (right panel)
                for each level of the categorical/discrete covariate from the bivariate model;"),
-                br(),
-                p("NOTE: The vertical bars represent the 95% credible intervals for each level of the categorical/discrete covariate
-               from the bivariate model;
-               the black points represent the study-specific data points for sensitivity (left panel) and specificity (right panel)
-               for each level of the categorical/discrete covariate from the bivariate model;")
+                br()
             )
             
           } 
@@ -48,11 +44,7 @@ MR_plot_2_renderUI    <- function(id,
                from the bivariate model;
                the black points represent the study-specific data points for sensitivity (left panel) and specificity (right panel)
                for each level of the categorical/discrete covariate from the bivariate model;"),
-                br(),
-                p("NOTE: The vertical bars represent the 95% credible intervals for each level of the categorical/discrete covariate
-               from the bivariate model;
-               the black points represent the study-specific data points for sensitivity (left panel) and specificity (right panel)
-               for each level of the categorical/discrete covariate from the bivariate model;")
+                br()
             )
         }
         

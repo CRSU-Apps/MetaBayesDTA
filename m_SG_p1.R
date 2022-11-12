@@ -202,22 +202,22 @@ SG_priors_options_server <- function(id, data) {
                           numericInput(inputId = ns("SG_prior_mean_sens_sd"), label=h5("Prior mean of pooled sensitivities - SD"), value = 1.5),
                           numericInput(inputId = ns("SG_prior_mean_spec_mu"), label=h5("Prior mean of pooled specificities - mean"), value = 0),
                           numericInput(inputId = ns("SG_prior_mean_spec_sd"), label=h5("Prior mean of pooled specificities - SD"), value = 1.5),
-                          numericInput(inputId = ns("SG_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1),
-                          numericInput(inputId = ns("SG_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1)
+                          numericInput(inputId = ns("SG_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1),
+                          numericInput(inputId = ns("SG_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1)
                           )
                       }
                       else {
                         tagList(
                           h4("Prior Distributions (For each subgroup):"),
                           h5("Sensitivity - 95% credible interval:"),
-                          numericInputRow(inputId =  ns("SG_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                          numericInputRow(inputId =  ns("SG_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                          numericInputRow(inputId =  ns("SG_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                          numericInputRow(inputId =  ns("SG_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                           h5("Specificity - 95% credible interval:"),
-                          numericInputRow(inputId =  ns("SG_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                          numericInputRow(inputId =  ns("SG_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                          numericInputRow(inputId =  ns("SG_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                          numericInputRow(inputId =  ns("SG_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                           h5("Standard deviation (SD) priors:"),
-                          numericInput(inputId = ns("SG_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1),
-                          numericInput(inputId = ns("SG_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1)
+                          numericInput(inputId = ns("SG_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1),
+                          numericInput(inputId = ns("SG_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1)
                         )
                       }
                   )
@@ -262,7 +262,7 @@ SG_model_priors_plot_server <- function(id, draws_PO, data) {  # "mod" is the rs
                 
                 if (C > 8 & Names[7] != "rob_PS") { j <<- 6 } else { j <<- 13  }
                 
-                n_samps <- (400 - 200)*4
+                n_samps <- (2000 - 200)*4
                 
                 if (cov_index == 0) {
                   print("Please select a covariate")
@@ -280,8 +280,8 @@ SG_model_priors_plot_server <- function(id, draws_PO, data) {  # "mod" is the rs
                       Parameter = c(rep("Sensitivity (for each subgroup)", n_samps), 
                                     rep("Specificity (for each subgroup)", n_samps), 
                                     rep("Between-study correlation (for each subgroup)", n_samps), 
-                                    rep("Between-study SD for sensitivity (for each subgroup)", n_samps), 
-                                    rep("Between-study SD for specificity (for each subgroup)", n_samps)))
+                                    rep("Between-study SD for logit(sensitivity) (for each subgroup)", n_samps), 
+                                    rep("Between-study SD for logit(specificity) (for each subgroup)", n_samps)))
                     
                     g <-    ggplot(data = data, aes(x=Samples)) + 
                       geom_density(alpha = 0.50) + 
@@ -390,7 +390,13 @@ SG_model_priors_plot_server <- function(id, draws_PO, data) {  # "mod" is the rs
 # UI function
 SG_model_priors_table_UI <- function(id) {
   ns <- NS(id)   
-  tableOutput(outputId =  ns("model_priors_table")) 
+  tagList(
+    tableOutput(outputId =  ns("model_priors_table")),
+    p("NOTE: The default priors are:"),  
+    p("For logit sensitivities and specificities - normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.05, 0.95) on the probability scale"),
+    p("For between-study SD's of logit sensitivities and specificities - truncated (at 0) normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.03, 2.25) "),
+    p("For between-study correlation between study-specific logit sensitivities and specificities - LKJ(2) prior, equivalent to 95% prior interval of (-0.8, 0.8)")
+  )
 }
 
 # server function
@@ -519,8 +525,8 @@ SG_model_priors_table_server <- function(id, draws_PO, data) {
                                   s.matrix[2,1] <-  paste0("Specificity [same prior across subgroups]", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"), ")",  ")")
                                   s.matrix[3,1] <-  "False positive rate (1 - specificity) [same prior across subgroups]"
                                   s.matrix[4,1] <-  paste0("Between-study Correlation [same prior across subgroups] " , "( ", HTML("&rho;"), " )")
-                                  s.matrix[5,1] <-  paste0("Between-study SD for Sensitivity [same prior across subgroups] ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                                  s.matrix[6,1] <-  paste0("Between-study SD for Sensitivity [same prior across subgroups] ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                                  s.matrix[5,1] <-  paste0("Between-study SD for logit(Sensitivity) [same prior across subgroups] ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                                  s.matrix[6,1] <-  paste0("Between-study SD for logit(Specificity) [same prior across subgroups] ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                                   
                                   for (i in 1:3) {
                                     for (j in 1:(nrow)-1) { 
@@ -955,8 +961,8 @@ SG_parameter_estimates_table_server <- function(id,
                               s.matrix.group[[i]][2,1] <- paste0("Specificity ", "( ", paste0("logit", HTML("<sub>-1;</sub>")), "(", HTML("&mu;<sub>0;</sub>"), "[SG]",i, ")",  ")")
                               s.matrix.group[[i]][3,1] <- "False positive rate (1 - Specificity)"
                               s.matrix.group[[i]][4,1] <- paste0("Between-study Correlation" , "( ", HTML("&rho;"), "[SG]",i," )")
-                              s.matrix.group[[i]][5,1] <- paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1;</sub>"), "[SG]",i," )")
-                              s.matrix.group[[i]][6,1] <- paste0("Between-study SD for Specificity ", "( ", HTML("&sigma;<sub>0;</sub>"), "[SG]",i," )")
+                              s.matrix.group[[i]][5,1] <- paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1;</sub>"), "[SG]",i," )")
+                              s.matrix.group[[i]][6,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0;</sub>"), "[SG]",i," )")
                               
                               
                               s.matrix.group[[i]][7,1] <-  paste0("Cutpoint parameter ", "( ", HTML("&Theta;"),"[SG]",i, " )")
@@ -1074,7 +1080,18 @@ SG_rhat_table_UI <- function(id) {
     verbatimTextOutput(ns("rhats_summary_msg")),
     DT::dataTableOutput(ns("rhats_table")),
     downloadButton(ns("download_rhat_table"), 
-                   "Download Table")
+                   "Download Table"),
+    p("NOTE:"), 
+    p("If there are any R-hat values > 1.05, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),  
+    p("Increasing the number of iterations above the default of 1500,"), 
+    p("Using more informative priors"), 
+    p(" "), 
+    p("If there are any divergent transitions, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),
+    p("Using more informative priors"),
+    p(" "), 
+    p("If there are any iterations that have exceeded the maximum treedepth, try increasing the treedepth above the default of 10")
   )
 }
 

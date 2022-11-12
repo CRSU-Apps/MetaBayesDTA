@@ -96,7 +96,6 @@ require(shinybusy)
 require(callr)
 require(MASS)
 
-#setwd("/home/enzo/MetaBayesDTA")
 
 # Load functions ----------------------------------------------------------
 source('./fn_general.R', local  = TRUE)
@@ -122,9 +121,9 @@ source('./m_SG_p2.R', local  = TRUE)
 source('./m_SG_p3.R', local  = TRUE)
 source('./m_SG_p4.R', local  = TRUE)
 
-source('./m_LCM_p1_v2.R', local  = TRUE)
+source('./m_LCM_p1.R', local  = TRUE)
 source('./m_LCM_p2.R', local  = TRUE)
-source('./m_LCM_p3_v2.R', local  = TRUE)
+source('./m_LCM_p3.R', local  = TRUE)
 
 # Load in images for TP, FP, FN, TN  -------------------------------------------------------------------
 TPimg <-readPNG('./www/TP.png')
@@ -152,12 +151,10 @@ FNimg <-readPNG('./www/FN.png')
 # 
 # saveRDS(stan_model(file = './models/MR_cts_PO.stan'), './models/MR_cts_PO.rds')
 # saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds') 
+# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds') # old
-# saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
+# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds')
+# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds')
 # 
 # saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan'), './models/p_scale_priors/SG_PO_p_scale_priors.rds')
@@ -178,10 +175,8 @@ MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
 MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
 MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-#MR_model_cat <- readRDS(file = './models/MR_cat.rds') # old
-MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
-#MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
-MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
+MR_model_cat <- readRDS(file = './models/MR_cat.rds')
+MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds')
 
 SG_model_PO <- readRDS(file = './models/SG_PO.rds')
 SG_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_PO_p_scale_priors.rds')
@@ -601,8 +596,8 @@ MR_draws_PO <-         MR_run_model_priors_only(id = "MR_model_id",
 #   MR - Full models ------
 MR_model_cts <- stan_model(file = './models/MR_cts.stan')
 
-MR_model_cat <- stan_model(file = './models/MR_cat_v2.stan')
-MR_model_cat_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan')
+MR_model_cat <- stan_model(file = './models/MR_cat.stan')
+MR_model_cat_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan')
 
 #  MR - call the server module for button
 MR_run_model_button_server <- run_model_button_server(id = "MR_model_button_id")
@@ -1165,8 +1160,7 @@ LCM_model_priors_plot_server(id = "LCM_model_id",
 # LCM - Table of prior distributions  ---------------------------------------------------------------------------------------------------
 LCM_model_priors_table_server(id = "LCM_model_id",
                               draws = LCM_draws_PO, 
-                              data = data,
-                              LCM_options_indicators = LCM_options_indicators)
+                              data = data)
 
 # LCM - table hich displays observed data and study weights from model + download ----------------------------------------------------------------
 LCM_data_table_server(id = "LCM_model_id",
@@ -1180,14 +1174,12 @@ LCM_parameter_estimates_tab_renderUI_server(id = "LCM_model_id",
 
 LCM_parameter_estimates_table_server(id = "LCM_model_id",
                                     data = data,
-                                    draws = LCM_draws,
-                                    LCM_options_indicators = LCM_options_indicators)
+                                    draws = LCM_draws)
 
 # SA
 LCM_parameter_estimates_table_server(id = "SA_LCM_model_id",
                                     data = SA_data,
-                                    draws = LCM_SA_draws,
-                                    LCM_options_indicators = LCM_options_indicators)
+                                    draws = LCM_SA_draws)
 
 
 
@@ -1215,8 +1207,7 @@ LCM_sroc_plot_server(id = "LCM_model_id",
                      SA_data = SA_data,
                      draws = LCM_draws,
                      SA_draws = LCM_SA_draws,
-                     SA_indicator = SA_LCM_indicator,
-                     LCM_options_indicators = LCM_options_indicators)
+                     SA_indicator = SA_LCM_indicator)
 
 
 

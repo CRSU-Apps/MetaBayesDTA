@@ -406,15 +406,15 @@ MA_model_priors_plot_server <- function(id,
                                 sd_se <- params$sigma[, 1]
                                 sd_sp <- params$sigma[, 2]
                                 
-                                n_samps <- 800
+                                n_samps <- (2000-200)*4
                                 
                                 data <- tibble(
                                   Samples = c(se, sp, corr, sd_se, sd_sp), 
                                   Parameter = c(rep("Sensitivity", n_samps), 
                                                 rep("Specificity", n_samps), 
                                                 rep("Between-study correlation", n_samps),
-                                                rep("Between-study SD for sensitivity", n_samps), 
-                                                rep("Between-study SD for specificity", n_samps)))
+                                                rep("Between-study SD for logit(sensitivity)", n_samps), 
+                                                rep("Between-study SD for logit(specificity)", n_samps)))
                                 
                                 g <-    ggplot(data = data, aes(x=Samples)) + 
                                   geom_density(alpha = 0.50) + 
@@ -467,7 +467,13 @@ MA_model_priors_plot_server <- function(id,
 # UI function
 MA_model_priors_table_UI <- function(id) {
   ns <- NS(id)   
-  tableOutput(outputId =  ns("model_priors_table")) 
+  tagList(
+    tableOutput(outputId =  ns("model_priors_table")),
+    p("NOTE: The default priors are:"),  
+    p("For logit sensitivities and specificities - normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.05, 0.95) "),
+    p("For between-study SD's of logit sensitivities and specificities - truncated (at 0) normal distribution with mean 0 and SD of 1, equivalent to a 95% prior interval of (0.03, 2.25) "),
+    p("For between-study correlation between study-specific logit sensitivities and specificities - LKJ(2) prior, equivalent to 95% prior interval of (-0.8, 0.8)")
+  )
 }
 
 # server function
@@ -517,8 +523,8 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 s.matrix[2,1] <-  paste0("Specificity ", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"), ")",  ")")
                 s.matrix[3,1] <-  "False Positive Rate (1 - Specificity)"
                 s.matrix[4,1] <-  paste0("Between-study Correlation" , "( ", HTML("&rho;"), " )")
-                s.matrix[5,1] <-  paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-                s.matrix[6,1] <-  paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+                s.matrix[5,1] <-  paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+                s.matrix[6,1] <-  paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                 
                 for (i in 1:3) {
                   for (j in 1:(nrow)-1) { 
@@ -531,7 +537,7 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 s.matrix <- s.matrix[, c(1,2,5)]
                 
                 #Name the columns of the matrix
-                colnames(s.matrix) <- c("Parameter", "Posterior Median", "95% Prior Interval")
+                colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
                 
                 return(s.matrix)
                 
@@ -606,7 +612,7 @@ MA_model_posterior_density_plots_server <- function(id, draws, data) {  # "mod" 
           posterior_density_plots_obj()
           
         }, height = input$posterior_density_plot_dimension_slider_height,
-           width  = input$posterior_density_plot_dimension_slider_height)
+           width  = input$posterior_density_plot_dimension_slider_width)
       })
       
     }
@@ -711,25 +717,25 @@ MA_priors_options_inputModule_renderUI_server <- function(id) {
               if (input$p_scale_priors_indicator == FALSE) { 
                 tagList(
                   h4("Prior Distributions:"),
-                  numericInput(inputId =  ns("MA_prior_mean_sens_mu"), label=h5("Prior mean of pooled sensitivity - mean"), value = 0),
-                  numericInput(inputId =  ns("MA_prior_mean_sens_sd"), label=h5("Prior mean of pooled sensitivity - SD"), value = 1.5, min = 0),
-                  numericInput(inputId =  ns("MA_prior_mean_spec_mu"), label=h5("Prior mean of pooled specificity - mean"), value = 0),
-                  numericInput(inputId =  ns("MA_prior_mean_spec_sd"), label=h5("Prior mean of pooled specificity - SD"), value = 1.5, min = 0),
-                  numericInput(inputId =  ns("MA_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1, min = 0),
-                  numericInput(inputId =  ns("MA_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1, min = 0)
+                  numericInput(inputId =  ns("MA_prior_mean_sens_mu"), label=h5("Prior mean of pooled logit(sensitivity) - mean"), value = 0),
+                  numericInput(inputId =  ns("MA_prior_mean_sens_sd"), label=h5("Prior mean of pooled logit(sensitivity) - SD"), value = 1.5, min = 0),
+                  numericInput(inputId =  ns("MA_prior_mean_spec_mu"), label=h5("Prior mean of pooled logit(specificity) - mean"), value = 0),
+                  numericInput(inputId =  ns("MA_prior_mean_spec_sd"), label=h5("Prior mean of pooled logit(specificity) - SD"), value = 1.5, min = 0),
+                  numericInput(inputId =  ns("MA_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1, min = 0),
+                  numericInput(inputId =  ns("MA_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1, min = 0)
                 )
               } 
            else {
              tagList(
                   h5("Sensitivity - 95% credible interval:"),
-                  numericInputRow(inputId =  ns("MA_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                  numericInputRow(inputId =  ns("MA_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MA_prior_sens_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MA_prior_sens_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                   h5("Specificity - 95% credible interval:"),
-                  numericInputRow(inputId =  ns("MA_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.005, min = 0, max = 1),
-                  numericInputRow(inputId =  ns("MA_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.995, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MA_prior_spec_lower95"), label=h5("Lower interval (2.5th percentile)"), value = 0.05, min = 0, max = 1),
+                  numericInputRow(inputId =  ns("MA_prior_spec_upper95"), label=h5("Upper interval (97.5th percentile)"), value = 0.95, min = 0, max = 1),
                   h5("Standard deviation (SD) priors:"),
-                  numericInput(inputId =  ns("MA_prior_SD_sens_sd"), label=h5("Prior for between-study SD of sensitivity - SD"), value = 1, min = 0),
-                  numericInput(inputId =  ns("MA_prior_SD_spec_sd"), label=h5("Prior for between-study SD of specificity - SD"), value = 1, min = 0)
+                  numericInput(inputId =  ns("MA_prior_SD_sens_sd"), label=h5("Prior for between-study SD of logit(sensitivity) - SD"), value = 1, min = 0),
+                  numericInput(inputId =  ns("MA_prior_SD_spec_sd"), label=h5("Prior for between-study SD of logit(specificity) - SD"), value = 1, min = 0)
                )
               }
                   )
@@ -888,8 +894,8 @@ MA_parameter_estimates_table_server <- function(id,
         s.matrix[7,1] <- "Likelihood Ratio +ve"
         s.matrix[8,1] <- "Likelihood Ratio -ve"
         s.matrix[9,1] <-  paste0("Between-study Correlation" , "( ", HTML("&rho;"), " )")
-        s.matrix[10,1] <- paste0("Between-study SD for Sensitivity ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
-        s.matrix[11,1] <- paste0("Between-study SD for Specificity ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
+        s.matrix[10,1] <- paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
+        s.matrix[11,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
         # HSROC model parameters 
         s.matrix[12,1] <- paste0("Cutpoint parameter ", "( ", HTML("&Theta;"), " )")
         s.matrix[13,1] <- paste0("Accuracy parameter ", "( ", HTML("&Lambda;"), " )")
@@ -909,7 +915,7 @@ MA_parameter_estimates_table_server <- function(id,
         s.matrix <- s.matrix[, c(1,2,5)]
         
         #Name the columns of the matrix
-        colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+        colnames(s.matrix) <- c("Parameter", "Posterior Median", "95% Posterior Interval")
         
         #Conditions to display which statistics are shown in the table
         #Start with a logical vector of false and replace ths with true if the corresponding box is ticked
@@ -971,7 +977,18 @@ MA_rhat_table_UI <- function(id) {
     verbatimTextOutput(ns("rhats_summary_msg")),
     DT::dataTableOutput(ns("rhats_table")),
     downloadButton(ns("download_rhat_table"), 
-                   "Download Table")
+                   "Download Table"),
+    p("NOTE:"), 
+    p("If there are any R-hat values > 1.05, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),  
+    p("Increasing the number of iterations above the default of 1500,"), 
+    p("Using more informative priors"), 
+    p(" "), 
+    p("If there are any divergent transitions, try:"),
+    p("Increasing the adapt_delta above the default of 0.80,"),
+    p("Using more informative priors"),
+    p(" "), 
+    p("If there are any iterations that have exceeded the maximum treedepth, try increasing the treedepth above the default of 10")
   )
 }
 

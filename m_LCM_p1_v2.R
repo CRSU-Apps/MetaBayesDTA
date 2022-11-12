@@ -483,7 +483,10 @@ LCM_model_priors_table_UI <- function(id) {
 }
 
 # server function
-LCM_model_priors_table_server <- function(id, draws, data) {  
+LCM_model_priors_table_server <- function(id, 
+                                          draws, 
+                                          data,
+                                          LCM_options_indicators) {  
   moduleServer(
     id,
     function(input, output, session) {
@@ -548,6 +551,24 @@ LCM_model_priors_table_server <- function(id, draws, data) {
                                 for (j in 1:(nrow)-1) { 
                                   s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
                                 }
+                              }
+                              
+                              
+                              # if either Se or Sp for index test. is fixed
+                              if (   ((LCM_options_indicators$LCM_SeI_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpI_fixed_indicator == 1))
+                              ) {
+                                
+                                s.matrix[4,2:4] <- "-"
+                                
+                                if (LCM_options_indicators$LCM_SeI_fixed_indicator == 1) { # if SeI fixed, no between-study SD for SeI
+                                  s.matrix[5,2:4] <- "-"
+                                }
+                                if (LCM_options_indicators$LCM_SpI_fixed_indicator == 1) { # if SpI fixed, no between-study SD for SpI
+                                  s.matrix[6,2:4] <- "-"
+                                }
+                              }
+                              else {
+                                # do nothing 
                               }
                               
                               s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
@@ -732,6 +753,25 @@ LCM_model_priors_table_server <- function(id, draws, data) {
           s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
         }
       }
+      
+      # if either Se or Sp for reference test. is fixed, no HSROC params and no between-study SD
+      if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
+      ) {
+        
+        s.matrix[1,2:4] <- "-"
+        
+        if (LCM_options_indicators$LCM_SeR_fixed_indicator == 1) { # if SeR fixed, no between-study SD for SeR
+          s.matrix[2,2:4] <- "-"
+        }
+        if (LCM_options_indicators$LCM_SpR_fixed_indicator == 1) { # if SpR fixed, no between-study SD for SpR
+          s.matrix[3,2:4] <- "-"
+        }
+      }
+      else {
+        # do nothing 
+      }
+      
+      
       
       s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
       s.matrix[nrow, 1:5] <- ""
@@ -1231,6 +1271,7 @@ LCM_parameter_estimates_table_server <- function(id,
           s.matrix[13,1] <- paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1;</sub>"),"[",input$index_test_name,"]", " )")
           s.matrix[14,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0;</sub>"),"[",input$index_test_name,"]", " )")
           
+
           for (i in 1:3) {
             for (j in 1:(nrow-1)) {
               s.matrix[j, i+1] <- sprintf('%4.3f', Z[j,i])
@@ -1248,18 +1289,18 @@ LCM_parameter_estimates_table_server <- function(id,
             s.matrix[11,2:4] <- "-"
             s.matrix[12,2:4] <- "-"
             
-             if (LCM_options_indicators$LCM_SeI_fixed_indicator == 1) { # if SeI fixed, no between-study SD for SeI
-               s.matrix[13,2:4] <- "-"
-             }
+            if (LCM_options_indicators$LCM_SeI_fixed_indicator == 1) { # if SeI fixed, no between-study SD for SeI
+              s.matrix[13,2:4] <- "-"
+            }
             if (LCM_options_indicators$LCM_SpI_fixed_indicator == 1) { # if SpI fixed, no between-study SD for SpI
-               s.matrix[14,2:4] <- "-"
+              s.matrix[14,2:4] <- "-"
             }
           }
           else {
-             # do nothing 
+            # do nothing 
           }
-            
-
+          
+          
           s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
           s.matrix[nrow, 1:5] <- ""
           s.matrix <- s.matrix[, c(1,2,5)]
@@ -1355,16 +1396,20 @@ LCM_parameter_estimates_table_server <- function(id,
             s.matrix.group[[i]][nrow, 1:4] <- ""
             
             # if either Se or Sp for index test. is fixed, no HSROC params and no between-study SD
-            #  if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
-            # ) {
+             if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
+             ) {
             
-          #  s.matrix.group[[i]][7,2:4] <- "-"
-          #  s.matrix.group[[i]][8,2:4] <- "-"
+              s.matrix.group[[i]][7,2:4] <- "-"
+              s.matrix.group[[i]][8,2:4] <- "-"
             
-            #  }
-            #  else {
+              }
+              else {
             # do nothing 
-            #   }
+               }
+            
+            s.matrix.group[[i]][,5] <- paste0("(", s.matrix.group[[i]][,3], ", ", s.matrix.group[[i]][,4], ")")
+            s.matrix.group[[i]][nrow, 1:5] <- ""
+            s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
             
             
             s.matrix.group.dataframes[[i]] <- data.frame(s.matrix.group[[i]])
@@ -1374,13 +1419,6 @@ LCM_parameter_estimates_table_server <- function(id,
                                                                  refs_names[i]), 
                                                            "Posterior Median", 
                                                            "95% Posterior Interval")
-            
-
-            
-            s.matrix.group[[i]][,5] <- paste0("(", s.matrix.group[[i]][,3], ", ", s.matrix.group[[i]][,4], ")")
-            s.matrix.group[[i]][nrow, 1:5] <- ""
-            s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
-            
             
           }
           
@@ -1476,7 +1514,6 @@ LCM_parameter_estimates_table_server <- function(id,
               s.matrix[j, i+1] <- sprintf('%4.3f', Z[j,i])
             }
           }
-          
           
           # if either Se or Sp for index test. is fixed, no HSROC params and no between-study SD
           if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))

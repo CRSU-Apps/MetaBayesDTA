@@ -115,7 +115,7 @@ source('./m_BVM_p2.R', local  = TRUE)
 source('./m_BVM_p3.R', local  = TRUE)
 source('./m_BVM_p4.R', local  = TRUE)
 
-source('./m_MR_p1.R', local  = TRUE)
+source('./m_MR_p1_v3.R', local  = TRUE)
 source('./m_MR_p2.R', local  = TRUE)
 source('./m_MR_p3.R', local  = TRUE)
 source('./m_MR_p4.R', local  = TRUE)
@@ -125,9 +125,9 @@ source('./m_SG_p2.R', local  = TRUE)
 source('./m_SG_p3.R', local  = TRUE)
 source('./m_SG_p4.R', local  = TRUE)
 
-source('./m_LCM_p1.R', local  = TRUE)
+source('./m_LCM_p1_v2.R', local  = TRUE)
 source('./m_LCM_p2.R', local  = TRUE)
-source('./m_LCM_p3.R', local  = TRUE)
+source('./m_LCM_p3_v2.R', local  = TRUE)
 
 # Load in images for TP, FP, FN, TN  -------------------------------------------------------------------
 TPimg <-readPNG('./www/TP.png')

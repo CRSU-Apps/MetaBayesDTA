@@ -92,6 +92,8 @@ require(callr)
 require(MASS)
 require(usethis)
 
+#setwd("/home/enzo/MetaBayesDTA")
+
 # Load functions ----------------------------------------------------------
 source('./fn_general.R', local  = TRUE)
 source('./fn_BVM.R', local  = TRUE)
@@ -116,9 +118,9 @@ source('./m_SG_p2.R', local  = TRUE)
 source('./m_SG_p3.R', local  = TRUE)
 source('./m_SG_p4.R', local  = TRUE)
 
-source('./m_LCM_p1.R', local  = TRUE)
+source('./m_LCM_p1_v2.R', local  = TRUE)
 source('./m_LCM_p2.R', local  = TRUE)
-source('./m_LCM_p3.R', local  = TRUE)
+source('./m_LCM_p3_v2.R', local  = TRUE)
 
 # Load in images for TP, FP, FN, TN  -------------------------------------------------------------------
 TPimg <-readPNG('./www/TP.png')
@@ -148,9 +150,11 @@ FNimg <-readPNG('./www/FN.png')
 # saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds')
-# 
+# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds') # old
+# saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
+# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
+# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
+
 # saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan'), './models/p_scale_priors/SG_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/SG.stan'), './models/SG.rds')
@@ -170,8 +174,10 @@ MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
 MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
 MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-MR_model_cat <- readRDS(file = './models/MR_cat.rds')
-MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds')
+#MR_model_cat <- readRDS(file = './models/MR_cat.rds') # old
+MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
+#MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
+MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
 
 SG_model_PO <- readRDS(file = './models/SG_PO.rds')
 SG_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_PO_p_scale_priors.rds')
