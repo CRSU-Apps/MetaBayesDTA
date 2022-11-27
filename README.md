@@ -11,7 +11,7 @@ MetaBayesDTA is an extended, Bayesian version of MetaDTA
 Please note that the current release is a Beta version and does not yet have a manual. Please send questions and any feedback - including bug reports and suggestions for new features - to Enzo Cerullo (enzo.cerullo@bath.edu). 
 
  
-We kindly ask you to cite this app as:
+**We kindly ask you to cite this app as:**
 
 _Cerullo, E., Sutton, A., Jones, H., Wu, O., Quinn, T., & Cooper, N.. (2022). MetaBayesDTA: Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. https://arxiv.org/abs/2211.05949_
 
