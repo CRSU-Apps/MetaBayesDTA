@@ -13,11 +13,11 @@ Please note that the current release is a Beta version and does not yet have a m
  
 We kindly ask you to cite this app as:
 
-Cerullo, E., Sutton, A., Jones, H., Wu, O., Quinn, T., & Cooper, N.. (2022). MetaBayesDTA: Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. https://arxiv.org/abs/2211.05949
+_Cerullo, E., Sutton, A., Jones, H., Wu, O., Quinn, T., & Cooper, N.. (2022). MetaBayesDTA: Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. https://arxiv.org/abs/2211.05949 _
 
 
 Furthermore, please cite the following papers associated with the previous version of the app - MetaDTA - whenever outputs from MetaBayesDTA are used:
 
-_Patel A, Cooper NJ, Freeman SC, Sutton AJ. Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439._
+_Patel A, Cooper NJ, Freeman SC, Sutton AJ. Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439. _
 
-_Freeman SC, Kerby CR, Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81_
+_Freeman SC, Kerby CR, Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x _
