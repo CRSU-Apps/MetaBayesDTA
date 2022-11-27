@@ -145,21 +145,19 @@ FNimg <-readPNG('./www/FN.png')
 # saveRDS(stan_model(file = './models/p_scale_priors/BVM_PO_p_scale_priors.stan'), './models/p_scale_priors/BVM_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/BVM.stan'), './models/BVM.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/BVM_p_scale_priors.stan'), './models/p_scale_priors/BVM_p_scale_priors.rds')
-# 
+# #
 # saveRDS(stan_model(file = './models/MR_cts_PO.stan'), './models/MR_cts_PO.rds')
 # saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds') # old
 # saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
-
+# 
 # saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan'), './models/p_scale_priors/SG_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/SG.stan'), './models/SG.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/SG_p_scale_priors.stan'), './models/p_scale_priors/SG_p_scale_priors.rds')
-# 
+# #
 # saveRDS(stan_model(file = './models/BLCM_ma_PO.stan'), './models/BLCM_ma_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/BLCM_ma.stan'), './models/BLCM_ma.rds')
@@ -174,9 +172,7 @@ MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
 MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
 MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-#MR_model_cat <- readRDS(file = './models/MR_cat.rds') # old
 MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
-#MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
 MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
 
 SG_model_PO <- readRDS(file = './models/SG_PO.rds')
@@ -247,11 +243,11 @@ tabItem(
                          meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81
                            "),
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
-                      h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following citation for 
-                         MetaBayesDTA itself: 
-                         Cerullo E, Freeman SC, Nevill CR, Patel A, Quinn TJ, Sutton AJ, Cooper NJ, Wu O. 
-                         MetaBayesDTA: Bayesian meta-analysis of diagnostic test accuracy data, 
-                         with or without a gold standard. NIHR Complex Reviews Support Unit (CRSU)."),
+                      h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following paper for 
+                         MetaBayesDTA itself: ",
+                         tags$a(href="https://arxiv.org/abs/2211.05949", "Cerullo E, Sutton AJ, 
+                         Jones HE, Wu O, Quinn T, Cooper NJ. MetaBayesDTA: Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard
+                           ")),
                       img(height=400,
                           width=600, 
                           src="roc_curve.png"),

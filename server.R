@@ -154,9 +154,7 @@ FNimg <-readPNG('./www/FN.png')
 # saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds') 
 # saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds') # old
 # saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
 # 
 # saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
@@ -178,9 +176,7 @@ MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
 MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
 MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-#MR_model_cat <- readRDS(file = './models/MR_cat.rds') # old
 MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
-#MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds') # old
 MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
 
 SG_model_PO <- readRDS(file = './models/SG_PO.rds')
@@ -1126,6 +1122,16 @@ LCM_rhat_table_server(id = "SA_LCM_model_id",
                       draws = LCM_SA_draws, 
                       data = SA_data)
 
+# LCM -  Table of deviance statistics  ---------------------------------------------------------------------------------------------------
+LCM_deviance_table_server(id = "LCM_model_id",
+                      draws = LCM_draws, 
+                      data = data)
+
+#  SA
+LCM_deviance_table_server(id = "SA_LCM_model_id",
+                      draws = LCM_SA_draws, 
+                      data = SA_data)
+
 # LCM - Posterior density plots  ---------------------------------------------------------------------------------------------------
 LCM_model_posterior_density_plots_server(id = "LCM_model_id",
                                          data = data,
@@ -1157,6 +1163,16 @@ LCM_correlation_residual_plot_server(id = "SA_LCM_model_id",
                                      draws = LCM_SA_draws)
 
 
+# LCM - Table count residual plot  ------------------------------------------------------------------------------------------------------------------------------------------
+
+LCM_table_prob_resid_plot_server(id = "LCM_model_id", 
+                                     draws = LCM_draws)
+
+# SA
+LCM_table_prob_resid_plot_server(id = "SA_LCM_model_id", 
+                                     draws = LCM_SA_draws)
+
+
 # LCM - Plot of prior distributions  ---------------------------------------------------------------------------------------------------
 LCM_model_priors_plot_server(id = "LCM_model_id",
                              draws = LCM_draws_PO, 
@@ -1168,7 +1184,7 @@ LCM_model_priors_table_server(id = "LCM_model_id",
                               data = data,
                               LCM_options_indicators = LCM_options_indicators)
 
-# LCM - table hich displays observed data and study weights from model + download ----------------------------------------------------------------
+# LCM - table which displays observed data and study weights from model + download ----------------------------------------------------------------
 LCM_data_table_server(id = "LCM_model_id",
                      data = data)
 

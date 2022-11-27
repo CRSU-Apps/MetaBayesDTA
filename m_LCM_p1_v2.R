@@ -141,7 +141,7 @@ LCM_correlation_residual_plot_server <- function(id,
           geom_errorbar(aes(ymin=dc_l, ymax=dc_u), width= 0.75, position=position_dodge(.9)) +
           geom_hline(yintercept = 0) +
           theme_bw() +
-          ylim(-0.31, 0.31) + 
+         # ylim(-0.31, 0.31) + 
           ylab("Correlation Residuals") + 
           xlab("Study") + 
           theme(text = element_text(size=14),
@@ -177,6 +177,105 @@ LCM_correlation_residual_plot_server <- function(id,
     }
   )
 }
+
+
+
+
+# table count residual plot  --------------------------------------------------   ----------------------------------------------
+LCM_table_prob_residual_plot_UI <-  function(id) {
+  ns <- NS(id)  
+  plotOutput(ns("table_prob_resid_plot"))
+}
+
+LCM_table_prob_residual_plot_settings_UI <-  function(id) {
+  ns <- NS(id)  
+  tagList(
+    sliderInput(inputId = ns("table_prob_resid_plot_dimension_slider_height"), 
+                label = "Change size of plot - height", 
+                min = 1, 
+                max = 2000, 
+                value = 300, 
+                ticks = FALSE),
+    sliderInput(inputId = ns("table_prob_resid_plot_dimension_slider_width"), 
+                label = "Change size of plot - width", 
+                min = 1, 
+                max = 2000, 
+                value = 500,
+                ticks = FALSE),
+    downloadButton(outputId = ns("download_table_prob_resid_plot"), 
+                   label = "Download Plot")
+  )
+}
+
+
+
+
+
+LCM_table_prob_resid_plot_server <- function(id, 
+                                              draws) {  
+  
+  moduleServer(
+    id,
+    function(input, output, session) {
+      
+      table_prob_resid_plot_obj <- reactive({
+        
+        mod <- draws()
+        
+        # plot
+        dt <- round(summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("dt"))$summary[,5],3) 
+        dt_l <- round(summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("dt"))$summary[,4],3) 
+        dt_u <- round(summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("dt"))$summary[,6],3) 
+        
+        dt_data <- tibble(dt, dt_l, dt_u, obs = seq(1, length(dt), by = 1), cell = rep(c(1:4), length(dt)/4))
+        
+        cutoff <- data.frame( x = c(-Inf, Inf), y = 0, cutoff = factor(0) )
+        
+        g <- ggplot(data = dt_data, aes(y = dt, x=obs)) + 
+          geom_point(size = 3) + 
+          geom_errorbar(aes(ymin=dt_l, ymax=dt_u), width= 0.75, position=position_dodge(.9)) +
+          geom_hline(yintercept = 0) +
+          theme_bw() +
+        #  ylim(-0.31, 0.31) + 
+          ylab("Table Count Residuals") + 
+          xlab("Study") + 
+          theme(text = element_text(size=14),
+                axis.text.x = element_text()) + 
+          facet_wrap(~ cell)
+        
+        g
+        
+      })
+      
+      
+      # output plot 
+      observe({
+        output$table_prob_resid_plot <- renderPlot({
+          req(data(), draws(), cancelOutput = TRUE)
+          
+          table_prob_resid_plot_obj()
+          
+        }, 
+        height = input$table_prob_resid_plot_dimension_slider_height, 
+        width  = input$table_prob_resid_plot_dimension_slider_width)
+      })
+      
+      # Download ggplot object 
+      output$download_table_prob_resid_plot <- downloadHandler(
+        filename = function(){
+          paste("plot.png")
+        },
+        content = function(file) { 
+          {ggsave(file, table_prob_resid_plot_obj())}
+        } 
+      )
+      
+    }
+  )
+}
+
+
+
 
 
 
@@ -1763,6 +1862,93 @@ LCM_rhat_table_server <- function(id,
 
 
 
+# deviance table ------------------------------------------------------------------------ ---------------------------------------
+
+# UI function for deviance table 
+LCM_deviance_table_UI <- function(id) {
+  ns <- NS(id)  
+  tagList(
+    verbatimTextOutput(ns("deviance_summary_msg")),
+    DT::dataTableOutput(ns("deviance_table")),
+    downloadButton(ns("download_deviance_table"), 
+                   "Download Table")
+  )
+}
+
+
+# Server function for deviance table 
+LCM_deviance_table_server <- function(id, 
+                                  draws, 
+                                  data) {  
+  
+  moduleServer(
+    id,
+    function(input, output, session) {
+      
+      deviance_obj <- reactive({
+        
+        X <- data()
+        mod <- draws()
+        
+        params <- rstan::extract(mod)
+        
+        pars <-  c("resdev", "dev")
+        
+        
+        devs_median <- round(summary(mod, 
+                               probs = c(0.025,  0.5, 0.975), 
+                               pars = pars)$summary[,5], 2)
+        
+        devs_mean <- round(summary(mod, 
+                                     probs = c(0.025,  0.5, 0.975), 
+                                     pars = pars)$summary[,1], 2)
+        
+        devs_2 <- tibble(parameter = c("Overall deviance", names(devs_median)[2:length(devs_median)]), 
+                         median = devs_median,
+                         mean = devs_mean)
+        
+        
+        
+        devs_2
+        
+      })
+      
+      
+      
+      # print deviance table 
+      output$deviance_table <- DT::renderDataTable({ 
+        
+        req(draws(), cancelOutput = TRUE)
+        
+        options(   
+          DT.options = list(autoWidth = TRUE)
+        )
+        
+        deviance_obj()
+        
+      })
+      
+      
+      # download table
+      output$download_deviance_table <- downloadHandler(
+        
+        filename = function() {
+          paste("table.csv")
+        },
+        content = function(file) { 
+          write.csv(deviance_obj(), file, sep=",", row.names=FALSE) 
+        } 
+      )
+      
+      
+    }
+  )    
+}
+
+
+
+
+
 
 
 
@@ -1846,8 +2032,12 @@ LCM_model_diagnostics_tab_renderUI_server <- function(id, SA_indicator) {
         tagList( 
           h3("Stan sampler diagnostics table"),
           sampler_diagnostics_table_UI(id = "LCM_model_id"),
+          br(),
           h3("R-hat statistics"), 
           LCM_rhat_table_UI(id = "LCM_model_id"), 
+          br(),
+          h3("Deviance statistics"), 
+          LCM_deviance_table_UI(id = "LCM_model_id"), 
           br(),
           h3("Correlation residual plot"),
           dropdownButton(
@@ -1857,6 +2047,15 @@ LCM_model_diagnostics_tab_renderUI_server <- function(id, SA_indicator) {
             tooltip = tooltipOptions(title = "Click to customise plot")
           ),
           LCM_correlation_residual_plot_UI(id = "LCM_model_id"),
+          br(),
+          h3("Table count residual plot"),
+          dropdownButton(
+            LCM_table_prob_residual_plot_settings_UI(id = "LCM_model_id"),
+            circle = TRUE, status = "danger",
+            icon = icon("gear"), width = "300px",
+            tooltip = tooltipOptions(title = "Click to customise plot")
+          ),
+          LCM_table_prob_residual_plot_UI(id = "LCM_model_id"),
           br(),
           h3("Posterior density plots"),
           dropdownButton(
@@ -1880,10 +2079,15 @@ LCM_model_diagnostics_tab_renderUI_server <- function(id, SA_indicator) {
           if (SA_indicator == TRUE) { 
                   tagList(
                     h2("Sensitivity analysis"),
+                    br(),
                     h3("Stan sampler diagnostics table"),
                     sampler_diagnostics_table_UI(id = "SA_LCM_model_id"),
+                    br(),
                     h3("R-hat statistics"), 
                     LCM_rhat_table_UI(id = "SA_LCM_model_id"), 
+                    br(),
+                    h3("Deviance statistics"), 
+                    LCM_deviance_table_UI(id = "SA_LCM_model_id"), 
                     br(),
                     h3("Correlation residual plot"),
                     dropdownButton(
@@ -1893,6 +2097,15 @@ LCM_model_diagnostics_tab_renderUI_server <- function(id, SA_indicator) {
                       tooltip = tooltipOptions(title = "Click to customise plot")
                     ),
                     LCM_correlation_residual_plot_UI(id = "SA_LCM_model_id"),
+                    br(),
+                    h3("Table count residual plot"),
+                    dropdownButton(
+                      LCM_table_prob_residual_plot_settings_UI(id = "SA_LCM_model_id"),
+                      circle = TRUE, status = "danger",
+                      icon = icon("gear"), width = "300px",
+                      tooltip = tooltipOptions(title = "Click to customise plot")
+                    ),
+                    LCM_table_prob_residual_plot_UI(id = "SA_LCM_model_id"),
                     br(),
                     h3("Posterior density plots"),
                     dropdownButton(

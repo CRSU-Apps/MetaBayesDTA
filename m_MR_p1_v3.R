@@ -55,6 +55,7 @@ MR_cts_cov_indicator_out <-  function(id,
                    req(data(), input$covcheck_model)
                    
                        C <- reactive({ 
+                       #  print(ncol(data()) )
                          ncol(data())  
                        })
                        
@@ -63,7 +64,23 @@ MR_cts_cov_indicator_out <-  function(id,
                        })
                        
                        j <- reactive({
-                         if (C() > 8 & Names()[7] != "rob_PS") { j <<- 6  } else { j <<- 13  }
+                       #  print(j)
+                         if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_")))  == 0) ) { # if Cov dataset type selected
+                           j <<- 6 
+                         } 
+                         if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA_Cov dataset type selected
+                           j <<- 13  
+                         }
+                         if (C() == 8) { # standard dataset (so only covariates are year.cts and prevalence.cts)
+                           j <<- 6
+                         }
+                         if (C() > 8 & Names()[7] == "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA dataset type selected
+                           j <<- 13
+                         }
+                      #   print(j)
+                      #   print(data())
+                       #  print(C())
+                         
                          j
                        })
                        
@@ -71,13 +88,23 @@ MR_cts_cov_indicator_out <-  function(id,
                          as.integer(as.double(input$covcheck_model)) - 1  
                        })
                        
-                       if ( (str_sub(colnames(data())[ j() + cov_index() ], start = -3) != 'cts') ) {
-                         vals$cts_cov_indicator <<-  0 
-                       }
-                       else {
-                         vals$cts_cov_indicator <<-  1 
-                       }
+                       
+                   #   if (ncol(cbind(dplyr::select(data(), contains(".cts")),dplyr::select(data(), contains(".cat")))) > 2) { # if data frame has any covariates (besides year.cts and prev.cts)
+                      #  print(data())
+                           if ( (str_sub(colnames(data())[ j() + cov_index() ], start = -3) != 'cts') ) {
+                             vals$cts_cov_indicator <<-  0 
+                           }
+                           else {
+                             vals$cts_cov_indicator <<-  1 
+                           }
+                   #    }
+                      # else { # no covariates in dataset  (besides year.cts and prev.cts)
+                      #   print(data())
+                      #     vals$cts_cov_indicator <<- 0
+                      #   }
                    
+                   #   print(str_sub(colnames(data())[ j() + cov_index() ], start = -3))
+                         
                  })
 
                  return(vals)
@@ -195,34 +222,54 @@ MR_covariate_model_server <- function(id,
         
                     initial <- c("None")
                     
-                      if (( C() > 8 & Names()[7] != "rob_PS") | 
-                          (C() > 15 & Names()[13] == "ac_RS")) {
-                        
-                        if (C() > 8 & Names()[7] != "rob_PS") {
-                          if (C() == 9) {
-                            covariates <- colnames(X()[7])
-                          }
-                          else {
-                            covariates <- colnames(X()[,7:C()])
-                          }
-                        }
-                        if (C() > 15 & Names()[13] == "ac_RS") {
-                          if (C() == 16) {
-                            covariates <- colnames(X()[14])
-                          }
-                          else {
-                            covariates <- colnames(X()[,14:C()])
-                          }
-                        }
-                        
-                      
-                      combined <- c(initial, covariates)
-                      number <- 1:length(combined)
-                      choicesCov <- setNames(number, combined)
-                      choicesCov
-                    }
+                      # if (( C() > 8 & Names()[7] != "rob_PS") |  (C() > 15 & Names()[13] == "ac_RS")) { # Cov or QA_Cov dataset types
+                      #   
+                      #         if (C() > 8 & Names()[7] != "rob_PS") { # Cov dataset type 
+                      #           if (C() == 9) {
+                      #             covariates <- colnames(X()[7]) # 1 covariate 
+                      #           }
+                      #           else {
+                      #             covariates <- colnames(X()[,7:C()])
+                      #           }
+                      #         }
+                      #         if (C() > 15 & Names()[13] == "ac_RS") {
+                      #           if (C() == 16) {
+                      #             covariates <- colnames(X()[14])
+                      #           }
+                      #           else {
+                      #             covariates <- colnames(X()[,14:C()])
+                      #           }
+                      #         }
+                      #   
+                      #       combined <- c(initial, covariates)
+                      #       number <- 1:length(combined)
+                      #       choicesCov <- setNames(number, combined)
+                      #       choicesCov
+                      #       
+                      # }
+                      # 
                     
-                    else { }
+
+                      if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_")))  == 0) ) { # if Cov dataset type selected
+                        covariates <- colnames(X()[,7:C()])
+                      }
+                      if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA_Cov dataset type selected
+                        covariates <- colnames(X()[,14:C()])
+                      }
+                      if (C() == 8) { # standard dataset (so only covariates are year.cts and prevalence.cts)
+                        covariates <- colnames(X()[,7:C()])
+                      }
+                      if (C() > 8 & Names()[7] == "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA dataset type selected
+                        covariates <- colnames(X()[,14:C()])
+                      }
+                    
+                    combined <- c(initial, covariates)
+                    number <- 1:length(combined)
+                    choicesCov <- setNames(number, combined)
+                    choicesCov
+
+                    
+
                     
       })
       
@@ -240,7 +287,23 @@ MR_covariate_model_server <- function(id,
       
       default_value_centering <- reactive({ 
         
-        if (C() > 8 & Names()[7] != "rob_PS") {   j <<- 6  } else { j <<- 13  }
+      #  if (C() > 8 & Names()[7] != "rob_PS") {   j <<- 6  } else { j <<- 13  }
+        
+
+
+          if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_")))  == 0) ) { # if Cov dataset type selected
+            j <<- 6 
+          } 
+          if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA_Cov dataset type selected
+            j <<- 13  
+          }
+          if (C() == 8) { # standard dataset (so only covariates are year.cts and prevalence.cts)
+            j <<- 6
+          }
+          if (C() > 8 & Names()[7] == "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA dataset type selected
+            j <<- 13
+          }
+
         
         centered_covariate_default <- round(mean( X()[, j +   as.integer(as.double(input$covcheck_model)) - 1] ) ,3) 
         # default value is the mean of the covariate
@@ -250,7 +313,19 @@ MR_covariate_model_server <- function(id,
       
       min_value_centering <- reactive({ 
         
-        if (C() > 8 & Names()[7] != "rob_PS") {   j <<- 6  } else { j <<- 13  }
+        if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_")))  == 0) ) { # if Cov dataset type selected
+          j <<- 6 
+        } 
+        if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA_Cov dataset type selected
+          j <<- 13  
+        }
+        if (C() == 8) { # standard dataset (so only covariates are year.cts and prevalence.cts)
+          j <<- 6
+        }
+        if (C() > 8 & Names()[7] == "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA dataset type selected
+          j <<- 13
+        }
+        
 
         
         centered_covariate_default <- min( X()[, j +   as.integer(as.double(input$covcheck_model)) - 1 ] )  
@@ -261,7 +336,19 @@ MR_covariate_model_server <- function(id,
       
       max_value_centering <- reactive({ 
         
-        if (C() > 8 & Names()[7] != "rob_PS") {   j <<- 6  } else { j <<- 13  }
+        if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_")))  == 0) ) { # if Cov dataset type selected
+          j <<- 6 
+        } 
+        if (C() > 8 & Names()[7] != "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA_Cov dataset type selected
+          j <<- 13  
+        }
+        if (C() == 8) { # standard dataset (so only covariates are year.cts and prevalence.cts)
+          j <<- 6
+        }
+        if (C() > 8 & Names()[7] == "rob_PS" & (ncol(dplyr::select(data(), contains("rob_"))) > 0) ) { # QA dataset type selected
+          j <<- 13
+        }
+        
 
         centered_covariate_default <- max( X()[, j +   as.integer(as.double(input$covcheck_model)) - 1] )  
         # default value is the mean of the covariate
@@ -1462,96 +1549,17 @@ MR_parameter_estimates_table_server <- function(id,
             
             comparisons <- tibble(comparisons = rep(NA, n_comparisons))
             
-           # print(comparisons)
-            
-           # print(levels(factor(X[, m + cov_index])))
-            
-           # print(levels(factor(X[, m + cov_index]))[1])
-            
-            
-            if (num_levels == 2) { # 1 comparison
-              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
-            }
-            if (num_levels == 3) { # 3 comparisons
-              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
-              comparisons$comparisons[2] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[3] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
-            }
-            if (num_levels == 4) { # 6 comparisons
-              comparisons$comparisons[1] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
-              comparisons$comparisons[2] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[3] <- (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[4] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[5] <- (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[6] <- (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
-            }
-            if (num_levels == 5) { # 10 comparisons
-              comparisons$comparisons[1] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
-              comparisons$comparisons[2] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[3] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[4] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[5] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[6] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[7] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[8] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[9] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[10] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5] ))
-            }
-            if (num_levels == 6) { # 15 comparisons
-              comparisons$comparisons[1] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2] ))
-              comparisons$comparisons[2] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[3] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[4] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[5] <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[6] ))
-              comparisons$comparisons[6] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3] ))
-              comparisons$comparisons[7] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[8] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[9] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[6] ))
-              comparisons$comparisons[10] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4] ))
-              comparisons$comparisons[11] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[12] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[6] ))
-              comparisons$comparisons[13] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5] ))
-              comparisons$comparisons[14] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[6] ))
-              comparisons$comparisons[15] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6] ))
-            }
-            if (num_levels == 7) { # 21 comparisons
-              comparisons$comparisons[1:6]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:7] ))
-              comparisons$comparisons[7:11]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:7] ))
-              comparisons$comparisons[12:15] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:7] ))
-              comparisons$comparisons[16:18] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:7] ))
-              comparisons$comparisons[19:20] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:7] ))
-              comparisons$comparisons[21]    <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7] ))
-            }
-            if (num_levels == 8) { # 28 comparisons
-              comparisons$comparisons[1:7]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:8] ))
-              comparisons$comparisons[8:13]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:8] ))
-              comparisons$comparisons[14:18] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:8] ))
-              comparisons$comparisons[19:22] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:8] ))
-              comparisons$comparisons[23:25] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:8] ))
-              comparisons$comparisons[26:27] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:8] ))
-              comparisons$comparisons[28]    <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8] ))
-            }
-            if (num_levels == 9) { # 36 comparisons
-              comparisons$comparisons[1:8]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:9] ))
-              comparisons$comparisons[9:15]  <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:9] ))
-              comparisons$comparisons[16:21] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:9] ))
-              comparisons$comparisons[22:26] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:9] ))
-              comparisons$comparisons[27:30] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:9] ))
-              comparisons$comparisons[31:33] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:9] ))
-              comparisons$comparisons[34:35] <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8:9] ))
-              comparisons$comparisons[36]    <-  (paste(  levels(factor(X[, m + cov_index]))[8], "vs", levels(factor(X[, m + cov_index]))[9] ))
-            }
-            if (num_levels == 10) { # 45 comparisons
-              comparisons$comparisons[1:9]   <-  (paste(  levels(factor(X[, m + cov_index]))[1], "vs", levels(factor(X[, m + cov_index]))[2:10] ))
-              comparisons$comparisons[10:17] <-  (paste(  levels(factor(X[, m + cov_index]))[2], "vs", levels(factor(X[, m + cov_index]))[3:10] ))
-              comparisons$comparisons[18:24] <-  (paste(  levels(factor(X[, m + cov_index]))[3], "vs", levels(factor(X[, m + cov_index]))[4:10] ))
-              comparisons$comparisons[25:30] <-  (paste(  levels(factor(X[, m + cov_index]))[4], "vs", levels(factor(X[, m + cov_index]))[5:10] ))
-              comparisons$comparisons[31:35] <-  (paste(  levels(factor(X[, m + cov_index]))[5], "vs", levels(factor(X[, m + cov_index]))[6:10] ))
-              comparisons$comparisons[36:39] <-  (paste(  levels(factor(X[, m + cov_index]))[6], "vs", levels(factor(X[, m + cov_index]))[7:10] ))
-              comparisons$comparisons[40:42] <-  (paste(  levels(factor(X[, m + cov_index]))[7], "vs", levels(factor(X[, m + cov_index]))[8:10] ))
-              comparisons$comparisons[43:44] <-  (paste(  levels(factor(X[, m + cov_index]))[8], "vs", levels(factor(X[, m + cov_index]))[9:10] ))
-              comparisons$comparisons[45]    <-  (paste(  levels(factor(X[, m + cov_index]))[9], "vs", levels(factor(X[, m + cov_index]))[10] ))
-            }
+
+
+              counter = 1
+              for (i in 1:(num_levels-1)) { 
+                for (j in ((i+1):num_levels)) { 
+                  comparisons$comparisons[counter] <-  (paste(  levels(factor(X[, m + cov_index]))[i], "vs", levels(factor(X[, m + cov_index]))[j] ))
+                  counter = counter + 1 
+                }
+              }
+                     
+
             
             print(comparisons)
             
