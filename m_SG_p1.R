@@ -370,12 +370,18 @@ SG_model_priors_plot_server <- function(id, draws_PO, data) {  # "mod" is the rs
       
       # Download ggplot object 
       output$download_priors_plot <- downloadHandler(
-        filename = function() {
-          paste("plot.png")
+        filename = function(){
+          paste("priors_plot.png")
         },
         content = function(file) { 
-          {ggsave(file, priors_plot_obj())}
-        }
+          {ggsave(file, 
+                  priors_plot_obj(),  
+                  width = input$priors_plot_dl_width,
+                  height = input$priors_plot_dl_height,
+                  dpi = input$priors_plot_dl_dpi,
+                  units = "in"
+          )}
+        } 
       )
       
       
@@ -574,7 +580,13 @@ SG_model_trace_plots_settings_UI <- function(id) {
     sliderInput(inputId = ns("trace_plot_dimention_slider_width"), 
                 label = "Change size of plot - width", 
                 min = 1, max = 2000, 
-                value = 500)
+                value = 500),
+    # Download plot:
+    h5("Download plot:"),
+    numericInput(inputId =  ns("trace_plot_dl_width"), label=h5("Plot width"), value = 10),
+    numericInput(inputId =  ns("trace_plot_dl_height"), label=h5("Plot height"), value = 5),
+    numericInput(inputId =  ns("trace_plot_dl_dpi"), label=h5("Plot DPI"), value = 600),
+    downloadButton(outputId = ns("download_trace_plot"), label = "Download Plot")
   )
 }
 
@@ -626,6 +638,21 @@ SG_model_trace_plots_server <- function(id, draws, data) {  # "mod" is the rstan
                                               width  = input$trace_plot_dimention_slider_width)
                      })
                      
+                     # Download ggplot object 
+                     output$download_trace_plot <- downloadHandler(
+                       filename = function(){
+                         paste("trace_plot.png")
+                       },
+                       content = function(file) { 
+                         {ggsave(file, trace_plots_obj(),
+                                 width = input$trace_plot_dl_width,
+                                 height = input$trace_plot_dl_height,
+                                 dpi = input$trace_plot_dl_dpi,
+                                 units = "in"
+                         )}
+                       } 
+                     )
+                     
     }
   )
 }
@@ -655,7 +682,13 @@ SG_model_posterior_density_plots_settings_UI <- function(id) {
                 label = "Change size of plot - width", 
                 min = 1, max = 2000, 
                 value = 500,
-                ticks = FALSE)
+                ticks = FALSE),
+    # Download plot:
+    h5("Download plot:"),
+    numericInput(inputId =  ns("dens_plot_dl_width"), label=h5("Plot width"), value = 10),
+    numericInput(inputId =  ns("dens_plot_dl_height"), label=h5("Plot height"), value = 5),
+    numericInput(inputId =  ns("dens_plot_dl_dpi"), label=h5("Plot DPI"), value = 600),
+    downloadButton(outputId = ns("download_dens_plot"), label = "Download Plot")
   )
 }
 
@@ -700,6 +733,21 @@ SG_model_posterior_density_plots_server <- function(id, draws, data) {  # "mod" 
                                                       }, height = as.numeric(input$posterior_density_plot_dimension_slider_height),
                                                          width  = as.numeric(input$posterior_density_plot_dimension_slider_width))
                     })
+                    
+                    # Download ggplot object 
+                    output$download_dens_plot <- downloadHandler(
+                      filename = function(){
+                        paste("posterior_density_plot.png")
+                      },
+                      content = function(file) { 
+                        {ggsave(file, posterior_density_plots_obj(),
+                                width = input$dens_plot_dl_width,
+                                height = input$dens_plot_dl_height,
+                                dpi = input$dens_plot_dl_dpi,
+                                units = "in"
+                        )}
+                      } 
+                    )
     }
   )
 }

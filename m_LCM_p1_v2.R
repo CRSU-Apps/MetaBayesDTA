@@ -237,7 +237,7 @@ LCM_table_prob_resid_plot_server <- function(id,
           geom_hline(yintercept = 0) +
           theme_bw() +
         #  ylim(-0.31, 0.31) + 
-          ylab("Table Count Residuals") + 
+          ylab("Table Probability Residuals") + 
           xlab("Study") + 
           theme(text = element_text(size=14),
                 axis.text.x = element_text()) + 
@@ -513,10 +513,16 @@ LCM_model_priors_plot_server <- function(id,
       # Download ggplot object 
       output$download_priors_plot <- downloadHandler(
         filename = function(){
-          paste("plot.png")
+          paste("priors_plot.png")
         },
         content = function(file) { 
-          {ggsave(file, priors_plot_obj())}
+          {ggsave(file, 
+                  priors_plot_obj(),  
+                  width = input$priors_plot_dl_width,
+                  height = input$priors_plot_dl_height,
+                  dpi = input$priors_plot_dl_dpi,
+                  units = "in"
+          )}
         } 
       )
       
@@ -1067,6 +1073,21 @@ LCM_model_trace_plots_server <- function(id, draws, data) {  # "mod" is the rsta
                 width  = input$trace_plot_dimension_slider_width)
       })
       
+      # Download ggplot object 
+      output$download_trace_plot <- downloadHandler(
+        filename = function(){
+          paste("trace_plot.png")
+        },
+        content = function(file) { 
+          {ggsave(file, trace_plots_obj(),
+                  width = input$trace_plot_dl_width,
+                  height = input$trace_plot_dl_height,
+                  dpi = input$trace_plot_dl_dpi,
+                  units = "in"
+          )}
+        } 
+      )
+      
     }
   )
 }
@@ -1132,6 +1153,21 @@ LCM_model_posterior_density_plots_server <- function(id, draws, data) {  # "mod"
         , height = input$posterior_density_plot_dimension_slider_height,
           width  = input$posterior_density_plot_dimension_slider_width)
       })
+      
+      # Download ggplot object 
+      output$download_dens_plot <- downloadHandler(
+        filename = function(){
+          paste("posterior_density_plot.png")
+        },
+        content = function(file) { 
+          {ggsave(file, posterior_density_plots_obj(),
+                  width = input$dens_plot_dl_width,
+                  height = input$dens_plot_dl_height,
+                  dpi = input$dens_plot_dl_dpi,
+                  units = "in"
+          )}
+        } 
+      )
       
     }
     
@@ -2048,7 +2084,7 @@ LCM_model_diagnostics_tab_renderUI_server <- function(id, SA_indicator) {
           ),
           LCM_correlation_residual_plot_UI(id = "LCM_model_id"),
           br(),
-          h3("Table count residual plot"),
+          h3("Table probability residual plot"),
           dropdownButton(
             LCM_table_prob_residual_plot_settings_UI(id = "LCM_model_id"),
             circle = TRUE, status = "danger",
