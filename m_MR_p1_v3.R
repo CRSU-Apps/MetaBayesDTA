@@ -602,13 +602,20 @@ MR_model_priors_plot_server <- function(id,
       })
       
       
+      
       # Download ggplot object 
       output$download_priors_plot <- downloadHandler(
         filename = function(){
-          paste("plot.png")
+          paste("priors_plot.png")
         },
         content = function(file) { 
-          {ggsave(file, priors_plot_obj())}
+          {ggsave(file, 
+                  priors_plot_obj(),  
+                  width = input$priors_plot_dl_width,
+                  height = input$priors_plot_dl_height,
+                  dpi = input$priors_plot_dl_dpi,
+                  units = "in"
+          )}
         } 
       )
       
@@ -838,6 +845,21 @@ MR_model_trace_plots_server <- function(id,
                                      }, height = input$trace_plot_dimension_slider_height,
                                         width  = input$trace_plot_dimension_slider_width)
            })
+           
+           # Download ggplot object 
+           output$download_trace_plot <- downloadHandler(
+             filename = function(){
+               paste("trace_plot.png")
+             },
+             content = function(file) { 
+               {ggsave(file, trace_plots_obj(),
+                       width = input$trace_plot_dl_width,
+                       height = input$trace_plot_dl_height,
+                       dpi = input$trace_plot_dl_dpi,
+                       units = "in"
+               )}
+             } 
+           )
                      
     }
   )
@@ -882,6 +904,22 @@ MR_model_posterior_density_plots_server <- function(id,
                                                       }, height = as.numeric(input$posterior_density_plot_dimension_slider_height),
                                                          width  = as.numeric(input$posterior_density_plot_dimension_slider_width))
                     })
+                    
+                    
+                    # Download ggplot object 
+                    output$download_dens_plot <- downloadHandler(
+                      filename = function(){
+                        paste("posterior_density_plot.png")
+                      },
+                      content = function(file) { 
+                        {ggsave(file, posterior_density_plots_obj(),
+                                width = input$dens_plot_dl_width,
+                                height = input$dens_plot_dl_height,
+                                dpi = input$dens_plot_dl_dpi,
+                                units = "in"
+                        )}
+                      } 
+                    )
     }
   )
 }

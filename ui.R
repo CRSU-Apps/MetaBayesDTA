@@ -227,7 +227,7 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home", 
-                      h1("MetaBayesDTA (BETA v1.0)"),
+                      h1("MetaBayesDTA (BETA v1.3)"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
@@ -245,15 +245,15 @@ tabItem(
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
                       h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following paper for 
                          MetaBayesDTA itself: ",
-                         tags$a(href="https://arxiv.org/abs/2211.05949", "Cerullo E, Sutton AJ, 
-                         Jones HE, Wu O, Quinn T, Cooper NJ. MetaBayesDTA: Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard
+                         tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", "Cerullo E, Sutton AJ, 
+                         Jones HE, Wu O, Quinn T, Cooper NJ. MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard
                            ")),
                       img(height=400,
                           width=600, 
                           src="roc_curve.png"),
                       br(),
                       h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
-                      p("For feedback/questions about this app please contact Enzo Cerullo at enzo.cerullo@bath.edu"),
+                      p("For feedback/questions about this app please contact Enzo Cerullo at ec325@leicester.ac.uk"),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
                       br(),
@@ -283,14 +283,20 @@ tabItem(
 tabItem(
   tabName = "tutorial_tab",
   #navbarPage("", id = "tutorial_tab_navbar",
-             box(width = 12,
-                 tabPanel("User Guide", 
-                          h1("User Guide"),
-                          h4("User guide coming soon."),
-                 )
-          )
-  ), 
-
+  box(width = 12,
+      tabPanel("User Guide", 
+               h1("User Guide"),
+               br(),
+               h4("Please click on the link before for a YouTube video (with subtitles) which gives a tutorial of MetaBayesDTA:",
+                  tags$a(href="https://www.youtube.com/watch?v=UqouZ7EQc1w&t=36s&ab_channel=ESMARConf", "https://www.youtube.com/watch?v=UqouZ7EQc1w&t=36s&ab_channel=ESMARConf", target="_blank")),
+               br(),
+               h4("We also recommend reading the associated paper for this application here:",
+                  tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", "https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", target="_blank")),
+               br(),
+               h4("In addition to the above, more in-depth tutorials with examples may be coming soon, and will be posted here")
+      )
+  )
+), 
 # Tab 3: load data tab -----------------------------------------------  ------------------------------------------------------------------------------------------------------------------
 tabItem(
   tabName = "load_data_subtab_fileupload", 

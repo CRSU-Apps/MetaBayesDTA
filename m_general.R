@@ -169,8 +169,14 @@ model_priors_plot_UI <- function(id) {
                     max = 2000, 
                     value = 1000,
                     ticks = FALSE),
-        downloadButton(outputId = ns("download_priors_plot"), 
-                       label = "Download Plot")
+        # Download plot:
+        h5("Download plot:"),
+        numericInput(inputId =  ns("priors_plot_dl_width"), label=h5("Plot width"), value = 5),
+        numericInput(inputId =  ns("priors_plot_dl_height"), label=h5("Plot height"), value = 5),
+        numericInput(inputId =  ns("priors_plot_dl_dpi"), label=h5("Plot DPI"), value = 600),
+        downloadButton(outputId = ns("download_priors_plot"), label = "Download Plot"),
+        # downloadButton(outputId = ns("download_priors_plot"), 
+        #                label = "Download Plot")
       ),
       circle = TRUE, 
       status = "danger",
@@ -322,7 +328,9 @@ dataset_import_server <- function(id,
 
 
 
-dataset_example_download_server <- function(id) {
+dataset_example_download_server <- function(id,
+                                            QA, Cov, QA_Cov, Standard
+                                            ) {
   
   moduleServer(
     id,
@@ -977,7 +985,13 @@ model_trace_plots_settings_UI <- function(id) {
                 label = "Change size of plot - width", 
                 min = 1, max = 2000, 
                 value = 500,
-                ticks = FALSE)
+                ticks = FALSE),
+    # Download plot:
+    h5("Download plot:"),
+    numericInput(inputId =  ns("trace_plot_dl_width"), label=h5("Plot width"), value = 10),
+    numericInput(inputId =  ns("trace_plot_dl_height"), label=h5("Plot height"), value = 5),
+    numericInput(inputId =  ns("trace_plot_dl_dpi"), label=h5("Plot DPI"), value = 600),
+    downloadButton(outputId = ns("download_trace_plot"), label = "Download Plot")
   )
 }
 
@@ -1009,7 +1023,13 @@ model_posterior_density_plots_settings_UI <- function(id) {
                 label = "Change size of plot - width", 
                 min = 1, max = 2000, 
                 value = 500,
-                ticks = FALSE)
+                ticks = FALSE),
+    # Download plot:
+    h5("Download plot:"),
+    numericInput(inputId =  ns("dens_plot_dl_width"), label=h5("Plot width"), value = 10),
+    numericInput(inputId =  ns("dens_plot_dl_height"), label=h5("Plot height"), value = 5),
+    numericInput(inputId =  ns("dens_plot_dl_dpi"), label=h5("Plot DPI"), value = 600),
+    downloadButton(outputId = ns("download_dens_plot"), label = "Download Plot")
   )
 }
 

@@ -96,7 +96,7 @@ require(shinybusy)
 require(callr)
 require(MASS)
 
-#setwd("/home/enzo/MetaBayesDTA")
+#setwd("/home/enzo/Documents/Work/MetaBayesDTA_Nov_2022/MetaBayesDTA-main")
 
 # Load functions ----------------------------------------------------------
 source('./fn_general.R', local  = TRUE)
@@ -139,11 +139,38 @@ FNimg <-readPNG('./www/FN.png')
 # # Load server (server.R file) ---------------------------------------------
 #source('server.R')
 
+###############################################################################
+#### IMPORTANT NOTE FOR ****** APP DEVELOPERS *******
+###############################################################################
+# At the time of writing, it is only possible to publish this app to shinyapps.io
+# if using a UNIX-based opertating sustem (e.g., Linux Mint, Ubuntu, MacOS)
+# This is because the Stan models need to be pre-compiled, and the compiler
+# flags (i.e., CXXFLAGS) need to match the ones that
+# shinyapps.io (shinyapps.io is hosted on a UNIX server).
+# See https://discourse.mc-stan.org/t/compile-stan-model-in-shiny-app/10022/16
+# for more details
+# # Although not using pre-compiled models would allow app developers to publish
+# the app using Windows, Without doing this, users would need to wait 15+ minutes 
+# for the models to compile before  they can even start using the app, every
+# time the app is opened or refreshed!
+###############################################################################
+
+
+
+###############################################################################
+#### IMPORTANT NOTE FOR ****** GENERAL APP USERS *******
+#############
+# The code below must be UN-COMMENTED (highlight the code then use CTRL+SHIFT+C), 
+# then run, and then COMMENTED OUT again before running the app locally. 
+#############
+# This is because the Stan model files (files ending in ".stan" in the "/models" directory of the app
+# must be compiled first, which creates larger .rds files which the app then users. 
+# Without doing this, users would need to wait 15+ minutes for the models to compile before
+# they can even start using the app, every time the app is opened or refreshed. 
 # Pre-load Stan model files without R shiny first (so R doesn't need to re-compile the
 # models overtime the app is launched) ----------------------------------------------
 # Save RDS of each Stan model - the compiler flags / CXXFLAGS needs to match the one in shinyapps.io 
 # only possible to change these on Linux 
-# see https://discourse.mc-stan.org/t/compile-stan-model-in-shiny-app/10022/16
 
 # saveRDS(stan_model(file = './models/BVM_PO.stan'), './models/BVM_PO.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/BVM_PO_p_scale_priors.stan'), './models/p_scale_priors/BVM_PO_p_scale_priors.rds')
@@ -152,7 +179,7 @@ FNimg <-readPNG('./www/FN.png')
 # 
 # saveRDS(stan_model(file = './models/MR_cts_PO.stan'), './models/MR_cts_PO.rds')
 # saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds') 
+# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
 # saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
 # saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
@@ -195,8 +222,11 @@ LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_sc
 server <- function(input, output, session) {
   
   shinyalert(title = "Important message",
-             text =  paste("Note that this is a beta release. A manual and youtube tutorial(s) will be coming soon. 
-                            Please report any bugs or suggestions for new features to Enzo Cerullo (enzo.cerullo@bath.edu)"),
+             text =  paste("Note that this is a beta release. If you had time. it would be greatly appreciated if you could fill 
+                            out the user feedback questionnaire",
+                            tags$a(href="https://docs.google.com/forms/d/e/1FAIpQLSdBvMFpWma87JV1R0lAkmiVWxcIFf9I0m2BiDS6JV20MrvE9Q/viewform?vc=0&c=0&w=1&flr=0"
+                                   , "here.",target="_blank"),
+                            "Please report any bugs or suggestions for new features to Enzo Cerullo (ec325@leicester.ac.uk), Alex Sutton (ajs22@leicester.ac.uk), and Tom Morris (tm428@leicester.ac.uk)"),
              type = "info",
              confirmButtonText = "I consent",
              html = TRUE)
@@ -250,7 +280,11 @@ output$downloadUG <- downloadHandler(
 data_for_analysis_server(id = "dataset_id", 
                          data = data)
 
-dataset_example_download_server(id = "dataset_id")
+dataset_example_download_server(id = "dataset_id",
+                                QA = QA,
+                                Cov = Cov,
+                                QA_Cov = QA_Cov, 
+                                Standard = Standard)
 
 
 #####  Standard bivariate model (BVM)  ----------------------------------------  --------------------------------------------------------------------------------------------------------------
