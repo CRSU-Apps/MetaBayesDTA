@@ -191,7 +191,18 @@ LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_sc
 ui <- dashboardPage(title="MetaBayesDTA", skin = "black", 
 dashboardHeader(title="MetaBayesDTA"),
 dashboardSidebar(
-tags$head(tags$style(HTML('.content-wrapper { height: 3000px !important;}'))), # overwrites the fixed height of the dashboard background 
+tags$head(
+  tags$style(
+    HTML('.content-wrapper { height: 3000px !important;}')),  
+  includeHTML("www/favicon/favicon.html"),
+  # SEO meta tags (partially redundant)
+  tags$meta(name="description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
+  tags$meta(name="keywords", content="Meta-Analysis, Diagnostic test accuracy, Application, Imperfect gold standard, Latent class, Bayesian"),
+  # Open Graph Tags
+  tags$meta(property="og:title", content="MetaBayesDTA v1.3.1"),
+  tags$meta(property="og:description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
+  tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaInsight/main/www/roc_curve.png")
+  ), 
 width = 350,
 sidebarMenu(
 id = "sidebarID",
@@ -227,7 +238,7 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home", 
-                      h1("MetaBayesDTA (BETA v1.3)"),
+                      h1("MetaBayesDTA (BETA v1.3.1)"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
@@ -253,7 +264,7 @@ tabItem(
                           src="roc_curve.png"),
                       br(),
                       h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
-                      p("For feedback/questions about this app please contact Enzo Cerullo at ec325@leicester.ac.uk"),
+                      p("For feedback/questions about this app please contact email the ", tags$a(href="mailto:apps@crsu.org.uk", "CRSU team")),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
                       br(),
@@ -264,7 +275,7 @@ tabItem(
                           column(3, img(src='CRSUlogo.jpg', width=220, height=110)),
                           column(9, tags$div(class="header", checked=NA,
                                              tags$p("For more information about the Complex Reviews Support Unit (CRSU)"),
-                                             tags$a(href="http://www.nihrcrsu.org", "please click here.", target="_blank")
+                                             tags$a(href="https://www.gla.ac.uk/research/az/evidencesynthesis/apps-materials-guidence/", "please click here.", target="_blank")
                           )
                           )
                         )

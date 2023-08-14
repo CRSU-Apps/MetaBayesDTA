@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+title: MetaBayesDTA
+message: >-
+  If you use this app, please cite it as: Cerullo, E., Sutton, A.J., Jones, H.E. et al. MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. BMC Med Res Methodol 23, 127 (2023). 
+type: software
+authors:
+  - family-names: Cerullo
+    given-names: Enzo
+    affiliation: University of Leicester
+  - family-names: Sutton
+    given-names: Alex J
+    affiliation: University of Leicester
+  - family-names: Jones
+    given-names: Hayley E
+    affiliation: University of Bristol
+  - family-names: Wu
+    given-names: Olivia
+    affiliation: University of Glasgow
+    orcid: 'https://orcid.org/0000-0002-0570-6016'
+  - family-names: Quinn
+    given-names: Terry J
+    affiliation: University of Glasgow
+    orcid: 'https://orcid.org/0000-0003-1401-0181'
+  - family-names: Cooper
+    given-names: Nicola J
+    affiliation: University of Leicester
+    orcid: 'https://orcid.org/0000-0002-4486-2791'
+  - family-names: Field
+    given-names: Ryan
+    affiliation: University of Glasgow
+    orcid: 'https://orcid.org/0000-0002-4424-9890'
+repository-code: 'https://github.com/CRSU-Apps/MetaBayesDTA/'
+abstract: >-
+  MetaBayesDTA is an extended, Bayesian version of MetaDTA, which allows users to conduct meta-analysis of test accuracy, with or without assuming a gold standard. 
+keywords:
+  - Network Analysis
+  - Diagnostic Test Accuracy
+  - Imperfect Gold Standard
+  - Latent Class
+  - Bayesian
+  - RShiny
+license: GPL-3.0-or-later
+version: 1.3.1
+date-released: '2023-08-14'
