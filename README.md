@@ -10,7 +10,7 @@ Please note that the current release is a Beta version and does not yet have a m
 
 **We kindly ask you to cite this app as:**
 
-*Cerullo, E., Sutton, A.J., Jones, H.E. et al. MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. BMC Med Res Methodol 23, 127 (2023). [https://doi.org/10.1186/s12874-023-01910-y](https://doi.org/10.1186/s12874-023-01910-y_){.uri}*
+*Cerullo, E., Sutton, A.J., Jones, H.E. et al. MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard. BMC Med Res Methodol 23, 127 (2023). [https://doi.org/10.1186/s12874-023-01910-y](https://doi.org/10.1186/s12874-023-01910-y)*
 
 Furthermore, please cite the following papers associated with the previous version of the app - MetaDTA - whenever outputs from MetaBayesDTA are used:
 
