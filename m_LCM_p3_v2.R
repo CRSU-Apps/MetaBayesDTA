@@ -1813,6 +1813,11 @@ LCM_sroc_plot_server <- function(id,
         
         ns <- session$ns
         
+        validate(
+          need(!(is.null(draws())), "Please run model to display plot")
+        )
+        
+        req(data(),  draws(), cancelOutput = TRUE)
         
         X <- data()
         N <- nrow(X)
