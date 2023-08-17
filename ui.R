@@ -201,7 +201,7 @@ tags$head(
   # Open Graph Tags
   tags$meta(property="og:title", content="MetaBayesDTA v1.3.1"),
   tags$meta(property="og:description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
-  tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaInsight/main/www/roc_curve.png")
+  tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaBayesDTA/main/www/roc_curve.png")
   ), 
 width = 350,
 sidebarMenu(
