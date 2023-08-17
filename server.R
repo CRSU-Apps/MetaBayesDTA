@@ -98,6 +98,9 @@ require(MASS)
 
 #setwd("/home/enzo/Documents/Work/MetaBayesDTA_Nov_2022/MetaBayesDTA-main")
 
+#Set the working directory to the folder containing this R script
+#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
 # Load functions ----------------------------------------------------------
 source('./fn_general.R', local  = TRUE)
 source('./fn_BVM.R', local  = TRUE)
@@ -1356,7 +1359,6 @@ Prev_plot_server(id = "LCM_SA_model_id",
 
   
   
-
 
 
 

@@ -1,6 +1,6 @@
 data {
-    int<lower=1> num_ref;  // total # of ref tests 
-  	int<lower=0> n_studies;	// total # of studies
+    int<lower=1> num_ref;  // total number of ref tests 
+  	int<lower=0> n_studies;	// total number of studies
   	int<lower=0> n[n_studies]; // n for each study
     int<lower=0> r[n_studies,4];
     int Ref[n_studies]; // indicator of ref. test 
@@ -320,7 +320,7 @@ for (s in 1:n_studies) {
         ot[s,a] = r[s,a];
      if (ot[s,a] != 0) {
     e[s,a] = n[s] * pr[s,a] ;                        // expected cell count (2x2 tables so 4)
-    o[s,a] = ot[s,a] / n[s] ;                         //# observed prob
+    o[s,a] = ot[s,a] / n[s] ;                         //number observed prob
     dv[s,a] = 2 * ot[s,a] * log(ot[s,a]/e[s,a]) ;
          }
         if (ot[s,a] == 0) { 
@@ -335,11 +335,10 @@ for (s in 1:n_studies) {
    //  CORRELATION RESIDUALS (Qu et al, 1996)
     ec[s] = (pr[s,1] - (pr[s,1]+pr[s,2]) * (pr[s,1]+pr[s,3]) )/             // expected correlations
     sqrt((pr[s,1]+pr[s,2]) * (pr[s,1]+pr[s,3]) * (1-pr[s,1]-pr[s,2]) * (1-pr[s,1]-pr[s,3]));
-    oc[s] = (o[s,1] - (o[s,1]+o[s,2]) * (o[s,1]+o[s,3])) /            // # observed correlations
+    oc[s] = (o[s,1] - (o[s,1]+o[s,2]) * (o[s,1]+o[s,3])) /            // number observed correlations
     sqrt((o[s,1]+o[s,2]) * (o[s,1]+o[s,3]) * (1-o[s,1]-o[s,2]) * (1-o[s,1]-o[s,3]));
-    dc[s] = oc[s] - ec[s];                                           //  # correlation residual
+    dc[s] = oc[s] - ec[s];                                           //  number correlation residual
    }    
     resdev = sum(dev[]);
 }
-
 

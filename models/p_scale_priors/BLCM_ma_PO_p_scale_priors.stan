@@ -1,6 +1,6 @@
 data {
-        int<lower=1> num_ref;  // total # of ref tests 
-      	int<lower=0> n_studies;	// total # of studies
+        int<lower=1> num_ref;  // total Number of ref tests 
+      	int<lower=0> n_studies;	// total Number of studies
         int Ref[n_studies]; // indicator of ref. test 
      // priors for index test (fixed as 1 index test)
         real<lower=0, upper=1> LCM_prior_sens_index_lower95;
