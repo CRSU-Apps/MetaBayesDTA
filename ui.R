@@ -264,7 +264,7 @@ tabItem(
                           src="roc_curve.png"),
                       br(),
                       h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
-                      p("For feedback/questions about this app please contact email the ", tags$a(href="mailto:apps@crsu.org.uk", "CRSU team")),
+                      p("For feedback/questions about this app please email the CRSU Team at ", tags$a(href="mailto:apps@crsu.org.uk", "apps@crsu.org.uk"), "."),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
                       br(),
