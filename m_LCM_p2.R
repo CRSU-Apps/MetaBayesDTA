@@ -171,10 +171,10 @@ LCM_run_model_priors_only <- function(id,
                              args = list(stan_model_p_scale_priors = stan_model_p_scale_priors,
                                          X = X(), 
                                          # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
-                                         LCM_prior_sens_ref_lower95 = priors$LCM_prior_sens_ref_lower95$vec,
-                                         LCM_prior_sens_ref_upper95 = priors$LCM_prior_sens_ref_upper95$vec,
-                                         LCM_prior_spec_ref_lower95 = priors$LCM_prior_spec_ref_lower95$vec,
-                                         LCM_prior_spec_ref_upper95 = priors$LCM_prior_spec_ref_upper95$vec,
+                                         LCM_prior_sens_ref_lower95 = as.array(priors$LCM_prior_sens_ref_lower95$vec),
+                                         LCM_prior_sens_ref_upper95 = as.array(priors$LCM_prior_sens_ref_upper95$vec),
+                                         LCM_prior_spec_ref_lower95 = as.array(priors$LCM_prior_spec_ref_lower95$vec),
+                                         LCM_prior_spec_ref_upper95 = as.array(priors$LCM_prior_spec_ref_upper95$vec),
                                          # static priors for ref test (between-study SD's, as meta-reg covariate only)
                                          LCM_prior_SD_sens_ref_sd = priors$LCM_prior_SD_sens_ref_sd,
                                          LCM_prior_SD_spec_ref_sd = priors$LCM_prior_SD_spec_ref_sd,
@@ -251,10 +251,10 @@ LCM_run_model_priors_only <- function(id,
                          args = list(stan_model = stan_model,
                                      X = X(), 
                                      # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
-                                     LCM_prior_mean_sens_ref_mu = priors$LCM_prior_mean_sens_ref_mu$vec,
-                                     LCM_prior_mean_sens_ref_sd = priors$LCM_prior_mean_sens_ref_sd$vec,
-                                     LCM_prior_mean_spec_ref_mu = priors$LCM_prior_mean_spec_ref_mu$vec,
-                                     LCM_prior_mean_spec_ref_sd = priors$LCM_prior_mean_spec_ref_sd$vec,
+                                     LCM_prior_mean_sens_ref_mu = as.array(priors$LCM_prior_mean_sens_ref_mu$vec),
+                                     LCM_prior_mean_sens_ref_sd = as.array(priors$LCM_prior_mean_sens_ref_sd$vec),
+                                     LCM_prior_mean_spec_ref_mu = as.array(priors$LCM_prior_mean_spec_ref_mu$vec),
+                                     LCM_prior_mean_spec_ref_sd = as.array(priors$LCM_prior_mean_spec_ref_sd$vec),
                                      # static priors for ref test (between-study SD's, as meta-reg covariate only)
                                      LCM_prior_SD_sens_ref_sd = priors$LCM_prior_SD_sens_ref_sd,
                                      LCM_prior_SD_spec_ref_sd = priors$LCM_prior_SD_spec_ref_sd,
@@ -530,10 +530,10 @@ LCM_run_model <- function( id,
                                                       SpI_fixed = LCM_options_indicators$LCM_SpI_fixed_indicator, 
                                                       tables = tables, 
                                                       # dynamic priors for ref test
-                                                      LCM_prior_sens_ref_lower95 = priors$LCM_prior_sens_ref_lower95$vec[ref_indexes()],
-                                                      LCM_prior_sens_ref_upper95 = priors$LCM_prior_sens_ref_upper95$vec[ref_indexes()],
-                                                      LCM_prior_spec_ref_lower95 = priors$LCM_prior_spec_ref_lower95$vec[ref_indexes()],
-                                                      LCM_prior_spec_ref_upper95 = priors$LCM_prior_spec_ref_upper95$vec[ref_indexes()],
+                                                      LCM_prior_sens_ref_lower95 = as.array(priors$LCM_prior_sens_ref_lower95$vec[ref_indexes()]),
+                                                      LCM_prior_sens_ref_upper95 = as.array(priors$LCM_prior_sens_ref_upper95$vec[ref_indexes()]),
+                                                      LCM_prior_spec_ref_lower95 = as.array(priors$LCM_prior_spec_ref_lower95$vec[ref_indexes()]),
+                                                      LCM_prior_spec_ref_upper95 = as.array(priors$LCM_prior_spec_ref_upper95$vec[ref_indexes()]),
                                                       # static priors for ref test (between-study SD's, as meta-reg covariate only)
                                                       LCM_prior_SD_sens_ref_sd = priors$LCM_prior_SD_sens_ref_sd,
                                                       LCM_prior_SD_spec_ref_sd = priors$LCM_prior_SD_spec_ref_sd,
@@ -650,10 +650,10 @@ LCM_run_model <- function( id,
                                                       SpI_fixed = LCM_options_indicators$LCM_SpI_fixed_indicator, 
                                                       tables = tables, 
                                                       # dynamic priors for ref test
-                                                      LCM_prior_mean_sens_ref_mu = priors$LCM_prior_mean_sens_ref_mu$vec[ref_indexes()],
-                                                      LCM_prior_mean_sens_ref_sd = priors$LCM_prior_mean_sens_ref_sd$vec[ref_indexes()],
-                                                      LCM_prior_mean_spec_ref_mu = priors$LCM_prior_mean_spec_ref_mu$vec[ref_indexes()],
-                                                      LCM_prior_mean_spec_ref_sd = priors$LCM_prior_mean_spec_ref_sd$vec[ref_indexes()],
+                                                      LCM_prior_mean_sens_ref_mu = as.array(priors$LCM_prior_mean_sens_ref_mu$vec[ref_indexes()]),
+                                                      LCM_prior_mean_sens_ref_sd = as.array(priors$LCM_prior_mean_sens_ref_sd$vec[ref_indexes()]),
+                                                      LCM_prior_mean_spec_ref_mu = as.array(priors$LCM_prior_mean_spec_ref_mu$vec[ref_indexes()]),
+                                                      LCM_prior_mean_spec_ref_sd = as.array(priors$LCM_prior_mean_spec_ref_sd$vec[ref_indexes()]),
                                                       # static priors for ref test (between-study SD's, as meta-reg covariate only)
                                                       LCM_prior_SD_sens_ref_sd = priors$LCM_prior_SD_sens_ref_sd,
                                                       LCM_prior_SD_spec_ref_sd = priors$LCM_prior_SD_spec_ref_sd,
@@ -726,7 +726,6 @@ LCM_run_model <- function( id,
     }
   )
 }
-
 
 
 

@@ -2368,33 +2368,29 @@ LCM_priors_options_inputModule_server <- function(id, data) {
         
         if (input$p_scale_priors_indicator == TRUE) { # p-scale priors ----------------------------------------------------------
           
-                  lapply(1:num_refs()  , 
-                         function(i) {
-                           req( input[[paste0("LCM_prior_sens_ref_lower95_",i)]])
-                           LCM_priors_ref$vec1[i] <- input[[paste0("LCM_prior_sens_ref_lower95_",i)]]
-                         }
-                  )
-                  
-                  lapply(1:num_refs()  , 
-                         function(i) {
-                           req( input[[paste0("LCM_prior_sens_ref_upper95_",i)]])
-                           LCM_priors_ref$vec2[i] <- input[[paste0("LCM_prior_sens_ref_upper95_",i)]]
-                         }
-                  )
-                  
-                  lapply(1:num_refs()  , 
-                         function(i) {
-                           req( input[[paste0("LCM_prior_spec_ref_lower95_",i)]])
-                           LCM_priors_ref$vec3[i] <- input[[paste0("LCM_prior_spec_ref_lower95_",i)]]
-                         }
-                  )
-                  
-                  lapply(1:num_refs()  , 
-                         function(i) {
-                           req( input[[paste0("LCM_prior_spec_ref_upper95_",i)]])
-                           LCM_priors_ref$vec4[i] <- input[[paste0("LCM_prior_spec_ref_upper95_",i)]]
-                         }
-                  )
+              LCM_priors_ref$vec1 <- sapply(1:num_refs(),
+                                            function(i){
+                                              req(input[[paste0("LCM_prior_sens_ref_lower95_",i)]])
+                                            }
+              )
+              
+              LCM_priors_ref$vec2 <- sapply(1:num_refs(),
+                                            function(i){
+                                              req(input[[paste0("LCM_prior_sens_ref_upper95_",i)]])
+                                            }
+              )
+              
+              LCM_priors_ref$vec3 <- sapply(1:num_refs(),
+                                            function(i){
+                                              req(input[[paste0("LCM_prior_spec_ref_lower95_",i)]])
+                                            }
+              )
+              
+              LCM_priors_ref$vec4 <- sapply(1:num_refs(),
+                                            function(i){
+                                              req(input[[paste0("LCM_prior_spec_ref_upper95_",i)]])
+                                            }
+              )
                
                 
                   vals$LCM_prior_sens_ref_lower95 <- reactiveValues(vec = LCM_priors_ref$vec1)
@@ -2469,7 +2465,6 @@ LCM_priors_options_inputModule_server <- function(id, data) {
     }
   )
 }
-
 
 
 
