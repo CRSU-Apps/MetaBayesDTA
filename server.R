@@ -225,11 +225,11 @@ LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_sc
 server <- function(input, output, session) {
   
   shinyalert(title = "Important message",
-             text =  paste("Note that this is a beta release. If you had time. it would be greatly appreciated if you could fill 
-                            out the user feedback questionnaire",
+             text =  paste0("Note that this is a beta release. If you have time it would be greatly appreciated if you could fill 
+                            out the user feedback questionnaire ",
                             tags$a(href="https://docs.google.com/forms/d/e/1FAIpQLSdBvMFpWma87JV1R0lAkmiVWxcIFf9I0m2BiDS6JV20MrvE9Q/viewform?vc=0&c=0&w=1&flr=0"
                                    , "here.",target="_blank"),
-                            "Please report any bugs or suggestions for new features to Enzo Cerullo (ec325@leicester.ac.uk), Alex Sutton (ajs22@leicester.ac.uk), and Tom Morris (tm428@leicester.ac.uk)"),
+                            " Please report any bugs or suggestions for new features to the CRSU Team at ", tags$a(href="mailto:apps@crsu.org.uk", "apps@crsu.org.uk"), "."),
              type = "info",
              confirmButtonText = "I consent",
              html = TRUE)

@@ -41,3 +41,5 @@ vignettes/*.pdf
 /models/*.rds
 /models/p_scale_priors/*.rds
 /rsconnect
+# Mac OS Indexing Files
+.DS_Store
