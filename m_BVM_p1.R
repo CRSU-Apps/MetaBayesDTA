@@ -322,15 +322,16 @@ MA_revman_plots_server <- function(id,
                              
                            
                            Z = data.frame(estimate = c(logit_Sens, logit_Spec, 
-                                                       se_logit_sens, se_logit_spec, 
                                                        between_study_var_se, between_study_var_sp,
-                                                       covariance, 
-                                                       correlation),
+                                                       correlation,
+                                                       se_logit_sens, se_logit_spec, 
+                                                       covariance
+                                                       ),
                                           row.names=c("logit(sens)", "logit(spec)", 
                                                       "Variance logit(sens)", "Variance logit(spec)", 
-                                                      "Covariance",
+                                                      "Correlation",
                                                       "SE(logit(sens))", "SE(logit(spec))", 
-                                                      "Correlation")
+                                                      "Covariance")
                            )
                            
                            # Create a matrix to store the parameter estimates
