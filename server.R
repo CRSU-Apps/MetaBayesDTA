@@ -58,6 +58,7 @@
 # install.packages("callr")
 # install.packages("MASS")
 # install.packages("usethis")
+# install.packages("R6")
 
 require(shiny)
 require(shinythemes)
@@ -95,6 +96,7 @@ require(shinyalert)
 require(shinybusy)
 require(callr)
 require(MASS)
+require(R6)
 
 #setwd("/home/enzo/Documents/Work/MetaBayesDTA_Nov_2022/MetaBayesDTA-main")
 
