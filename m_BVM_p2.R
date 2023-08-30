@@ -82,7 +82,7 @@ MA_run_model_priors_only <- function(id,
         if (p_scale_priors_indicator == TRUE) {  # p-scale priors for Se and Sp   -------------------------------------------  
           stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
           r$bg_process <<-   callr::r_bg(
-            func = function(stan_model_p_scale_priors_model,
+            func = function(stan_model_p_scale_priors,
                             MA_prior_sens_lower95,
                             MA_prior_sens_upper95,
                             MA_prior_spec_lower95,
@@ -91,7 +91,7 @@ MA_run_model_priors_only <- function(id,
                             MA_prior_SD_spec_sd) {
               
               rstan::sampling(
-                object = stan_model_p_scale_priors_model,
+                object = stan_model_p_scale_priors,
                 data =  list(   MA_prior_sens_lower95 = MA_prior_sens_lower95,
                                 MA_prior_sens_upper95 = MA_prior_sens_upper95,
                                 MA_prior_spec_lower95 = MA_prior_spec_lower95,
@@ -106,7 +106,7 @@ MA_run_model_priors_only <- function(id,
                 seed= 123
               )
             }, # end of function 
-            args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model, 
+            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                         MA_prior_sens_lower95 = input$MA_prior_sens_lower95,
                         MA_prior_sens_upper95 = input$MA_prior_sens_upper95,
                         MA_prior_spec_lower95 = input$MA_prior_spec_lower95,
@@ -121,7 +121,7 @@ MA_run_model_priors_only <- function(id,
         else {   # logit-scale priors for Se and Sp   -------------------------------------------  
           stan_model_model <- stan_model$getModel()
           r$bg_process <<-   callr::r_bg(
-            func = function(stan_model_model, 
+            func = function(stan_model, 
                             MA_prior_mean_sens_mu,
                             MA_prior_mean_sens_sd,
                             MA_prior_mean_spec_mu,
@@ -130,7 +130,7 @@ MA_run_model_priors_only <- function(id,
                             MA_prior_SD_spec_sd) {
               
               rstan::sampling(
-                object = stan_model_model,
+                object = stan_model,
                 data =  list(   MA_prior_mean_sens_mu = MA_prior_mean_sens_mu,
                                 MA_prior_mean_sens_sd = MA_prior_mean_sens_sd,
                                 MA_prior_mean_spec_mu = MA_prior_mean_spec_mu,
@@ -145,7 +145,7 @@ MA_run_model_priors_only <- function(id,
                 seed= 123
               )
             }, # end of function 
-            args = list(stan_model_model = stan_model_model, 
+            args = list(stan_model = stan_model_model, 
                         MA_prior_mean_sens_mu = input$MA_prior_mean_sens_mu,
                         MA_prior_mean_sens_sd = input$MA_prior_mean_sens_sd,
                         MA_prior_mean_spec_mu = input$MA_prior_mean_spec_mu,
@@ -293,7 +293,7 @@ MA_run_model <- function(id,
         if (p_scale_priors_indicator == TRUE) {  # p-scale priors for Se and Sp   -------------------------------------------  
           stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
           r$bg_process <<-   callr::r_bg(
-            func = function(stan_model_p_scale_priors_model,
+            func = function(stan_model_p_scale_priors,
                             X,
                             MA_prior_sens_lower95,
                             MA_prior_sens_upper95,
@@ -309,7 +309,7 @@ MA_run_model <- function(id,
                             seed) {
               
               rstan::sampling(
-                object = stan_model_p_scale_priors_model,
+                object = stan_model_p_scale_priors,
                 data =  list(n_studies = length(X$author),
                              holdout = rep(0, length(X$author)), 
                              TP = X$TP,  
@@ -330,7 +330,7 @@ MA_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             },
-            args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model, 
+            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                         X = X, 
                         MA_prior_sens_lower95 = priors$MA_prior_sens_lower95,
                         MA_prior_sens_upper95 = priors$MA_prior_sens_upper95,
@@ -353,7 +353,7 @@ MA_run_model <- function(id,
         else {   # logit-scale priors for Se and Sp   -------------------------------------------  
           stan_model_model <- stan_model$getModel()
           r$bg_process <<-   callr::r_bg(
-            func = function(stan_model_model,
+            func = function(stan_model,
                             X,
                             MA_prior_mean_sens_mu,
                             MA_prior_mean_sens_sd,
@@ -369,7 +369,7 @@ MA_run_model <- function(id,
                             seed) {
               
               rstan::sampling(
-                object = stan_model_model,
+                object = stan_model,
                 data =  list(n_studies = length(X$author),
                              holdout = rep(0, length(X$author)), 
                              TP = X$TP,  
@@ -390,7 +390,7 @@ MA_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             },
-            args = list(stan_model_model = stan_model_model, 
+            args = list(stan_model = stan_model_model, 
                         X = X(), 
                         MA_prior_mean_sens_mu = priors$MA_prior_mean_sens_mu,
                         MA_prior_mean_sens_sd = priors$MA_prior_mean_sens_sd,

@@ -7,7 +7,7 @@
 MR_run_model_priors_only <- function(id, 
                                      stan_model_cts, 
                                      stan_model_cat, 
-                                     stan_model_cat_p_scale_priors,
+                                     stan_model_cat_PO_p_scale_priors,
                                      p_scale_priors_indicator,
                                      cts_cov_indicator = MR_cts_cov_indicator,
                                      data,
@@ -105,7 +105,7 @@ MR_run_model_priors_only <- function(id,
                      
                      stan_model_cts_model <- stan_model_cts$getModel()
                      r$bg_process  <<-   callr::r_bg(
-                        func = function(stan_model_cts_model, 
+                        func = function(stan_model_cts, 
                                         X, 
                                         Cov, 
                                         num_levels, 
@@ -126,7 +126,7 @@ MR_run_model_priors_only <- function(id,
                                         MRcts_prior_coeff_spec_sd) {
                           
                           rstan::sampling(
-                            object = stan_model_cts_model,
+                            object = stan_model_cts,
                             data =  list(n_studies = length(X$author), 
                                          holdout = rep(0, length(X$author)),
                                          TP = X$TP, 
@@ -160,7 +160,7 @@ MR_run_model_priors_only <- function(id,
                                          max_treedepth = 10),
                             seed= 123)
                         }, # end of function 
-                        args = list(stan_model_cts_model = stan_model_cts_model, 
+                        args = list(stan_model_cts = stan_model_cts_model, 
                                     X = X, 
                                     Cov = Cov, 
                                     num_levels = num_levels, 
@@ -201,9 +201,9 @@ MR_run_model_priors_only <- function(id,
               p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
 
               if (p_scale_priors_indicator == TRUE) {
-                          stan_model_cat_p_scale_priors_model <- stan_model_cat_p_scale_priors$getModel()
+                          stan_model_cat_PO_p_scale_priors_model <- stan_model_cat_PO_p_scale_priors$getModel()
                           r$bg_process  <<-     callr::r_bg(
-                                                func = function(stan_model_cat_p_scale_priors_model,
+                                                func = function(stan_model_cat_PO_p_scale_priors,
                                                                 X,
                                                                 Cov,
                                                                 num_levels,
@@ -214,9 +214,9 @@ MR_run_model_priors_only <- function(id,
                                                                 MRcat_prior_spec_upper95,
                                                                 MRcat_prior_SD_sens_sd,
                                                                 MRcat_prior_SD_spec_sd) {
-                        
+                                                                
                                                   rstan::sampling(
-                                                    object = stan_model_cat_p_scale_priors_model,
+                                                    object = stan_model_cat_PO_p_scale_priors,
                                                     data =  list(n_studies = length(X$author),
                                                                  holdout = rep(0, length(X$author)),
                                                                  TP = X$TP,
@@ -241,7 +241,7 @@ MR_run_model_priors_only <- function(id,
                                                                  max_treedepth = 10),
                                                     seed= 123)
                                                 }, # end of function
-                                                args = list(stan_model_cat_p_scale_priors_model = stan_model_cat_p_scale_priors_model,
+                                                args = list(stan_model_cat_PO_p_scale_priors = stan_model_cat_PO_p_scale_priors_model,
                                                             X = X,
                                                             Cov = Cov,
                                                             num_levels = num_levels,
@@ -260,7 +260,7 @@ MR_run_model_priors_only <- function(id,
               else {
                 stan_model_cat_model <- stan_model_cat$getModel()
                 r$bg_process  <<-     callr::r_bg(
-                                      func = function(stan_model_cat_model,
+                                      func = function(stan_model_cat,
                                                       X,
                                                       Cov,
                                                       num_levels,
@@ -273,7 +273,7 @@ MR_run_model_priors_only <- function(id,
                                                       MRcat_prior_SD_spec_sd) {
                                         
                                         rstan::sampling(
-                                          object = stan_model_cat_model,
+                                          object = stan_model_cat,
                                           data =  list(n_studies = length(X$author),
                                                        holdout = rep(0, length(X$author)),
                                                        TP = X$TP,
@@ -298,7 +298,7 @@ MR_run_model_priors_only <- function(id,
                                                        max_treedepth = 10),
                                           seed= 123)
                                       }, # end of function
-                                      args = list(stan_model_cat_model = stan_model_cat_model,
+                                      args = list(stan_model_cat = stan_model_cat_model,
                                                   X = X,
                                                   Cov = Cov,
                                                   num_levels = num_levels,
@@ -421,7 +421,7 @@ MR_run_model <- function(id,
                        cts_cov_points <- if_else_Cov(X, cov_index)$cts_cov_points
                        stan_model_cts_model <- stan_model_cts$getModel()
                        r$bg_process  <-   callr::r_bg(
-                          func = function(stan_model_cts_model, 
+                          func = function(stan_model_cts, 
                                           X, 
                                           Cov_level,  
                                           Z_Cov, 
@@ -446,7 +446,7 @@ MR_run_model <- function(id,
                                           seed) {
                             
                           rstan::sampling(
-                            object = stan_model_cts_model,
+                            object = stan_model_cts,
                             data =    list(n_studies = length(X$author), 
                                            holdout = rep(0, length(X$author)),
                                            TP = X$TP, 
@@ -478,7 +478,7 @@ MR_run_model <- function(id,
                                          max_treedepth = max_treedepth),
                             seed= seed)
                       }, # end of function 
-                      args = list(stan_model_cts_model = stan_model_cts_model, 
+                      args = list(stan_model_cts = stan_model_cts_model, 
                                   X = X, 
                                   Cov_level = Cov_level, 
                                   cts_cov_points = cts_cov_points -  input$centered_value_input, 
@@ -523,9 +523,9 @@ MR_run_model <- function(id,
             p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
             
             if (p_scale_priors_indicator == TRUE) {    # p-scale priors for Se and Sp ---------------------------------------------------------
-                      stan_model_cat_p_scale_priors_model <- stan_model_cat_p_scale_priors$getModel
+                      stan_model_cat_p_scale_priors_model <- stan_model_cat_p_scale_priors$getModel()
                       r$bg_process  <-    callr::r_bg(
-                                func = function(stan_model_cat_p_scale_priors_model,
+                                func = function(stan_model_cat_p_scale_priors,
                                                 X,
                                                 Cov,
                                                 num_levels,
@@ -544,7 +544,7 @@ MR_run_model <- function(id,
                                                 seed) {
                                   
                               rstan::sampling(
-                                object = stan_model_cat_p_scale_priors_model,
+                                object = stan_model_cat_p_scale_priors,
                                 data =  list(n_studies = length(X$author), 
                                              holdout = rep(0, length(X$author)),
                                              TP = X$TP, 
@@ -569,7 +569,7 @@ MR_run_model <- function(id,
                                              max_treedepth = max_treedepth),
                                 seed= seed)
                             },  # end of function 
-                            args = list(stan_model_cat_p_scale_priors_model = stan_model_cat_p_scale_priors_model, 
+                            args = list(stan_model_cat_p_scale_priors = stan_model_cat_p_scale_priors_model, 
                                         X = X, 
                                         Cov = Cov, 
                                         num_levels = num_levels, 
@@ -593,7 +593,7 @@ MR_run_model <- function(id,
             else {  # logit-scale priors for Se and Sp ---------------------------------------------------------
               stan_model_cat_model <- stan_model_cat$getModel()
               r$bg_process  <-    callr::r_bg(
-                func = function(stan_model_cat_model,
+                func = function(stan_model_cat,
                                 X,
                                 Cov,
                                 num_levels,
@@ -612,7 +612,7 @@ MR_run_model <- function(id,
                                 seed) {
                   
                   rstan::sampling(
-                    object = stan_model_cat_model,
+                    object = stan_model_cat,
                     data =  list(n_studies = length(X$author), 
                                  holdout = rep(0, length(X$author)),
                                  TP = X$TP, 
@@ -637,7 +637,7 @@ MR_run_model <- function(id,
                                  max_treedepth = max_treedepth),
                     seed= seed)
                 },  # end of function 
-                args = list(stan_model_cat_model = stan_model_cat_model, 
+                args = list(stan_model_cat = stan_model_cat_model, 
                             X = X, 
                             Cov = Cov, 
                             num_levels = num_levels, 

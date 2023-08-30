@@ -604,17 +604,17 @@ MR_model_cat_PO_p_scale_priors<- StanModel$new(stan_model_rds_path = "./models/p
 
 
 #  MR - call the server module for button
-MR_run_prior_model_button_server <- run_prior_model_button_server(id = "MR_prior_model_button_id")
+MR_run_PO_prior_model_button_server <- run_prior_model_button_server(id = "MR_prior_model_button_id")
 
 
 MR_draws_PO <-         MR_run_model_priors_only(id = "MR_model_id",
                                                 data = data,
                                                 stan_model_cts = MR_model_cts_PO,
                                                 stan_model_cat = MR_model_cat_PO,
-                                                stan_model_cat_p_scale_priors = MR_model_cat_PO_p_scale_priors,
+                                                stan_model_cat_PO_p_scale_priors = MR_model_cat_PO_p_scale_priors,
                                                 cts_cov_indicator = MR_cts_cov_indicator,
                                                 p_scale_priors_indicator = MR_p_scale_priors_indicator,
-                                                button = MR_run_prior_model_button_server)$draws
+                                                button = MR_run_PO_prior_model_button_server)$draws
 
 gc()
 
@@ -622,7 +622,7 @@ gc()
 MR_model_cts  <- StanModel$new(stan_model_rds_path = "./models/MR_cts.rds",
                               stan_model_path = "./models/MR_cts.stan")
 MR_model_cat  <- StanModel$new(stan_model_rds_path = "./models/MR_cat_v2.rds",
-                              stan_model_path = "./models/MR_cts.stan")
+                              stan_model_path = "./models/MR_cat_v2.stan")
 MR_model_cat_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.rds",
                               stan_model_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.stan")                              
 
