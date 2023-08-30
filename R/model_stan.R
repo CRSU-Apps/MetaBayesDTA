@@ -10,7 +10,7 @@ StanModel <- R6::R6Class(
             if(file.exists(stan_model_rds_path)){
                 private$stan_model_rds_path = stan_model_rds_path
             }
-            if(file.exists(stan_model_rds_path)){
+            if(file.exists(stan_model_path)){
                 private$stan_model_path = stan_model_path
             }            
         },
@@ -18,7 +18,7 @@ StanModel <- R6::R6Class(
             if(!is.null(private$stan_model_object)){
                 return(private$stan_model_object)
             }
-            if(!is.null(private$stan_model_rds_path)){
+            if(!is.null(private$stan_model_rds_path & private$stan_model_rds_path != "")){
                 private$stan_model_object <- readRDS(private$stan_model_rds_path)
                 return(private$stan_model_object)
             }
