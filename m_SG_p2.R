@@ -104,10 +104,9 @@ SG_run_model_priors_only <- function(id,
                       
              if (p_scale_priors_indicator == TRUE) {   # p-scale priors for Se and Sp  -------------------------------------------
 
-                     
+                          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
                           r$bg_process  <-   callr::r_bg(
-                            
-                                      func = function(stan_model_p_scale_priors, 
+                                      func = function(stan_model_p_scale_priors_model, 
                                                       X, 
                                                       Cov, 
                                                       num_levels, 
@@ -120,7 +119,7 @@ SG_run_model_priors_only <- function(id,
                                                       SG_prior_SD_spec_sd) {
                                         
                                         rstan::sampling(
-                                          object = stan_model_p_scale_priors,
+                                          object = stan_model_p_scale_priors_model,
                                           data =  list(n_studies = length(X$author), 
                                                        holdout = rep(0, length(X$author)),
                                                        TP = X$TP, 
@@ -145,7 +144,7 @@ SG_run_model_priors_only <- function(id,
                                                        max_treedepth = 10),
                                           seed= 123)
                                       }, # end of function 
-                                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                                      args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model, 
                                                   X = X, 
                                                   Cov = Cov, 
                                                   num_levels = num_levels, 
@@ -162,10 +161,9 @@ SG_run_model_priors_only <- function(id,
                       
                    }
                    else {  # logit-scale priors for Se and Sp   -------------------------------------------  
-                         
+                         stan_model_model <- stan_model$getModel()
                          r$bg_process  <-   callr::r_bg(
-                           
-                                         func = function(stan_model, 
+                                         func = function(stan_model_model, 
                                                          X, 
                                                          Cov, 
                                                          num_levels, 
@@ -178,7 +176,7 @@ SG_run_model_priors_only <- function(id,
                                                          SG_prior_SD_spec_sd) {
                                            
                                            rstan::sampling(
-                                             object = stan_model,
+                                             object = stan_model_model,
                                              data =  list(n_studies = length(X$author), 
                                                           holdout = rep(0, length(X$author)),
                                                           TP = X$TP, 
@@ -203,7 +201,7 @@ SG_run_model_priors_only <- function(id,
                                                           max_treedepth = 10),
                                              seed= 123)
                                          }, # end of function 
-                                         args = list(stan_model = stan_model, 
+                                         args = list(stan_model_model = stan_model_model, 
                                                      X = X, 
                                                      Cov = Cov, 
                                                      num_levels = num_levels, 
@@ -328,9 +326,9 @@ SG_run_model <- function(id,
         Cov_level <-  if_else_Cov_level(X, cov_index)
         
         if (input$p_scale_priors_indicator == TRUE) { # p-scale priors for Se and Sp   -------------------------------------------  
-          
+                    stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel
                     r$bg_process <-    callr::r_bg(
-                      func = function(stan_model_p_scale_priors, 
+                      func = function(stan_model_p_scale_priors_model, 
                                       X, 
                                       Cov, 
                                       num_levels, 
@@ -349,7 +347,7 @@ SG_run_model <- function(id,
                                       seed) {
                         
                         rstan::sampling(
-                          object = stan_model_p_scale_priors, 
+                          object = stan_model_p_scale_priors_model, 
                           data = list(n_studies = length(X$author), 
                                       holdout = rep(0, length(X$author)),
                                       TP = X$TP,
@@ -374,7 +372,7 @@ SG_run_model <- function(id,
                                        max_treedepth = max_treedepth),
                           seed= seed)
                       }, 
-                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                      args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model, 
                                   X = X, 
                                   Cov = Cov, 
                                   num_levels = num_levels, 
@@ -397,9 +395,9 @@ SG_run_model <- function(id,
                     
         }
         else {  # logit-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_model = stan_model$getModel()
           r$bg_process <-    callr::r_bg(
-            func = function(stan_model, 
+            func = function(stan_model_model, 
                             X, 
                             Cov, 
                             num_levels, 
@@ -418,7 +416,7 @@ SG_run_model <- function(id,
                             seed) {
               
               rstan::sampling(
-                object = stan_model, 
+                object = stan_model_model, 
                 data = list(n_studies = length(X$author), 
                             holdout = rep(0, length(X$author)),
                             TP = X$TP,
@@ -443,7 +441,7 @@ SG_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             }, 
-            args = list(stan_model = stan_model, 
+            args = list(stan_model_model = stan_model_model, 
                         X = X, 
                         Cov = Cov, 
                         num_levels = num_levels, 

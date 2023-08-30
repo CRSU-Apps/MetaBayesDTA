@@ -43,3 +43,5 @@ vignettes/*.pdf
 /rsconnect
 # Mac OS Indexing Files
 .DS_Store
+
+app.R

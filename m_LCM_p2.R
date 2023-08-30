@@ -115,10 +115,9 @@ LCM_run_model_priors_only <- function(id,
         p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
         
      if (p_scale_priors_indicator == TRUE) {
-
+                          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
                            r$bg_process <<-   callr::r_bg(
-                             
-                             func = function(stan_model_p_scale_priors,
+                             func = function(stan_model_p_scale_priors_model,
                                              X,
                                              LCM_prior_sens_ref_lower95,
                                              LCM_prior_sens_ref_upper95,
@@ -136,7 +135,7 @@ LCM_run_model_priors_only <- function(id,
                                              LCM_prior_prev_b) {
                                
                                rstan::sampling( 
-                                 object = stan_model_p_scale_priors, 
+                                 object = stan_model_p_scale_priors_model, 
                                  data =  list(num_ref = length(unique(as.numeric(as.factor(X$reference.cat)))), 
                                               n_studies = nrow(X), 
                                               Ref = as.numeric(as.factor(X$reference.cat)), 
@@ -168,7 +167,7 @@ LCM_run_model_priors_only <- function(id,
                                )
                              }, # end of function 
                              
-                             args = list(stan_model_p_scale_priors = stan_model_p_scale_priors,
+                             args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model,
                                          X = X(), 
                                          # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
                                          LCM_prior_sens_ref_lower95 = as.array(priors$LCM_prior_sens_ref_lower95$vec),
@@ -195,10 +194,10 @@ LCM_run_model_priors_only <- function(id,
         
      }
      else {   # logit-scale priors
-          
+                      stan_model_model <- stan_model$getModel()         
                        r$bg_process <<-   callr::r_bg(
-                         
-                         func = function(stan_model, 
+
+                         func = function(stan_model_model, 
                                          X,
                                          LCM_prior_mean_sens_ref_mu,
                                          LCM_prior_mean_sens_ref_sd,
@@ -216,7 +215,7 @@ LCM_run_model_priors_only <- function(id,
                                          LCM_prior_prev_b) {
                            
                            rstan::sampling(
-                             object = stan_model,
+                             object = stan_model_model,
                              data =  list(num_ref = length(unique(as.numeric(as.factor(X$reference.cat)))), 
                                           n_studies = nrow(X),
                                           Ref = as.numeric(as.factor(X$reference.cat)),
@@ -248,7 +247,7 @@ LCM_run_model_priors_only <- function(id,
                            )
                          }, # end of function 
                          
-                         args = list(stan_model = stan_model,
+                         args = list(stan_model_model = stan_model_model,
                                      X = X(), 
                                      # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
                                      LCM_prior_mean_sens_ref_mu = as.array(priors$LCM_prior_mean_sens_ref_mu$vec),
@@ -444,11 +443,10 @@ LCM_run_model <- function( id,
                     p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
                     
             
-                    if (p_scale_priors_indicator == TRUE) {    # p-scale priors for Se and Sp ----------------------------------------------------------
-
+                    if (p_scale_priors_indicator == TRUE) { 
+                                stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()   # p-scale priors for Se and Sp ----------------------------------------------------------
                                 r$bg_process <<-   callr::r_bg(
-                                  
-                                          func = function(stan_model_p_scale_priors, 
+                                          func = function(stan_model_p_scale_priors_model, 
                                                           X,
                                                           study_sizes,
                                                           LCM_conditional_independence_indicator,
@@ -480,7 +478,7 @@ LCM_run_model <- function( id,
                                                           inits) {
                                             
                                             rstan::sampling(
-                                              object = stan_model_p_scale_priors,
+                                              object = stan_model_p_scale_priors_model,
                                               data =  list(num_ref = length(unique(as.numeric(as.factor(X$reference.cat)))), 
                                                            n_studies = nrow(X),
                                                            n = study_sizes, 
@@ -520,7 +518,7 @@ LCM_run_model <- function( id,
                                               init = list(inits, inits)
                                               )
                                           },
-                                          args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                                          args = list(stan_model_p_scale_priors_model = stan_model_p_scale_priors_model, 
                                                       X = X, 
                                                       study_sizes = study_sizes,
                                                       LCM_conditional_independence_indicator = LCM_options_indicators$LCM_conditional_independence_indicator, 
@@ -563,10 +561,9 @@ LCM_run_model <- function( id,
                                 
                     }
                     else {  # logit-scale priors for Se and Sp  ---------------------------------------------------------- 
-                      
+                      stan_model_model <- stan_model$getModel()
                       r$bg_process <<-   callr::r_bg(
-                                          
-                                          func = function(stan_model, 
+                                          func = function(stan_model_model, 
                                                           X,
                                                           study_sizes,
                                                           LCM_conditional_independence_indicator,
@@ -598,7 +595,7 @@ LCM_run_model <- function( id,
                                                           inits) {
                                             
                                             rstan::sampling(
-                                              object = stan_model,
+                                              object = stan_model_model,
                                               data =  list(num_ref = length(unique(as.numeric(as.factor(X$reference.cat)))), 
                                                            n_studies = nrow(X),
                                                            n = study_sizes, 
@@ -640,7 +637,7 @@ LCM_run_model <- function( id,
                                             )
                                           },
                                           
-                                          args = list(stan_model = stan_model, 
+                                          args = list(stan_model_model = stan_model_model, 
                                                       X = X, 
                                                       study_sizes = study_sizes,
                                                       LCM_conditional_independence_indicator = LCM_options_indicators$LCM_conditional_independence_indicator, 

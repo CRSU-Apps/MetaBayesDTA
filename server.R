@@ -197,31 +197,6 @@ FNimg <-readPNG('./www/FN.png')
 # saveRDS(stan_model(file = './models/BLCM_ma.stan'), './models/BLCM_ma.rds')
 # saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
 
-MA_model_PO <- readRDS(file = './models/BVM_PO.rds')
-MA_model_PO_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_PO_p_scale_priors.rds")
-MA_model <- readRDS(file = "./models/BVM.rds")
-MA_model_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_p_scale_priors.rds")
-
-MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
-MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
-MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
-MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
-MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
-
-SG_model_PO <- readRDS(file = './models/SG_PO.rds')
-SG_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_PO_p_scale_priors.rds')
-SG_model <- readRDS(file = './models/SG.rds')
-SG_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_p_scale_priors.rds')
-
-LCM_model_PO <- readRDS(file ='./models/BLCM_ma_PO.rds')
-LCM_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
-LCM_model <- readRDS(file = './models/BLCM_ma.rds')
-LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
-
-
-
-
 server <- function(input, output, session) {
   
   shinyalert(title = "Important message",
@@ -330,8 +305,10 @@ progress_main_model_server(id = "SA_MA_model_id")
 
 
 #  BVM- Run Bivariate Model - prior-only model  -------------------------------  ----------------------------------
-MA_model_PO <- stan_model(file = './models/BVM_PO.stan')
-MA_model_PO_p_scale_priors <- stan_model(file = "./models/p_scale_priors/BVM_PO_p_scale_priors.stan")
+MA_model_PO <- StanModel$new(stan_model_rds_path = "./models/BVM_PO.rds",
+                              stan_model_path = "./models/BVM_PO.stan")
+MA_model_PO_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BVM_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BVM_PO_p_scale_priors.stan")
 
 # BVM- call the server module for button
 MA_model_PO_button <- run_prior_model_button_server(id = "MA_prior_model_button_id")
@@ -343,10 +320,13 @@ draws_PO <- MA_run_model_priors_only(id = "MA_model_id",
                                      stan_model_p_scale_priors = MA_model_PO_p_scale_priors,
                                      p_scale_priors_indicator = MA_p_scale_priors_indicator)$draws
 
+gc()
 
 # BVM-  Run Bivariate Model - full model  -----------------------------  ----------------------------------
-MA_model <- stan_model(file = "./models/BVM.stan")
-MA_model_p_scale_priors <- stan_model(file = "./models/p_scale_priors/BVM_p_scale_priors.stan")
+MA_model <- StanModel$new(stan_model_rds_path = "./models/BVM.rds",
+                              stan_model_path = "./models/BVM.stan")
+MA_model_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BVM_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BVM_p_scale_priors.stan")
 
 # BVM-  call the server module for buttons
 MA_model_button    <- run_model_button_server(id = "MA_model_button_id")
@@ -381,8 +361,7 @@ MA_revman_plots_server(id = "MA_model_id",
                        data = data, 
                        draws = draws)
 
-
-
+gc()
 
 
 
@@ -614,9 +593,13 @@ MR_p_scale_priors_indicator <- MR_p_scale_priors_indicator_checkbox_out(id = "MR
                                                                         cts_cov_indicator = MR_cts_cov_indicator)
 
 #  MR - prior-only models ---
-MR_model_cts_PO <- stan_model(file = './models/MR_cts_PO.stan')
-MR_model_cat_PO <- stan_model(file = './models/MR_cat_PO.stan')
-MR_model_cat_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan')
+MR_model_cts_PO  <- StanModel$new(stan_model_rds_path = "./models/MR_cts_PO.rds",
+                              stan_model_path = "./models/MR_cts_PO.stan")
+MR_model_cat_PO<- StanModel$new(stan_model_rds_path = "./models/MR_cat_PO.rds",
+                              stan_model_path = "./models/MR_cat_PO.stan")
+MR_model_cat_PO_p_scale_priors<- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/MR_cat_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/MR_cat_PO_p_scale_priors.stan")
+
 
 #  MR - call the server module for button
 MR_run_prior_model_button_server <- run_prior_model_button_server(id = "MR_prior_model_button_id")
@@ -631,11 +614,16 @@ MR_draws_PO <-         MR_run_model_priors_only(id = "MR_model_id",
                                                 p_scale_priors_indicator = MR_p_scale_priors_indicator,
                                                 button = MR_run_prior_model_button_server)$draws
 
-#   MR - Full models ------
-MR_model_cts <- stan_model(file = './models/MR_cts.stan')
+gc()
 
-MR_model_cat <- stan_model(file = './models/MR_cat_v2.stan')
-MR_model_cat_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan')
+#   MR - Full models ------
+MR_model_cts  <- StanModel$new(stan_model_rds_path = "./models/MR_cts.rds",
+                              stan_model_path = "./models/MR_cts.stan")
+MR_model_cat  <- StanModel$new(stan_model_rds_path = "./models/MR_cat_v2.rds",
+                              stan_model_path = "./models/MR_cts.stan")
+MR_model_cat_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.rds",
+                              stan_model_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.stan")                              
+
 
 #  MR - call the server module for button
 MR_run_model_button_server <- run_model_button_server(id = "MR_model_button_id")
@@ -649,6 +637,7 @@ MR_draws <-             MR_run_model(id = "MR_model_id",
                                      p_scale_priors_indicator = MR_p_scale_priors_indicator,
                                      button = MR_run_model_button_server)$draws
 
+gc()
 
 # MR -  Plot of prior distributions  ---------------------------------
 MR_model_priors_plot_server(id = "MR_model_id",
@@ -847,9 +836,11 @@ progress_main_model_server(id = "SG_model_id")
 SG_p_scale_priors_indicator <- p_scale_priors_indicator_checkbox_out(id = "SG_model_id")
   
 # priors-only model-----
-SG_model_PO <- stan_model(file = './models/SG_PO.stan')
-SG_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan')
+SG_model_PO  <- StanModel$new(stan_model_rds_path = "./models/SG_PO.rds",
+                              stan_model_path = "./models/SG_PO.stan")                              
 
+SG_model_PO_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/SG_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/SG_PO_p_scale_priors.stan")                              
 
 SG_run_prior_model_button_server <- run_prior_model_button_server(id = "SG_prior_model_button_id")
 
@@ -860,10 +851,13 @@ SG_draws_PO <- SG_run_model_priors_only(id = "SG_model_id",
                                                 p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                                 button = SG_run_prior_model_button_server)$draws
 
-# full model --------
-SG_model <- stan_model(file = './models/SG.stan')
-SG_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/SG_p_scale_priors.stan')
+gc()
 
+# full model --------
+SG_model  <- StanModel$new(stan_model_rds_path = "./models/SG.rds",
+                              stan_model_path = "./models/SG.stan")     
+SG_model_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/SG_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/SG_p_scale_priors.stan")                                                          
 
 SG_run_model_button_server <- run_model_button_server(id = "SG_model_button_id")
 
@@ -873,6 +867,8 @@ SG_draws <-             SG_run_model(id = "SG_model_id",
                                      data = data,
                                      p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                      button = SG_run_model_button_server)$draws
+
+gc()
 
 # Subgroup analysis - Plot of prior distributions  --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SG_model_priors_plot_server(id = "SG_model_id",
@@ -1071,9 +1067,16 @@ progress_main_model_server(id = "SA_LCM_model_id")
 
 LCM_p_scale_priors_indicator <- p_scale_priors_indicator_checkbox_out(id = "LCM_model_id")
 
+#LCM_model_PO <- readRDS(file ='./models/BLCM_ma_PO.rds')
+#LCM_model_PO <- stan_model(file ='./models/BLCM_ma_PO.stan')
+#LCM_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
+#LCM_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan')
 
-LCM_model_PO <- stan_model(file ='./models/BLCM_ma_PO.stan')
-LCM_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan')
+LCM_model_PO <- StanModel$new(stan_model_rds_path = "./models/BLCM_ma_PO.rds",
+                              stan_model_path = "./models/BLCM_ma_PO.stan")                                                          
+LCM_model_PO_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan")                                                          
+
 
 # LCM -  call the server module for button
 LCM_model_PO_button <- run_prior_model_button_server(id = "LCM_prior_model_button_id")
@@ -1088,6 +1091,8 @@ LCM_draws_PO <- LCM_run_model_priors_only( id = "LCM_model_id",
                                                    stan_model = LCM_model_PO,
                                                    stan_model_p_scale_priors = LCM_model_PO_p_scale_priors)$draws
 
+gc()
+
 # LCM - LCM options 
 LCM_model_options_inputModule_renderUI_server(id = "LCM_model_id")
 LCM_options_indicators <- LCM_model_options_inputModule_server(id = "LCM_model_id") # extract options
@@ -1097,8 +1102,15 @@ LCM_options_indicators <- LCM_model_options_inputModule_server(id = "LCM_model_i
 
 
 #  LCM -  Run LCM Model - full model    -----------------------------------------------------------------------------------------------------------------
-LCM_model <- stan_model(file = './models/BLCM_ma.stan')
-LCM_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan')
+#LCM_model <- readRDS(file = './models/BLCM_ma.rds')
+#LCM_model <- stan_model(file = './models/BLCM_ma.stan')
+#LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
+#LCM_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan')
+
+LCM_model <- StanModel$new(stan_model_rds_path = "./models/BLCM_ma.rds",
+                              stan_model_path = "./models/BLCM_ma.stan")                                                          
+LCM_model_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BLCM_ma_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BLCM_ma_p_scale_priors.stan")                                                          
 
 
 # LCM - call the server module for button
@@ -1133,7 +1145,7 @@ LCM_SA_draws <- LCM_run_model( id = "SA_LCM_model_id",
                                SA_indicator_local = 1, 
                                LCM_options_indicators = LCM_options_indicators)$draws
 
-
+gc()
 
 #  LCM - Table of model diagnostics  ---------------------------------------------------------------------------------------------------
 LCM_model_diagnostics_tab_renderUI_server(id = "LCM_model_id", 
