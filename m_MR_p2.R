@@ -346,7 +346,7 @@ MR_run_model_priors_only <- function(id,
           
       
       })
-      
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
       
@@ -691,7 +691,7 @@ MR_run_model <- function(id,
           })
           
      }) # end of r$bgprocess
-     
+          gc()
           return( list( draws = reactive({ r$draws  }) ))
       
     }

@@ -183,7 +183,7 @@ MA_run_model_priors_only <- function(id,
         
       })
       
-      
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
     }
@@ -448,7 +448,7 @@ MA_run_model <- function(id,
       )
       
       
-      
+      gc()
       return(my_list)
       
     }

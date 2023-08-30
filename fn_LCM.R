@@ -289,7 +289,7 @@ my_list <- list("ss" = ss,
                 "num_refs" = num_refs,
                 "refs_names_short" = refs_names_short,
                 "refs_names" = refs_names)
-
+gc()
 return(my_list)
 
 

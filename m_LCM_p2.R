@@ -305,7 +305,7 @@ LCM_run_model_priors_only <- function(id,
       my_list <-             list(
         draws    = reactive({ r$draws  })
       )
-      
+      gc()
       return(my_list)
       
     }
@@ -715,7 +715,7 @@ LCM_run_model <- function( id,
       )
       
       
-      
+      gc()
       return(my_list)
       
       

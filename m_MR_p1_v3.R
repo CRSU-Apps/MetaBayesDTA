@@ -1007,6 +1007,7 @@ MR_data_table_server <- function(id,
                             dplyr::arrange( !!as.name( str_sub(colnames(X)[j + cov_index], end = -5) ) )
                     
                     data <- data.frame(data)
+                    gc()
                     return(data)
 
                     
@@ -1054,7 +1055,7 @@ MR_data_table_server <- function(id,
                             dplyr::arrange( !!as.name( str_sub(colnames(X)[j + cov_index], end = -5) ) )
                     
                     data <- data.frame(data)
-                    
+                    gc()
                     return(data)
                     
            }
@@ -1067,7 +1068,7 @@ MR_data_table_server <- function(id,
                                                         autoWidth = TRUE, 
                                                         scrollX=T))
                             
-                              
+                              gc()
                               return(DT::datatable( data_table_obj() ))
 
         })
@@ -1450,6 +1451,7 @@ MR_parameter_estimates_table_server <- function(id,
                   s.matrix.group.dataframe_allgroups3[(i-1)*nrow+1,1] <- (paste0("<b> Parameters for ",
                                                                                ((levels(factor(X[, m + cov_index]) )[i])),":", " </b>"))
                 }
+                gc()
                 return(s.matrix.group.dataframe_allgroups3)
                 
               }  else { # cts covariate -------------------------------------------------------------------------------------------------------------------------------
@@ -1664,6 +1666,7 @@ MR_parameter_estimates_table_server <- function(id,
               s.matrix.group.dataframe_allgroups3[(4+(5*(i-1))), 1] <- "Ratio of sensitivities"
               s.matrix.group.dataframe_allgroups3[(5+(5*(i-1))), 1] <- "Ratio of specificities"
             }
+            gc()
             return(s.matrix.group.dataframe_allgroups3)
             
             
@@ -1790,7 +1793,7 @@ MR_rhat_table_server <- function(id,
             dplyr::filter(r_hat != "NaN")
           
           
-        
+        gc()
         return(rhats_2)
         
       })

@@ -150,6 +150,7 @@ SG_weights <- function(X, mod, cov_index) {
     }
     
   }
+  gc()
   return(X2)
 }
 

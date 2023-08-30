@@ -60,7 +60,7 @@ MA_weights <- function(X, mod) {
         }
         
         X2 <- X %>%  dplyr::mutate(pctse = pctse, pctsp = pctsp)
-        
+        gc()
         return(X2)
         
 }
@@ -152,7 +152,7 @@ MA_cred_pred_roc <- function(X,
                       "pred_region" = pred_region, 
                       "credible_region" = credible_region,
                       "medians" = medians)
-      
+      gc()
       return(my_list)
 
 
