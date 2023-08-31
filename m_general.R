@@ -414,7 +414,7 @@ run_prior_model_button_UI <- function(id) {
     br(), 
     actionButton(inputId = ns("run_prior_model"),
                  label = "Click to run prior model"), 
-    add_busy_bar(color = "red", height = "8px"),
+    add_busy_bar(color = "#005398", height = "8px"),
     br()
   )
 }
@@ -436,7 +436,7 @@ run_model_button_UI <- function(id) {
     br(), 
     actionButton(inputId = ns("run_model"),
                  label = "Click to run model"), 
-    add_busy_bar(color = "red", height = "8px"), 
+    add_busy_bar(color = "#005398", height = "8px"), 
     br()
   )
 }
