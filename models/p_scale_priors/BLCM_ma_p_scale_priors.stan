@@ -121,10 +121,10 @@ transformed parameters {
                    s2[s]  =  inv_logit(index_logit[s,1]);
                    c2[s]  =  inv_logit(index_logit[s,2]);
 
-                   LBd[s]  = -(1-s1[s]) * (1-s2[s]);
-                   LBnd[s] = -(1-c1[s]) * (1-c2[s]);
-                   UBd[s]  = fmin(s1[s],s2[s]) - (s1[s] * s2[s]);
-                   UBnd[s] = fmin(c1[s],c2[s]) - (c1[s] * c2[s]);
+                   LBd[s]  = fmax(-s1[s]*s2[s], -(1-s1[s])*(1-s2[s]));
+                   LBnd[s] = fmax(-c1[s]*c2[s], -(1-c1[s])*(1-c2[s]));
+                   UBd[s]  = fmin(s1[s]*(1-s2[s]), (1-s1[s])*s2[s]);
+                   UBnd[s] = fmin(c1[s]*(1-c2[s]), (1-c1[s])*c2[s]);
        
        if (ci == 1) {      // conditional independence: 
         cv1[s] = 0; 
