@@ -77,6 +77,7 @@ LCM_model_options_inputModule_server <- function(id) {
           vals$LCM_index_logit_mu_sp <- input$LCM_index_logit_mu_sp
       })
       
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return(vals)
       
@@ -1242,6 +1243,7 @@ LCM_data_table_server <- function(id, data) {  # "mod" is the rstan file which i
                                   scrollX=T))
         
       #  print(data_table_obj())
+        # Run the Garabage Collector to Ensure any excess memory used by stan is freed
         gc()
         return(DT::datatable( data_table_obj() ))
         
@@ -2460,6 +2462,7 @@ LCM_priors_options_inputModule_server <- function(id, data) {
         
       
       })
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return(vals)
     }

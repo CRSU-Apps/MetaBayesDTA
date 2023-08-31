@@ -44,6 +44,7 @@ p_scale_priors_indicator_checkbox_out <-  function(id) {
     vals <- reactiveValues()
     
     observe({vals$p_scale_priors_indicator <- input$p_scale_priors_indicator})
+    # Run the Garabage Collector to Ensure any excess memory used by stan is freed
     gc()
     return(vals)
     
@@ -477,6 +478,7 @@ SA_indicator_out <-  function(id) {
     observe({
       vals$SA_indicator <- input$SA_indicator
       })
+    # Run the Garabage Collector to Ensure any excess memory used by stan is freed
     gc()
     return(vals)
     
@@ -549,6 +551,7 @@ SA_triallist_out <- function(id) {
       
       vals <- reactiveValues()
       observe({vals$triallist <- input$triallist})
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return(vals)
       
@@ -578,6 +581,7 @@ SA_data_server <- function(id, data) {
         
         
         #print(sa_data)
+        # Run the Garabage Collector to Ensure any excess memory used by stan is freed
         gc()
         return(sa_data)
       })
@@ -1169,6 +1173,7 @@ sampler_options_inputModule_server <- function(id) {
       observe({vals$MA_adapt_delta <- input$MA_adapt_delta})
       observe({vals$MA_max_treedepth <- input$MA_max_treedepth})
       observe({vals$MA_seed <- input$MA_seed})
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return(vals)
 

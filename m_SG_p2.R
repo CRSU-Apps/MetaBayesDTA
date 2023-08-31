@@ -244,6 +244,7 @@ SG_run_model_priors_only <- function(id,
       })
       
        })  # end of r$bgprocess
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return( list( draws = reactive({ r$draws  }) ))
       
@@ -494,6 +495,7 @@ SG_run_model <- function(id,
       
     }) 
     
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return( list( draws = reactive({ r$draws  }) ))
       

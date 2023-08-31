@@ -53,6 +53,7 @@ study_level_outcomes <- function(data = NULL, subset=NULL, formula = NULL,
   study_level <- data.frame(TP=origdata$TP, FN=origdata$FN, FP=origdata$FP, TN=origdata$TN, 
                             N=(origdata$TP+origdata$FN+origdata$FP+origdata$TN), 
                             Sensitivity=origdata$sens, Specificity=origdata$spec, FPR=origdata$fpr)
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(study_level)
 }
@@ -104,6 +105,7 @@ if_else_Cov <- function(X, cov_index) {
     }
   }
   my_list <- list("out" = out, "num_levels" = num_levels, "cts_cov_points" = cts_cov_points)
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(my_list)
 }
@@ -128,6 +130,7 @@ if_else_Cov_level <- function(X, cov_index) {
       out <- sort(unique(as.numeric(factor(X[, 13 + cov_index]))))
     }
   }
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(out)
 }
@@ -179,6 +182,7 @@ num_covariates <- function(X) { # input X is a data frame
                     "choicesCov" = choicesCov,
                     "no_covariates" = no_covariates)
   }
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(my_list)
 }
@@ -201,6 +205,7 @@ obs_values <- function(X) {
   my_list <- list("ss" = ss, 
                   "n_studies" = n_studies, 
                   "n_individuals" = "n_studies")
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(my_list)
 }
@@ -229,6 +234,7 @@ data_summary_for_display <- function(X) {
   }
   
   data <- dplyr::select(ss3, cols)
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(data)
 }
@@ -253,6 +259,7 @@ stan_kfold <- function(file, list_of_datas, chains, cores,...){
                  k <- round((i+1) / chains)
                  s <- sampling(model, data = list_of_datas[[k]], 
                                chains = 1, chain_id = i,  ...)
+                 # Run the Garabage Collector to Ensure any excess memory used by stan is freed
                  gc()
                  return(s)
                })
@@ -263,6 +270,7 @@ stan_kfold <- function(file, list_of_datas, chains, cores,...){
     # Merge `chains` of each fold
     stanfit[[k]] <- sflist2stanfit(sflist[inchains])
   }  
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(stanfit) 
 }
@@ -291,6 +299,7 @@ extract_log_lik_K <- function(list_of_stanfits, list_of_holdout, ...){
     # We save here the log_lik of the fold k in the matrix:
     log_lik_heldout[heldout==1] <- log_lik[heldout==1]
   }
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(log_lik_heldout)
 }

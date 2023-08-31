@@ -182,7 +182,7 @@ MA_run_model_priors_only <- function(id,
         })
         
       })
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return( list( draws = reactive({ r$draws  }) ))
       
@@ -447,7 +447,7 @@ MA_run_model <- function(id,
         draws    = reactive({ r$draws  })
       )
       
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
       gc()
       return(my_list)
       

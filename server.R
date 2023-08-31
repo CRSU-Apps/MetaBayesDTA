@@ -137,6 +137,7 @@ draws_PO <- MA_run_model_priors_only(id = "MA_model_id",
                                      stan_model_p_scale_priors = MA_model_PO_p_scale_priors,
                                      p_scale_priors_indicator = MA_p_scale_priors_indicator)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 # BVM-  Run Bivariate Model - full model  -----------------------------  ----------------------------------
@@ -178,6 +179,7 @@ MA_revman_plots_server(id = "MA_model_id",
                        data = data, 
                        draws = draws)
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 
@@ -431,6 +433,7 @@ MR_draws_PO <-         MR_run_model_priors_only(id = "MR_model_id",
                                                 p_scale_priors_indicator = MR_p_scale_priors_indicator,
                                                 button = MR_run_PO_prior_model_button_server)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 #   MR - Full models ------
@@ -454,6 +457,7 @@ MR_draws <-             MR_run_model(id = "MR_model_id",
                                      p_scale_priors_indicator = MR_p_scale_priors_indicator,
                                      button = MR_run_model_button_server)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 # MR -  Plot of prior distributions  ---------------------------------
@@ -668,6 +672,7 @@ SG_draws_PO <- SG_run_model_priors_only(id = "SG_model_id",
                                                 p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                                 button = SG_run_prior_model_button_server)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 # full model --------
@@ -685,6 +690,7 @@ SG_draws <-             SG_run_model(id = "SG_model_id",
                                      p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                      button = SG_run_model_button_server)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 # Subgroup analysis - Plot of prior distributions  --------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -908,6 +914,7 @@ LCM_draws_PO <- LCM_run_model_priors_only( id = "LCM_model_id",
                                                    stan_model = LCM_model_PO,
                                                    stan_model_p_scale_priors = LCM_model_PO_p_scale_priors)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 # LCM - LCM options 
@@ -962,6 +969,7 @@ LCM_SA_draws <- LCM_run_model( id = "SA_LCM_model_id",
                                SA_indicator_local = 1, 
                                LCM_options_indicators = LCM_options_indicators)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
 gc()
 
 #  LCM - Table of model diagnostics  ---------------------------------------------------------------------------------------------------

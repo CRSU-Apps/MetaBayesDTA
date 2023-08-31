@@ -150,6 +150,7 @@ SG_weights <- function(X, mod, cov_index) {
     }
     
   }
+  # Run the Garabage Collector to Ensure any excess memory used by stan is freed
   gc()
   return(X2)
 }
