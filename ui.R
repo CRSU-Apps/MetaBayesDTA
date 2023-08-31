@@ -4,7 +4,7 @@ dashboardHeader(title="MetaBayesDTA"),
 dashboardSidebar(
 tags$head(
   tags$style(
-    HTML('.content-wrapper { height: 3000px !important;}'))
+    HTML('.content-wrapper { height: 3000px !important;}')),
   includeHTML("www/favicon/favicon.html"),
   # SEO meta tags (partially redundant)
   tags$meta(name="description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
