@@ -16,13 +16,6 @@
 #  .libPaths(myPaths)  # reassign the path
 #  .libPaths()
 
-
-
-
-
-
-
-
 # install.packages("shiny")
 # install.packages("shinythemes")
 # install.packages("shinyWidgets")
@@ -57,8 +50,10 @@
 # install.packages("shinybusy")
 # install.packages("callr")
 # install.packages("MASS")
-# install.packages("usethis")
 # install.packages("htmltools")
+# install.packages("usethis")
+# install.packages("R6")
+
 
 require(shiny)
 require(shinythemes)
@@ -97,6 +92,8 @@ require(shinybusy)
 require(callr)
 require(MASS)
 require(htmltools)
+require(usethis)
+require(R6)
 # Set Stan options -------------------------------------------------------------
 #rstan_options(auto_write = TRUE)
 #options(mc.cores = parallel::detectCores())
