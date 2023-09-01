@@ -279,7 +279,7 @@ LCM_run_model_priors_only <- function(id,
         
         observe({
           req(r$bg_process, r$poll)
-          
+          show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
           invalidateLater(millis = 1000, session)
           mtime <- file.info(tfile)$mtime
           if (mtime > r$progress_mtime) {
@@ -288,6 +288,7 @@ LCM_run_model_priors_only <- function(id,
           }
           if (!r$bg_process$is_alive()) {
             r$draws <- r$bg_process$get_result() 
+            remove_modal_spinner()
             r$poll <- FALSE 
           }
         })
@@ -688,7 +689,7 @@ LCM_run_model <- function( id,
                     observe({
                           req(r$bg_process, r$poll)
                           
-                          invalidateLater(millis = 1000, session)
+                          Later(millis = 1000, session)
                           mtime <- file.info(tfile)$mtime
                           
                           if (mtime > r$progress_mtime) {

@@ -1,4 +1,4 @@
-# MetaBayesDTA (BETA v1.3.1)
+# MetaBayesDTA (BETA v1.4.0)
 
 App link: <https://crsu.shinyapps.io/MetaBayesDTA/>
 
