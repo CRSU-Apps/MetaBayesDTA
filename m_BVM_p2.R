@@ -79,12 +79,10 @@ MA_run_model_priors_only <- function(id,
       observeEvent(button(), {
         
         p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
-        
         if (p_scale_priors_indicator == TRUE) {  # p-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
           r$bg_process <<-   callr::r_bg(
-            
-            func = function(stan_model_p_scale_priors, 
+            func = function(stan_model_p_scale_priors,
                             MA_prior_sens_lower95,
                             MA_prior_sens_upper95,
                             MA_prior_spec_lower95,
@@ -108,7 +106,7 @@ MA_run_model_priors_only <- function(id,
                 seed= 123
               )
             }, # end of function 
-            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                         MA_prior_sens_lower95 = input$MA_prior_sens_lower95,
                         MA_prior_sens_upper95 = input$MA_prior_sens_upper95,
                         MA_prior_spec_lower95 = input$MA_prior_spec_lower95,
@@ -121,9 +119,8 @@ MA_run_model_priors_only <- function(id,
           
         }
         else {   # logit-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_model <- stan_model$getModel()
           r$bg_process <<-   callr::r_bg(
-            
             func = function(stan_model, 
                             MA_prior_mean_sens_mu,
                             MA_prior_mean_sens_sd,
@@ -148,7 +145,7 @@ MA_run_model_priors_only <- function(id,
                 seed= 123
               )
             }, # end of function 
-            args = list(stan_model = stan_model, 
+            args = list(stan_model = stan_model_model, 
                         MA_prior_mean_sens_mu = input$MA_prior_mean_sens_mu,
                         MA_prior_mean_sens_sd = input$MA_prior_mean_sens_sd,
                         MA_prior_mean_spec_mu = input$MA_prior_mean_spec_mu,
@@ -165,6 +162,7 @@ MA_run_model_priors_only <- function(id,
         
         observe({
           req(r$bg_process, r$poll)
+          show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
           invalidateLater(millis = 1000, session)
           mtime <- file.info(tfile)$mtime
           if (mtime > r$progress_mtime) {
@@ -173,6 +171,7 @@ MA_run_model_priors_only <- function(id,
           }
           if (!r$bg_process$is_alive()) {
             r$draws <- r$bg_process$get_result() 
+            remove_modal_spinner()
             r$poll <- FALSE 
           }
         })
@@ -185,8 +184,8 @@ MA_run_model_priors_only <- function(id,
         })
         
       })
-      
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
     }
@@ -294,9 +293,8 @@ MA_run_model <- function(id,
         print(SA_indicator_local)
         
         if (p_scale_priors_indicator == TRUE) {  # p-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
           r$bg_process <<-   callr::r_bg(
-            
             func = function(stan_model_p_scale_priors,
                             X,
                             MA_prior_sens_lower95,
@@ -334,7 +332,7 @@ MA_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             },
-            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+            args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                         X = X, 
                         MA_prior_sens_lower95 = priors$MA_prior_sens_lower95,
                         MA_prior_sens_upper95 = priors$MA_prior_sens_upper95,
@@ -355,9 +353,8 @@ MA_run_model <- function(id,
           
         } # end of if
         else {   # logit-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_model <- stan_model$getModel()
           r$bg_process <<-   callr::r_bg(
-            
             func = function(stan_model,
                             X,
                             MA_prior_mean_sens_mu,
@@ -395,7 +392,7 @@ MA_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             },
-            args = list(stan_model = stan_model, 
+            args = list(stan_model = stan_model_model, 
                         X = X(), 
                         MA_prior_mean_sens_mu = priors$MA_prior_mean_sens_mu,
                         MA_prior_mean_sens_sd = priors$MA_prior_mean_sens_sd,
@@ -421,7 +418,7 @@ MA_run_model <- function(id,
         
         observe({
           req(r$bg_process, r$poll)
-          
+          show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
           invalidateLater(millis = 1000, session)
           mtime <- file.info(tfile)$mtime
           
@@ -431,6 +428,7 @@ MA_run_model <- function(id,
           }
           if (!r$bg_process$is_alive()) {
             r$draws <- r$bg_process$get_result() 
+            remove_modal_spinner()
             r$poll <- FALSE 
           }
         })
@@ -452,8 +450,8 @@ MA_run_model <- function(id,
         draws    = reactive({ r$draws  })
       )
       
-      
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(my_list)
       
     }

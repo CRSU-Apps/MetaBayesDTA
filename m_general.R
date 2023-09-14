@@ -44,7 +44,8 @@ p_scale_priors_indicator_checkbox_out <-  function(id) {
     vals <- reactiveValues()
     
     observe({vals$p_scale_priors_indicator <- input$p_scale_priors_indicator})
-    
+    # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+    gc()
     return(vals)
     
   }
@@ -413,7 +414,7 @@ run_prior_model_button_UI <- function(id) {
     br(), 
     actionButton(inputId = ns("run_prior_model"),
                  label = "Click to run prior model"), 
-    add_busy_bar(color = "red", height = "8px"),
+    add_busy_bar(color = "#005398", height = "8px"),
     br()
   )
 }
@@ -435,7 +436,7 @@ run_model_button_UI <- function(id) {
     br(), 
     actionButton(inputId = ns("run_model"),
                  label = "Click to run model"), 
-    add_busy_bar(color = "red", height = "8px"), 
+    add_busy_bar(color = "#005398", height = "8px"), 
     br()
   )
 }
@@ -477,7 +478,8 @@ SA_indicator_out <-  function(id) {
     observe({
       vals$SA_indicator <- input$SA_indicator
       })
-    
+    # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+    gc()
     return(vals)
     
   }
@@ -549,6 +551,8 @@ SA_triallist_out <- function(id) {
       
       vals <- reactiveValues()
       observe({vals$triallist <- input$triallist})
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(vals)
       
     }
@@ -577,7 +581,8 @@ SA_data_server <- function(id, data) {
         
         
         #print(sa_data)
-        
+        # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+        gc()
         return(sa_data)
       })
       
@@ -1168,7 +1173,8 @@ sampler_options_inputModule_server <- function(id) {
       observe({vals$MA_adapt_delta <- input$MA_adapt_delta})
       observe({vals$MA_max_treedepth <- input$MA_max_treedepth})
       observe({vals$MA_seed <- input$MA_seed})
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(vals)
 
     }

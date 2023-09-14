@@ -545,7 +545,8 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 
                 #Name the columns of the matrix
                 colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
-                
+                # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+                gc()
                 return(s.matrix)
                 
               }, sanitize.text.function = function(x) x)
@@ -696,7 +697,8 @@ MA_data_table_server <- function(id, data, draws) {  # "mod" is the rstan file w
                 bb$Weight_Spec <- sprintf('%4.3f', X$pctsp)
                 
                 bb <- data.frame(bb)
-
+                # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+                gc()
                 return(bb)
                         
       })
@@ -707,7 +709,8 @@ MA_data_table_server <- function(id, data, draws) {  # "mod" is the rstan file w
                 options(DT.options = list(pageLength = 30, 
                                           autoWidth = TRUE, 
                                           scrollX=T))
-                
+                # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+                gc()
                 return(DT::datatable( data_table_obj() ))
                       
         
@@ -819,7 +822,8 @@ MA_priors_options_inputModule_server <- function(id) {
             }
         
       })
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(vals)
       
 
@@ -975,7 +979,8 @@ MA_parameter_estimates_table_server <- function(id,
         
         #Only the rows of s.matrix where statticks=T will be displayed
         s.matrix <- s.matrix[statticks,]
-        
+        # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+        gc()
         return(s.matrix)
         
       })

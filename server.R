@@ -1,147 +1,3 @@
-# Load / install packages needed for app ----------------------------------
-
-
-# .libPaths()
-#  myPaths <- .libPaths()   # get the path(s)
-#  myPaths
-#  myPaths[1] <- "C:/Users/ec325/Documents" # for work laptop
-# 
-#  #myPaths[1] <- "/home/enzo/R/x86_64-pc-linux-gnu-library/4.1" # for linux comp
-# 
-#  myPaths
-# 
-#  #/usr/local/lib/R/site-library
-#  #/home/enzo/R/x86_64-pc-linux-gnu-library/4.1
-# 
-#  .libPaths(myPaths)  # reassign the path
-#  .libPaths()
-
-
-
-
-
-
-
-
-# install.packages("shiny")
-# install.packages("shinythemes")
-# install.packages("shinyWidgets")
-# install.packages("shinydashboard")
-# install.packages("shinyjs")
-# install.packages("rstan")
-# install.packages("dplyr")
-# install.packages("readxl")
-# install.packages("ggplot2")
-# install.packages("ggforce")
-# install.packages("ggrepel")
-# install.packages("DT")
-# install.packages("magic")
-# install.packages("foreach")
-# install.packages("Hmisc")
-# install.packages("stringr")
-# install.packages("data.table")
-# install.packages("patchwork")
-# install.packages("scatterpie")
-# install.packages("tidyverse")
-# install.packages("cowplot")
-# install.packages("ggnewscale")
-# install.packages("rlist")
-# install.packages("rlang")
-# install.packages("varhandle")
-# install.packages("mada")
-# install.packages("png")
-# install.packages("devtools")
-# install.packages("dashboardthemes")
-# install.packages("tableHTML")
-# install.packages("shinyalert")
-# install.packages("shinybusy")
-# install.packages("callr")
-# install.packages("MASS")
-# install.packages("usethis")
-
-require(shiny)
-require(shinythemes)
-require(shinyWidgets)
-require(shinydashboard)
-require(shinyjs)
-require(StanHeaders)
-require(rstan)
-require(plyr) 
-require(dplyr) 
-require(readxl)
-require(ggplot2)
-require(ggforce)
-require(ggrepel)
-require(DT)
-require(magic)
-require(foreach)
-require(Hmisc)
-require(stringr)
-require(data.table)
-require(patchwork)
-require(scatterpie)
-require(tidyverse)
-require(cowplot)
-require(ggnewscale)
-require(rlist)
-require(rlang)
-require(varhandle)
-require(mada)
-require(png)
-require(devtools)
-require(dashboardthemes)
-require(tableHTML)
-require(shinyalert)
-require(shinybusy)
-require(callr)
-require(MASS)
-
-#setwd("/home/enzo/Documents/Work/MetaBayesDTA_Nov_2022/MetaBayesDTA-main")
-
-#Set the working directory to the folder containing this R script
-#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
-
-# Load functions ----------------------------------------------------------
-source('./fn_general.R', local  = TRUE)
-source('./fn_BVM.R', local  = TRUE)
-source('./fn_SG.R', local  = TRUE)
-source('./fn_LCM.R', local  = TRUE)
-
-# Load modules ------------------------------------------------------------
-source('./m_general.R', local  = TRUE)
-
-source('./m_BVM_p1.R', local  = TRUE)
-source('./m_BVM_p2.R', local  = TRUE)
-source('./m_BVM_p3.R', local  = TRUE)
-source('./m_BVM_p4.R', local  = TRUE)
-
-source('./m_MR_p1_v3.R', local  = TRUE)
-source('./m_MR_p2.R', local  = TRUE)
-source('./m_MR_p3.R', local  = TRUE)
-source('./m_MR_p4.R', local  = TRUE)
-
-source('./m_SG_p1.R', local  = TRUE)
-source('./m_SG_p2.R', local  = TRUE)
-source('./m_SG_p3.R', local  = TRUE)
-source('./m_SG_p4.R', local  = TRUE)
-
-source('./m_LCM_p1_v2.R', local  = TRUE)
-source('./m_LCM_p2.R', local  = TRUE)
-source('./m_LCM_p3_v2.R', local  = TRUE)
-
-# Load in images for TP, FP, FN, TN  -------------------------------------------------------------------
-TPimg <-readPNG('./www/TP.png')
-TNimg <-readPNG('./www/TN.png')
-FPimg <-readPNG('./www/FP.png')
-FNimg <-readPNG('./www/FN.png')
-
-
-# # Load UI (ui.R file) -----------------------------------------------------
-#source('ui.R')
-# 
-# # Load server (server.R file) ---------------------------------------------
-#source('server.R')
-
 ###############################################################################
 #### IMPORTANT NOTE FOR ****** APP DEVELOPERS *******
 ###############################################################################
@@ -157,70 +13,6 @@ FNimg <-readPNG('./www/FN.png')
 # for the models to compile before  they can even start using the app, every
 # time the app is opened or refreshed!
 ###############################################################################
-
-
-
-###############################################################################
-#### IMPORTANT NOTE FOR ****** GENERAL APP USERS *******
-#############
-# The code below must be UN-COMMENTED (highlight the code then use CTRL+SHIFT+C), 
-# then run, and then COMMENTED OUT again before running the app locally. 
-#############
-# This is because the Stan model files (files ending in ".stan" in the "/models" directory of the app
-# must be compiled first, which creates larger .rds files which the app then users. 
-# Without doing this, users would need to wait 15+ minutes for the models to compile before
-# they can even start using the app, every time the app is opened or refreshed. 
-# Pre-load Stan model files without R shiny first (so R doesn't need to re-compile the
-# models overtime the app is launched) ----------------------------------------------
-# Save RDS of each Stan model - the compiler flags / CXXFLAGS needs to match the one in shinyapps.io 
-# only possible to change these on Linux 
-
-# saveRDS(stan_model(file = './models/BVM_PO.stan'), './models/BVM_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BVM_PO_p_scale_priors.stan'), './models/p_scale_priors/BVM_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/BVM.stan'), './models/BVM.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BVM_p_scale_priors.stan'), './models/p_scale_priors/BVM_p_scale_priors.rds')
-# 
-# saveRDS(stan_model(file = './models/MR_cts_PO.stan'), './models/MR_cts_PO.rds')
-# saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat_v2.stan'), './models/MR_cat_v2.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan'), './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
-# 
-# saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan'), './models/p_scale_priors/SG_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/SG.stan'), './models/SG.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/SG_p_scale_priors.stan'), './models/p_scale_priors/SG_p_scale_priors.rds')
-# 
-# saveRDS(stan_model(file = './models/BLCM_ma_PO.stan'), './models/BLCM_ma_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/BLCM_ma.stan'), './models/BLCM_ma.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
-
-MA_model_PO <- readRDS(file = './models/BVM_PO.rds')
-MA_model_PO_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_PO_p_scale_priors.rds")
-MA_model <- readRDS(file = "./models/BVM.rds")
-MA_model_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_p_scale_priors.rds")
-
-MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
-MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
-MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
-MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-MR_model_cat <- readRDS(file = './models/MR_cat_v2.rds')
-MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.rds')
-
-SG_model_PO <- readRDS(file = './models/SG_PO.rds')
-SG_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_PO_p_scale_priors.rds')
-SG_model <- readRDS(file = './models/SG.rds')
-SG_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_p_scale_priors.rds')
-
-LCM_model_PO <- readRDS(file ='./models/BLCM_ma_PO.rds')
-LCM_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
-LCM_model <- readRDS(file = './models/BLCM_ma.rds')
-LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
-
-
-
 
 server <- function(input, output, session) {
   
@@ -330,8 +122,10 @@ progress_main_model_server(id = "SA_MA_model_id")
 
 
 #  BVM- Run Bivariate Model - prior-only model  -------------------------------  ----------------------------------
-MA_model_PO <- stan_model(file = './models/BVM_PO.stan')
-MA_model_PO_p_scale_priors <- stan_model(file = "./models/p_scale_priors/BVM_PO_p_scale_priors.stan")
+MA_model_PO <- StanModel$new(stan_model_rds_path = "./models/BVM_PO.rds",
+                              stan_model_path = "./models/BVM_PO.stan")
+MA_model_PO_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BVM_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BVM_PO_p_scale_priors.stan")
 
 # BVM- call the server module for button
 MA_model_PO_button <- run_prior_model_button_server(id = "MA_prior_model_button_id")
@@ -343,10 +137,14 @@ draws_PO <- MA_run_model_priors_only(id = "MA_model_id",
                                      stan_model_p_scale_priors = MA_model_PO_p_scale_priors,
                                      p_scale_priors_indicator = MA_p_scale_priors_indicator)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 # BVM-  Run Bivariate Model - full model  -----------------------------  ----------------------------------
-MA_model <- stan_model(file = "./models/BVM.stan")
-MA_model_p_scale_priors <- stan_model(file = "./models/p_scale_priors/BVM_p_scale_priors.stan")
+MA_model <- StanModel$new(stan_model_rds_path = "./models/BVM.rds",
+                              stan_model_path = "./models/BVM.stan")
+MA_model_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BVM_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BVM_p_scale_priors.stan")
 
 # BVM-  call the server module for buttons
 MA_model_button    <- run_model_button_server(id = "MA_model_button_id")
@@ -381,8 +179,8 @@ MA_revman_plots_server(id = "MA_model_id",
                        data = data, 
                        draws = draws)
 
-
-
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 
 
@@ -614,28 +412,38 @@ MR_p_scale_priors_indicator <- MR_p_scale_priors_indicator_checkbox_out(id = "MR
                                                                         cts_cov_indicator = MR_cts_cov_indicator)
 
 #  MR - prior-only models ---
-MR_model_cts_PO <- stan_model(file = './models/MR_cts_PO.stan')
-MR_model_cat_PO <- stan_model(file = './models/MR_cat_PO.stan')
-MR_model_cat_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan')
+MR_model_cts_PO  <- StanModel$new(stan_model_rds_path = "./models/MR_cts_PO.rds",
+                              stan_model_path = "./models/MR_cts_PO.stan")
+MR_model_cat_PO<- StanModel$new(stan_model_rds_path = "./models/MR_cat_PO.rds",
+                              stan_model_path = "./models/MR_cat_PO.stan")
+MR_model_cat_PO_p_scale_priors<- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/MR_cat_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/MR_cat_PO_p_scale_priors.stan")
+
 
 #  MR - call the server module for button
-MR_run_prior_model_button_server <- run_prior_model_button_server(id = "MR_prior_model_button_id")
+MR_run_PO_prior_model_button_server <- run_prior_model_button_server(id = "MR_prior_model_button_id")
 
 
 MR_draws_PO <-         MR_run_model_priors_only(id = "MR_model_id",
                                                 data = data,
                                                 stan_model_cts = MR_model_cts_PO,
                                                 stan_model_cat = MR_model_cat_PO,
-                                                stan_model_cat_p_scale_priors = MR_model_cat_PO_p_scale_priors,
+                                                stan_model_cat_PO_p_scale_priors = MR_model_cat_PO_p_scale_priors,
                                                 cts_cov_indicator = MR_cts_cov_indicator,
                                                 p_scale_priors_indicator = MR_p_scale_priors_indicator,
-                                                button = MR_run_prior_model_button_server)$draws
+                                                button = MR_run_PO_prior_model_button_server)$draws
+
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 #   MR - Full models ------
-MR_model_cts <- stan_model(file = './models/MR_cts.stan')
+MR_model_cts  <- StanModel$new(stan_model_rds_path = "./models/MR_cts.rds",
+                              stan_model_path = "./models/MR_cts.stan")
+MR_model_cat  <- StanModel$new(stan_model_rds_path = "./models/MR_cat_v2.rds",
+                              stan_model_path = "./models/MR_cat_v2.stan")
+MR_model_cat_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.rds",
+                              stan_model_path = "./models/p_scale_priors/MR_cat_p_scale_priors_v2.stan")                              
 
-MR_model_cat <- stan_model(file = './models/MR_cat_v2.stan')
-MR_model_cat_p_scale_priors <- stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors_v2.stan')
 
 #  MR - call the server module for button
 MR_run_model_button_server <- run_model_button_server(id = "MR_model_button_id")
@@ -649,6 +457,8 @@ MR_draws <-             MR_run_model(id = "MR_model_id",
                                      p_scale_priors_indicator = MR_p_scale_priors_indicator,
                                      button = MR_run_model_button_server)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 # MR -  Plot of prior distributions  ---------------------------------
 MR_model_priors_plot_server(id = "MR_model_id",
@@ -847,9 +657,11 @@ progress_main_model_server(id = "SG_model_id")
 SG_p_scale_priors_indicator <- p_scale_priors_indicator_checkbox_out(id = "SG_model_id")
   
 # priors-only model-----
-SG_model_PO <- stan_model(file = './models/SG_PO.stan')
-SG_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan')
+SG_model_PO  <- StanModel$new(stan_model_rds_path = "./models/SG_PO.rds",
+                              stan_model_path = "./models/SG_PO.stan")                              
 
+SG_model_PO_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/SG_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/SG_PO_p_scale_priors.stan")                              
 
 SG_run_prior_model_button_server <- run_prior_model_button_server(id = "SG_prior_model_button_id")
 
@@ -860,10 +672,14 @@ SG_draws_PO <- SG_run_model_priors_only(id = "SG_model_id",
                                                 p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                                 button = SG_run_prior_model_button_server)$draws
 
-# full model --------
-SG_model <- stan_model(file = './models/SG.stan')
-SG_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/SG_p_scale_priors.stan')
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
+# full model --------
+SG_model  <- StanModel$new(stan_model_rds_path = "./models/SG.rds",
+                              stan_model_path = "./models/SG.stan")     
+SG_model_p_scale_priors  <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/SG_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/SG_p_scale_priors.stan")                                                          
 
 SG_run_model_button_server <- run_model_button_server(id = "SG_model_button_id")
 
@@ -873,6 +689,9 @@ SG_draws <-             SG_run_model(id = "SG_model_id",
                                      data = data,
                                      p_scale_priors_indicator = SG_p_scale_priors_indicator,
                                      button = SG_run_model_button_server)$draws
+
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 # Subgroup analysis - Plot of prior distributions  --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 SG_model_priors_plot_server(id = "SG_model_id",
@@ -1071,9 +890,16 @@ progress_main_model_server(id = "SA_LCM_model_id")
 
 LCM_p_scale_priors_indicator <- p_scale_priors_indicator_checkbox_out(id = "LCM_model_id")
 
+#LCM_model_PO <- readRDS(file ='./models/BLCM_ma_PO.rds')
+#LCM_model_PO <- stan_model(file ='./models/BLCM_ma_PO.stan')
+#LCM_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
+#LCM_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan')
 
-LCM_model_PO <- stan_model(file ='./models/BLCM_ma_PO.stan')
-LCM_model_PO_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan')
+LCM_model_PO <- StanModel$new(stan_model_rds_path = "./models/BLCM_ma_PO.rds",
+                              stan_model_path = "./models/BLCM_ma_PO.stan")                                                          
+LCM_model_PO_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan")                                                          
+
 
 # LCM -  call the server module for button
 LCM_model_PO_button <- run_prior_model_button_server(id = "LCM_prior_model_button_id")
@@ -1088,6 +914,9 @@ LCM_draws_PO <- LCM_run_model_priors_only( id = "LCM_model_id",
                                                    stan_model = LCM_model_PO,
                                                    stan_model_p_scale_priors = LCM_model_PO_p_scale_priors)$draws
 
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
+
 # LCM - LCM options 
 LCM_model_options_inputModule_renderUI_server(id = "LCM_model_id")
 LCM_options_indicators <- LCM_model_options_inputModule_server(id = "LCM_model_id") # extract options
@@ -1097,8 +926,15 @@ LCM_options_indicators <- LCM_model_options_inputModule_server(id = "LCM_model_i
 
 
 #  LCM -  Run LCM Model - full model    -----------------------------------------------------------------------------------------------------------------
-LCM_model <- stan_model(file = './models/BLCM_ma.stan')
-LCM_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan')
+#LCM_model <- readRDS(file = './models/BLCM_ma.rds')
+#LCM_model <- stan_model(file = './models/BLCM_ma.stan')
+#LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
+#LCM_model_p_scale_priors <- stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan')
+
+LCM_model <- StanModel$new(stan_model_rds_path = "./models/BLCM_ma.rds",
+                              stan_model_path = "./models/BLCM_ma.stan")                                                          
+LCM_model_p_scale_priors <- StanModel$new(stan_model_rds_path = "./models/p_scale_priors/BLCM_ma_p_scale_priors.rds",
+                              stan_model_path = "./models/p_scale_priors/BLCM_ma_p_scale_priors.stan")                                                          
 
 
 # LCM - call the server module for button
@@ -1133,7 +969,8 @@ LCM_SA_draws <- LCM_run_model( id = "SA_LCM_model_id",
                                SA_indicator_local = 1, 
                                LCM_options_indicators = LCM_options_indicators)$draws
 
-
+# Run the Garabage Collector to Ensure any excess memory used by stan is freed
+gc()
 
 #  LCM - Table of model diagnostics  ---------------------------------------------------------------------------------------------------
 LCM_model_diagnostics_tab_renderUI_server(id = "LCM_model_id", 

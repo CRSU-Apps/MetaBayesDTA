@@ -7,7 +7,7 @@
 MR_run_model_priors_only <- function(id, 
                                      stan_model_cts, 
                                      stan_model_cat, 
-                                     stan_model_cat_p_scale_priors,
+                                     stan_model_cat_PO_p_scale_priors,
                                      p_scale_priors_indicator,
                                      cts_cov_indicator = MR_cts_cov_indicator,
                                      data,
@@ -103,9 +103,8 @@ MR_run_model_priors_only <- function(id,
                      Z_Cov <- if_else_Cov(X, cov_index)$out
                      cts_cov_points <- if_else_Cov(X, cov_index)$cts_cov_points
                      
-                     
+                     stan_model_cts_model <- stan_model_cts$getModel()
                      r$bg_process  <<-   callr::r_bg(
-                        
                         func = function(stan_model_cts, 
                                         X, 
                                         Cov, 
@@ -161,7 +160,7 @@ MR_run_model_priors_only <- function(id,
                                          max_treedepth = 10),
                             seed= 123)
                         }, # end of function 
-                        args = list(stan_model_cts = stan_model_cts, 
+                        args = list(stan_model_cts = stan_model_cts_model, 
                                     X = X, 
                                     Cov = Cov, 
                                     num_levels = num_levels, 
@@ -202,9 +201,9 @@ MR_run_model_priors_only <- function(id,
               p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
 
               if (p_scale_priors_indicator == TRUE) {
-                
+                          stan_model_cat_PO_p_scale_priors_model <- stan_model_cat_PO_p_scale_priors$getModel()
                           r$bg_process  <<-     callr::r_bg(
-                                                func = function(stan_model_cat_p_scale_priors,
+                                                func = function(stan_model_cat_PO_p_scale_priors,
                                                                 X,
                                                                 Cov,
                                                                 num_levels,
@@ -215,9 +214,9 @@ MR_run_model_priors_only <- function(id,
                                                                 MRcat_prior_spec_upper95,
                                                                 MRcat_prior_SD_sens_sd,
                                                                 MRcat_prior_SD_spec_sd) {
-                        
+                                                                
                                                   rstan::sampling(
-                                                    object = stan_model_cat_p_scale_priors,
+                                                    object = stan_model_cat_PO_p_scale_priors,
                                                     data =  list(n_studies = length(X$author),
                                                                  holdout = rep(0, length(X$author)),
                                                                  TP = X$TP,
@@ -242,7 +241,7 @@ MR_run_model_priors_only <- function(id,
                                                                  max_treedepth = 10),
                                                     seed= 123)
                                                 }, # end of function
-                                                args = list(stan_model_cat_p_scale_priors = stan_model_cat_p_scale_priors,
+                                                args = list(stan_model_cat_PO_p_scale_priors = stan_model_cat_PO_p_scale_priors_model,
                                                             X = X,
                                                             Cov = Cov,
                                                             num_levels = num_levels,
@@ -259,7 +258,7 @@ MR_run_model_priors_only <- function(id,
                           
               }
               else {
-                
+                stan_model_cat_model <- stan_model_cat$getModel()
                 r$bg_process  <<-     callr::r_bg(
                                       func = function(stan_model_cat,
                                                       X,
@@ -299,7 +298,7 @@ MR_run_model_priors_only <- function(id,
                                                        max_treedepth = 10),
                                           seed= 123)
                                       }, # end of function
-                                      args = list(stan_model_cat = stan_model_cat,
+                                      args = list(stan_model_cat = stan_model_cat_model,
                                                   X = X,
                                                   Cov = Cov,
                                                   num_levels = num_levels,
@@ -326,6 +325,7 @@ MR_run_model_priors_only <- function(id,
           
           observe({
                   req(r$bg_process, r$poll)
+                  show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
                   invalidateLater(millis = 1000, session)
                   mtime <- file.info(tfile)$mtime
                   if (mtime > r$progress_mtime) {
@@ -334,6 +334,7 @@ MR_run_model_priors_only <- function(id,
                   }
                   if (!r$bg_process$is_alive()) {
                     r$draws <- r$bg_process$get_result() 
+                    remove_modal_spinner()
                     r$poll <- FALSE 
                   }
           })
@@ -347,7 +348,8 @@ MR_run_model_priors_only <- function(id,
           
       
       })
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
       
@@ -420,9 +422,8 @@ MR_run_model <- function(id,
 
                        Z_Cov <- if_else_Cov(X, cov_index)$out 
                        cts_cov_points <- if_else_Cov(X, cov_index)$cts_cov_points
-                       
+                       stan_model_cts_model <- stan_model_cts$getModel()
                        r$bg_process  <-   callr::r_bg(
-                          
                           func = function(stan_model_cts, 
                                           X, 
                                           Cov_level,  
@@ -480,7 +481,7 @@ MR_run_model <- function(id,
                                          max_treedepth = max_treedepth),
                             seed= seed)
                       }, # end of function 
-                      args = list(stan_model_cts = stan_model_cts, 
+                      args = list(stan_model_cts = stan_model_cts_model, 
                                   X = X, 
                                   Cov_level = Cov_level, 
                                   cts_cov_points = cts_cov_points -  input$centered_value_input, 
@@ -525,9 +526,8 @@ MR_run_model <- function(id,
             p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
             
             if (p_scale_priors_indicator == TRUE) {    # p-scale priors for Se and Sp ---------------------------------------------------------
-              
+                      stan_model_cat_p_scale_priors_model <- stan_model_cat_p_scale_priors$getModel()
                       r$bg_process  <-    callr::r_bg(
-                                
                                 func = function(stan_model_cat_p_scale_priors,
                                                 X,
                                                 Cov,
@@ -572,7 +572,7 @@ MR_run_model <- function(id,
                                              max_treedepth = max_treedepth),
                                 seed= seed)
                             },  # end of function 
-                            args = list(stan_model_cat_p_scale_priors = stan_model_cat_p_scale_priors, 
+                            args = list(stan_model_cat_p_scale_priors = stan_model_cat_p_scale_priors_model, 
                                         X = X, 
                                         Cov = Cov, 
                                         num_levels = num_levels, 
@@ -594,9 +594,8 @@ MR_run_model <- function(id,
                             ) # end of obj <- callr::r_bg(..)
             }
             else {  # logit-scale priors for Se and Sp ---------------------------------------------------------
-              
+              stan_model_cat_model <- stan_model_cat$getModel()
               r$bg_process  <-    callr::r_bg(
-                
                 func = function(stan_model_cat,
                                 X,
                                 Cov,
@@ -641,7 +640,7 @@ MR_run_model <- function(id,
                                  max_treedepth = max_treedepth),
                     seed= seed)
                 },  # end of function 
-                args = list(stan_model_cat = stan_model_cat, 
+                args = list(stan_model_cat = stan_model_cat_model, 
                             X = X, 
                             Cov = Cov, 
                             num_levels = num_levels, 
@@ -672,7 +671,7 @@ MR_run_model <- function(id,
           
           observe({
             req(r$bg_process, r$poll)
-            
+            show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
             invalidateLater(millis = 1000, session)
             
             mtime <- file.info(tfile)$mtime
@@ -683,6 +682,7 @@ MR_run_model <- function(id,
             }
             if (!r$bg_process$is_alive()) {
               r$draws <- r$bg_process$get_result() 
+              remove_modal_spinner()
               r$poll <- FALSE 
             }
           })
@@ -695,7 +695,8 @@ MR_run_model <- function(id,
           })
           
      }) # end of r$bgprocess
-     
+          # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+          gc()
           return( list( draws = reactive({ r$draws  }) ))
       
     }

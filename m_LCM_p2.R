@@ -115,9 +115,8 @@ LCM_run_model_priors_only <- function(id,
         p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
         
      if (p_scale_priors_indicator == TRUE) {
-
+                          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
                            r$bg_process <<-   callr::r_bg(
-                             
                              func = function(stan_model_p_scale_priors,
                                              X,
                                              LCM_prior_sens_ref_lower95,
@@ -168,7 +167,7 @@ LCM_run_model_priors_only <- function(id,
                                )
                              }, # end of function 
                              
-                             args = list(stan_model_p_scale_priors = stan_model_p_scale_priors,
+                             args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model,
                                          X = X(), 
                                          # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
                                          LCM_prior_sens_ref_lower95 = as.array(priors$LCM_prior_sens_ref_lower95$vec),
@@ -195,9 +194,9 @@ LCM_run_model_priors_only <- function(id,
         
      }
      else {   # logit-scale priors
-          
+                      stan_model_model <- stan_model$getModel()         
                        r$bg_process <<-   callr::r_bg(
-                         
+
                          func = function(stan_model, 
                                          X,
                                          LCM_prior_mean_sens_ref_mu,
@@ -248,7 +247,7 @@ LCM_run_model_priors_only <- function(id,
                            )
                          }, # end of function 
                          
-                         args = list(stan_model = stan_model,
+                         args = list(stan_model = stan_model_model,
                                      X = X(), 
                                      # "dynamic" priors for ref test (# of priors is dynamic as depends on # of ref. tests)
                                      LCM_prior_mean_sens_ref_mu = as.array(priors$LCM_prior_mean_sens_ref_mu$vec),
@@ -280,7 +279,7 @@ LCM_run_model_priors_only <- function(id,
         
         observe({
           req(r$bg_process, r$poll)
-          
+          show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
           invalidateLater(millis = 1000, session)
           mtime <- file.info(tfile)$mtime
           if (mtime > r$progress_mtime) {
@@ -289,6 +288,7 @@ LCM_run_model_priors_only <- function(id,
           }
           if (!r$bg_process$is_alive()) {
             r$draws <- r$bg_process$get_result() 
+            remove_modal_spinner()
             r$poll <- FALSE 
           }
         })
@@ -306,7 +306,8 @@ LCM_run_model_priors_only <- function(id,
       my_list <-             list(
         draws    = reactive({ r$draws  })
       )
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(my_list)
       
     }
@@ -444,10 +445,9 @@ LCM_run_model <- function( id,
                     p_scale_priors_indicator <- p_scale_priors_indicator$p_scale_priors_indicator
                     
             
-                    if (p_scale_priors_indicator == TRUE) {    # p-scale priors for Se and Sp ----------------------------------------------------------
-
+                    if (p_scale_priors_indicator == TRUE) { 
+                                stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()   # p-scale priors for Se and Sp ----------------------------------------------------------
                                 r$bg_process <<-   callr::r_bg(
-                                  
                                           func = function(stan_model_p_scale_priors, 
                                                           X,
                                                           study_sizes,
@@ -520,7 +520,7 @@ LCM_run_model <- function( id,
                                               init = list(inits, inits)
                                               )
                                           },
-                                          args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                                          args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                                                       X = X, 
                                                       study_sizes = study_sizes,
                                                       LCM_conditional_independence_indicator = LCM_options_indicators$LCM_conditional_independence_indicator, 
@@ -563,9 +563,8 @@ LCM_run_model <- function( id,
                                 
                     }
                     else {  # logit-scale priors for Se and Sp  ---------------------------------------------------------- 
-                      
+                      stan_model_model <- stan_model$getModel()
                       r$bg_process <<-   callr::r_bg(
-                                          
                                           func = function(stan_model, 
                                                           X,
                                                           study_sizes,
@@ -640,7 +639,7 @@ LCM_run_model <- function( id,
                                             )
                                           },
                                           
-                                          args = list(stan_model = stan_model, 
+                                          args = list(stan_model = stan_model_model, 
                                                       X = X, 
                                                       study_sizes = study_sizes,
                                                       LCM_conditional_independence_indicator = LCM_options_indicators$LCM_conditional_independence_indicator, 
@@ -689,7 +688,7 @@ LCM_run_model <- function( id,
                     
                     observe({
                           req(r$bg_process, r$poll)
-                          
+                          show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
                           invalidateLater(millis = 1000, session)
                           mtime <- file.info(tfile)$mtime
                           
@@ -699,6 +698,7 @@ LCM_run_model <- function( id,
                           }
                           if (!r$bg_process$is_alive()) {
                             r$draws <- r$bg_process$get_result()
+                            remove_modal_spinner()
                             r$poll <- FALSE 
                           }
                     })
@@ -717,8 +717,8 @@ LCM_run_model <- function( id,
                                   draws    = reactive({ r$draws  })
       )
       
-      
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return(my_list)
       
       

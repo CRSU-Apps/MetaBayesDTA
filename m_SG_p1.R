@@ -852,7 +852,8 @@ SG_data_table_server <- function(id, data, draws) {  # "mod" is the rstan file w
                                                     autoWidth = TRUE, 
                                                     scrollX=T))
                           
-                          
+                          # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+                          gc()
                           return(DT::datatable( data_table_obj() ))
 
         })

@@ -104,9 +104,8 @@ SG_run_model_priors_only <- function(id,
                       
              if (p_scale_priors_indicator == TRUE) {   # p-scale priors for Se and Sp  -------------------------------------------
 
-                     
+                          stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
                           r$bg_process  <-   callr::r_bg(
-                            
                                       func = function(stan_model_p_scale_priors, 
                                                       X, 
                                                       Cov, 
@@ -145,7 +144,7 @@ SG_run_model_priors_only <- function(id,
                                                        max_treedepth = 10),
                                           seed= 123)
                                       }, # end of function 
-                                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                                                   X = X, 
                                                   Cov = Cov, 
                                                   num_levels = num_levels, 
@@ -162,9 +161,8 @@ SG_run_model_priors_only <- function(id,
                       
                    }
                    else {  # logit-scale priors for Se and Sp   -------------------------------------------  
-                         
+                         stan_model_model <- stan_model$getModel()
                          r$bg_process  <-   callr::r_bg(
-                           
                                          func = function(stan_model, 
                                                          X, 
                                                          Cov, 
@@ -203,7 +201,7 @@ SG_run_model_priors_only <- function(id,
                                                           max_treedepth = 10),
                                              seed= 123)
                                          }, # end of function 
-                                         args = list(stan_model = stan_model, 
+                                         args = list(stan_model = stan_model_model, 
                                                      X = X, 
                                                      Cov = Cov, 
                                                      num_levels = num_levels, 
@@ -226,6 +224,7 @@ SG_run_model_priors_only <- function(id,
       
       observe({
               req(r$bg_process, r$poll)
+              show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
               invalidateLater(millis = 1000, session)
               mtime <- file.info(tfile)$mtime
               if (mtime > r$progress_mtime) {
@@ -234,6 +233,7 @@ SG_run_model_priors_only <- function(id,
               }
               if (!r$bg_process$is_alive()) {
                 r$draws <- r$bg_process$get_result() 
+                remove_modal_spinner()
                 r$poll <- FALSE 
               }
       })
@@ -246,7 +246,8 @@ SG_run_model_priors_only <- function(id,
       })
       
        })  # end of r$bgprocess
-       
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
 
@@ -328,7 +329,7 @@ SG_run_model <- function(id,
         Cov_level <-  if_else_Cov_level(X, cov_index)
         
         if (input$p_scale_priors_indicator == TRUE) { # p-scale priors for Se and Sp   -------------------------------------------  
-          
+                    stan_model_p_scale_priors_model <- stan_model_p_scale_priors$getModel()
                     r$bg_process <-    callr::r_bg(
                       func = function(stan_model_p_scale_priors, 
                                       X, 
@@ -374,7 +375,7 @@ SG_run_model <- function(id,
                                        max_treedepth = max_treedepth),
                           seed= seed)
                       }, 
-                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors, 
+                      args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
                                   X = X, 
                                   Cov = Cov, 
                                   num_levels = num_levels, 
@@ -397,7 +398,7 @@ SG_run_model <- function(id,
                     
         }
         else {  # logit-scale priors for Se and Sp   -------------------------------------------  
-          
+          stan_model_model = stan_model$getModel()
           r$bg_process <-    callr::r_bg(
             func = function(stan_model, 
                             X, 
@@ -443,7 +444,7 @@ SG_run_model <- function(id,
                              max_treedepth = max_treedepth),
                 seed= seed)
             }, 
-            args = list(stan_model = stan_model, 
+            args = list(stan_model = stan_model_model, 
                         X = X, 
                         Cov = Cov, 
                         num_levels = num_levels, 
@@ -472,7 +473,7 @@ SG_run_model <- function(id,
       
       observe({
         req(r$bg_process, r$poll)
-        
+        show_modal_spinner(spin = "atom", color = "#005398", text = "Running Model")
         invalidateLater(millis = 1000, session)
         
         mtime <- file.info(tfile)$mtime
@@ -483,6 +484,7 @@ SG_run_model <- function(id,
         }
         if (!r$bg_process$is_alive()) {
           r$draws <- r$bg_process$get_result() 
+          remove_modal_spinner()
           r$poll <- FALSE 
         }
       })
@@ -496,7 +498,8 @@ SG_run_model <- function(id,
       
     }) 
     
-      
+      # Run the Garabage Collector to Ensure any excess memory used by stan is freed
+      gc()
       return( list( draws = reactive({ r$draws  }) ))
       
     }

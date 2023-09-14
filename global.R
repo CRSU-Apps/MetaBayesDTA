@@ -16,13 +16,6 @@
 #  .libPaths(myPaths)  # reassign the path
 #  .libPaths()
 
-
-
-
-
-
-
-
 # install.packages("shiny")
 # install.packages("shinythemes")
 # install.packages("shinyWidgets")
@@ -57,8 +50,10 @@
 # install.packages("shinybusy")
 # install.packages("callr")
 # install.packages("MASS")
-# install.packages("usethis")
 # install.packages("htmltools")
+# install.packages("usethis")
+# install.packages("R6")
+
 
 require(shiny)
 require(shinythemes)
@@ -97,6 +92,8 @@ require(shinybusy)
 require(callr)
 require(MASS)
 require(htmltools)
+require(usethis)
+require(R6)
 # Set Stan options -------------------------------------------------------------
 #rstan_options(auto_write = TRUE)
 #options(mc.cores = parallel::detectCores())
@@ -134,61 +131,3 @@ TPimg <-readPNG('./www/TP.png')
 TNimg <-readPNG('./www/TN.png')
 FPimg <-readPNG('./www/FP.png')
 FNimg <-readPNG('./www/FN.png')
-
-
-# # Load UI (ui.R file) -----------------------------------------------------
-#source('ui.R')
-# 
-# # Load server (server.R file) ---------------------------------------------
-#source('server.R')
-
-# Pre-load Stan model files without R shiny first (so R doesn't need to re-compile the
-# models overtime the app is launched) ----------------------------------------------
-# Save RDS of each Stan model - the compiler flags / CXXFLAGS needs to match the one in shinyapps.io 
-# only possible to change these on Linux 
-# see https://discourse.mc-stan.org/t/compile-stan-model-in-shiny-app/10022/16
-
-# saveRDS(stan_model(file = './models/BVM_PO.stan'), './models/BVM_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BVM_PO_p_scale_priors.stan'), './models/p_scale_priors/BVM_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/BVM.stan'), './models/BVM.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BVM_p_scale_priors.stan'), './models/p_scale_priors/BVM_p_scale_priors.rds')
-# 
-# saveRDS(stan_model(file = './models/MR_cts_PO.stan'), './models/MR_cts_PO.rds')
-# saveRDS(stan_model(file = './models/MR_cat_PO.stan'), './models/MR_cat_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/MR_cts.stan'), './models/MR_cts.rds')
-# saveRDS(stan_model(file = './models/MR_cat.stan'), './models/MR_cat.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/MR_cat_p_scale_priors.stan'), './models/p_scale_priors/MR_cat_p_scale_priors.rds')
-# 
-# saveRDS(stan_model(file = './models/SG_PO.stan'), './models/SG_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/SG_PO_p_scale_priors.stan'), './models/p_scale_priors/SG_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/SG.stan'), './models/SG.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/SG_p_scale_priors.stan'), './models/p_scale_priors/SG_p_scale_priors.rds')
-# 
-# saveRDS(stan_model(file = './models/BLCM_ma_PO.stan'), './models/BLCM_ma_PO.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
-# saveRDS(stan_model(file = './models/BLCM_ma.stan'), './models/BLCM_ma.rds')
-# saveRDS(stan_model(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.stan'), './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
-
-# MA_model_PO <- readRDS(file = './models/BVM_PO.rds')
-# MA_model_PO_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_PO_p_scale_priors.rds")
-# MA_model <- readRDS(file = "./models/BVM.rds")
-# MA_model_p_scale_priors <- readRDS(file = "./models/p_scale_priors/BVM_p_scale_priors.rds")
-# 
-# MR_model_cts_PO <- readRDS(file = './models/MR_cts_PO.rds')
-# MR_model_cat_PO <- readRDS(file = './models/MR_cat_PO.rds')
-# MR_model_cat_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_PO_p_scale_priors.rds')
-# MR_model_cts <- readRDS(file = './models/MR_cts.rds')
-# MR_model_cat <- readRDS(file = './models/MR_cat.rds')
-# MR_model_cat_p_scale_priors <- readRDS(file = './models/p_scale_priors/MR_cat_p_scale_priors.rds')
-# 
-# SG_model_PO <- readRDS(file = './models/SG_PO.rds')
-# SG_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_PO_p_scale_priors.rds')
-# SG_model <- readRDS(file = './models/SG.rds')
-# SG_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/SG_p_scale_priors.rds')
-# 
-# LCM_model_PO <- readRDS(file ='./models/BLCM_ma_PO.rds')
-# LCM_model_PO_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_PO_p_scale_priors.rds')
-# LCM_model <- readRDS(file = './models/BLCM_ma.rds')
-# LCM_model_p_scale_priors <- readRDS(file = './models/p_scale_priors/BLCM_ma_p_scale_priors.rds')
-
