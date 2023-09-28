@@ -283,7 +283,7 @@ MA_revman_plots_UI <- function(id) {
   ns <- NS(id)  
   tagList( 
     tableOutput(ns("revman")),
-    downloadButton(ns("download_revvan"), "Download Table")
+    downloadButton(ns("revman_download"), "Download Table")
   )
 }
 
@@ -373,8 +373,11 @@ MA_revman_plots_server <- function(id,
                           }, sanitize.text.function = function(x) x)
                  
           output$revman_download <- downloadHandler(
-
-                                     write.csv(   revman_obj(), file, sep=",", row.names=FALSE)    )
+            filename = "parameters_for_revman.csv",
+            content = function(file){
+              write.csv(revman_obj(), file, sep=",", row.names=FALSE)
+            }
+          )
                                                            
                                                    
                     }
