@@ -49,7 +49,7 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home", 
-                      h1("MetaBayesDTA (BETA v1.4.0)"),
+                      h1("MetaBayesDTA (BETA v1.4.1)"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
