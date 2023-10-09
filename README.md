@@ -1,5 +1,7 @@
 # MetaBayesDTA (BETA v1.4.1)
 
+[![DOI](https://zenodo.org/badge/452713721.svg)](https://zenodo.org/badge/latestdoi/452713721)
+
 App link: <https://crsu.shinyapps.io/MetaBayesDTA/>
 
 Paper link: <https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y>
