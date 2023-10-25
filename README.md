@@ -1,4 +1,4 @@
-# MetaBayesDTA (BETA v1.4.2)
+# MetaBayesDTA (v1.0)
 
 [![DOI](https://zenodo.org/badge/452713721.svg)](https://zenodo.org/badge/latestdoi/452713721)
 

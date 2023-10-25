@@ -17,7 +17,7 @@
 server <- function(input, output, session) {
   
   shinyalert(title = "Important message",
-             text =  paste0("Note that this is a beta release. If you have time it would be greatly appreciated if you could fill 
+             text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
                             tags$a(href="https://docs.google.com/forms/d/e/1FAIpQLSdBvMFpWma87JV1R0lAkmiVWxcIFf9I0m2BiDS6JV20MrvE9Q/viewform?vc=0&c=0&w=1&flr=0"
                                    , "here.",target="_blank"),
@@ -77,7 +77,7 @@ output$downloadCochraneGuide <- downloadHandler(
     paste("Cochrane-DTA-in-MetaBayesDTA v1_0.html")
   },
   content = function(file){
-    file.copy("www/Cochrane-DTA-in-MetaBayesDTA.html", file) 
+    file.copy("https://github.com/CRSU-Apps/MBDTA-Cochrane-guide/blob/main/Cochrane-DTA-in-MetaBayesDTA.html?raw=TRUE", file) 
   }
 )
 
