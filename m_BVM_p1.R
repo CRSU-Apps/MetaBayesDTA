@@ -189,20 +189,39 @@ MA_forest_plots_server <- function(id, data) {  # "mod" is the rstan file which 
           
            })
       
-      # # Download plot object 
+      # Download plot object 
       output$forest_plot_sens_download <- downloadHandler(
                                             filename =  function(){
-                                              paste("Sensitivity_forest_plot", input$filetype_forest, sep=".")
+                                              paste("Sensitivity_forest_plot", input$prev_treeplot_filetype, sep=".")
                                             },
-                                            content = function(file) {
-                                              if (input$filetype_forest == "png") {
+                                            content = function(file) { 
+                                              if (input$prev_treeplot_filetype == "png") {
                                                 png(file)
-                                                forest_plot_sens_obj()
+                                                prev_treeplot_obj()
                                                 dev.off()
                                               }
                                               else {
                                                 pdf(file)
-                                                forest_plot_sens_obj()
+                                                prev_treeplot_obj()
+                                                dev.off()
+                                              }
+                                            }
+                                          )
+      
+      # Download plot object 
+      output$forest_plot_sens_download <- downloadHandler(
+                                            filename =  function(){
+                                              paste("Specificity_forest_plot", input$filetype_forest, sep=".")
+                                            },
+                                            content = function(file) { 
+                                              if (input$filetype_forest == "png") {
+                                                png(file)
+                                                forest_plot_spec_obj()
+                                                dev.off()
+                                              }
+                                              else {
+                                                pdf(file)
+                                                forest_plot_spec_obj()
                                                 dev.off()
                                               }
                                             }
