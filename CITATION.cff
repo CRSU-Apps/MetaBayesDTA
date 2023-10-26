@@ -32,6 +32,9 @@ authors:
     given-names: Ryan
     affiliation: University of Glasgow
     orcid: 'https://orcid.org/0000-0002-4424-9890'
+  - family-names: Nevill
+    given-names: Janion
+    affiliation: University of Leicester
 repository-code: 'https://github.com/CRSU-Apps/MetaBayesDTA/'
 abstract: >-
   MetaBayesDTA is an extended, Bayesian version of MetaDTA, which allows users to conduct meta-analysis of test accuracy, with or without assuming a gold standard. 
@@ -43,5 +46,5 @@ keywords:
   - Bayesian
   - RShiny
 license: GPL-3.0-or-later
-version: 1.4.1
-date-released: '2023-09-01'
+version: 1.0
+date-released: '2023-10-25'
