@@ -46,5 +46,5 @@ keywords:
   - Bayesian
   - RShiny
 license: GPL-3.0-or-later
-version: 1.0
-date-released: '2023-10-25'
+version: 1.0.0
+date-released: '2023-10-27'
