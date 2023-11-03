@@ -10,7 +10,7 @@ tags$head(
   tags$meta(name="description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(name="keywords", content="Meta-Analysis, Diagnostic test accuracy, Application, Imperfect gold standard, Latent class, Bayesian"),
   # Open Graph Tags
-  tags$meta(property="og:title", content="MetaBayesDTA v1.0.0"),
+  tags$meta(property="og:title", content="MetaBayesDTA v1.5.0"),
   tags$meta(property="og:description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaBayesDTA/main/www/roc_curve.png")
   ), 
@@ -48,7 +48,8 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home", 
-                      h1("MetaBayesDTA (v1.0.0)"),
+                      h1("MetaBayesDTA (v1.5.0)"),
+                      h2("FULL RELEASE - MetaBayesDTA has now left BETA", style="color:blue"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
