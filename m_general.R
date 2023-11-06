@@ -199,6 +199,7 @@ dataset_import_ui <- function(id) {
     tags$hr(),
     h4(helpText(tags$strong("File options"))),
     awesomeCheckbox(inputId = ns("header"), label = "First row as column headings", value = TRUE),
+    actionButton(ns("reset_file"), "Reset file input"),
     br(),
     awesomeRadio(inputId = ns("default"),
                  label = h4(helpText(tags$strong("Select example dataset"))),
@@ -231,15 +232,12 @@ dataset_default_import_server <- function(id,
       default_data <- reactive({
         df <- NULL
         if ('2' %in% input$default) {
-          df <-QA
-        }
-        if ('3' %in% input$default) {
+          df <- QA
+        } else if ('3' %in% input$default) {
           df <- Cov
-        }
-        if ('4' %in% input$default) {
+        } else if ('4' %in% input$default) {
           df <- QA_Cov
-        }
-        else {
+        } else {
           df <- Standard
         }
         df <- df %>%
@@ -296,6 +294,10 @@ dataset_import_server <- function(id,
   moduleServer(
     id,
     function(input, output, session) {
+
+    observeEvent(input$reset_file, {
+      shinyjs::reset("data_input")  # reset is a shinyjs function
+    })
       
       # Make the data file that was uploaded reactive 
       output$data <- reactive({ 
@@ -326,6 +328,7 @@ dataset_import_server <- function(id,
                           text = e$message,
                           type = "error"
                         )
+                        shinyjs::reset("data_input")
                         return(defaultData())
                       }
                     )

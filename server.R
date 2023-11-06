@@ -16,14 +16,14 @@
 
 server <- function(input, output, session) {
   
-  shinyalert(title = "Important message",
+  shinyalert(title = "Message from Authors",
              text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
                             tags$a(href="https://docs.google.com/forms/d/e/1FAIpQLSdBvMFpWma87JV1R0lAkmiVWxcIFf9I0m2BiDS6JV20MrvE9Q/viewform?vc=0&c=0&w=1&flr=0"
                                    , "here.",target="_blank"),
                             " Please report any bugs or suggestions for new features to the CRSU Team at ", tags$a(href="mailto:apps@crsu.org.uk", "apps@crsu.org.uk"), "."),
              type = "info",
-             confirmButtonText = "I consent",
+             confirmButtonText = "Okay",
              html = TRUE)
   
     shinyalert(title = "Important message",
