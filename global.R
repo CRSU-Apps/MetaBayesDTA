@@ -53,6 +53,7 @@
 # install.packages("htmltools")
 # install.packages("usethis")
 # install.packages("R6")
+# install.packages("rio")
 
 
 require(shiny)
@@ -94,6 +95,7 @@ require(MASS)
 require(htmltools)
 require(usethis)
 require(R6)
+require(rio)
 # Set Stan options -------------------------------------------------------------
 #rstan_options(auto_write = TRUE)
 #options(mc.cores = parallel::detectCores())
@@ -125,6 +127,7 @@ source('./m_SG_p4.R', local  = TRUE)
 source('./m_LCM_p1_v2.R', local  = TRUE)
 source('./m_LCM_p2.R', local  = TRUE)
 source('./m_LCM_p3_v2.R', local  = TRUE)
+source('./utils.R', local = TRUE)
 
 # Load in images for TP, FP, FN, TN  -------------------------------------------------------------------
 TPimg <-readPNG('./www/TP.png')

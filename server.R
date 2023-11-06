@@ -43,19 +43,18 @@ server <- function(input, output, session) {
   Cov <- read.csv('./Cov.csv') 
   QA_Cov <- read.csv('./QA_Cov.csv')
  
-  
-  
-# Load data 
-data <- dataset_import_server(id = "dataset_id",
-                              QA = QA, Cov = Cov, QA_Cov = QA_Cov, Standard = Standard)
-                              
-
 defaultData <- dataset_default_import_server(id = "dataset_id", 
                                              QA = QA,
                                              Cov = Cov,
                                              QA_Cov = QA_Cov, 
                                              Standard = Standard)
 
+  
+# Load data 
+data <- dataset_import_server(
+  id = "dataset_id",
+  defaultData
+)
 
 # Download User Guide
 # Allow users the option to download the standard example dataset

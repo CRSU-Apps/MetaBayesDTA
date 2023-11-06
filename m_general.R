@@ -194,13 +194,11 @@ model_priors_plot_UI <- function(id) {
 dataset_import_ui <- function(id) {
   ns <- NS(id) 
   tagList(
-    fileInput(inputId = ns("data_input"), label="Please select a file", buttonLabel="Select", placeholder="No file selected"),
+    fileInput(inputId = ns("data_input"), label="Please select a file", buttonLabel="Select", placeholder="No file selected", accept = c(".csv", ".xlsx")),
     helpText("Default maximum file size is 5MB"),
     tags$hr(),
     h4(helpText(tags$strong("File options"))),
     awesomeCheckbox(inputId = ns("header"), label = "First row as column headings", value = TRUE),
-    br(),
-    awesomeRadio(inputId = ns("sep"), label="File Delimiter", choices=c(Comma=",", Semicolon=";", Tab="\t", Space= " "), selected=","),
     br(),
     awesomeRadio(inputId = ns("default"),
                  label = h4(helpText(tags$strong("Select example dataset"))),
@@ -230,23 +228,30 @@ dataset_default_import_server <- function(id,
     function(input, output, session) {
       
       # Default data
-      output$defaultData <- reactive({
-        
+      default_data <- reactive({
+        df <- NULL
         if ('2' %in% input$default) {
-          return(QA)
+          df <-QA
         }
         if ('3' %in% input$default) {
-          return(Cov)
+          df <- Cov
         }
         if ('4' %in% input$default) {
-          return(QA_Cov)
+          df <- QA_Cov
         }
         else {
-          return(Standard) 
+          df <- Standard
         }
+        df <- df %>%
+          dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
+        
+        return(df)
         
       })
+
+      output$defaultData <- default_data
       
+      return(default_data)
       
     }
   )
@@ -286,7 +291,7 @@ data_for_analysis_server <- function(id,
 
 # Dataset import  ------------------------ ---------------------------------
 dataset_import_server <- function(id,
-                                  QA, Cov, QA_Cov, Standard) {
+                                  defaultData) {
   
   moduleServer(
     id,
@@ -298,29 +303,33 @@ dataset_import_server <- function(id,
                   file1 <- input$data_input
                   
                   if (is.null(file1)) {
-                    if ('2' %in% input$default) {
-                      return(QA %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    if ('3' %in% input$default) {
-                      return(Cov %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    if ('4' %in% input$default) {
-                      return(QA_Cov %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    else {
-                      return(Standard %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)) )
-                    }
+                    return(defaultData())
+                  } else { 
+                    tryCatch({
+                      a <- rio::import(file1$datapath,
+                        header = input$header,
+                        stringsAsFactors = FALSE
+                      ) 
+                      if (!is_valid(a)){
+                        stop(paste0(
+                          paste(get_missing_cols(a), collapse = ", ")),
+                          " column(s) are Missing from Data"
+                        )
+                      }
+                      a <- a %>% 
+                        dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
+                      a
+                      },
+                      error=function(e) {
+                        shinyalert::shinyalert(
+                          title = "Error",
+                          text = e$message,
+                          type = "error"
+                        )
+                        return(defaultData())
+                      }
+                    )
                   }
-                  
-                  else { 
-                    a <- read.table(file = file1$datapath, 
-                                    sep = input$sep,
-                                    header = input$header, 
-                                    stringsAsFactors = FALSE) %>% 
-                      dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
-                    a
-                  }
-        
       })
       
     }
