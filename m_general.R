@@ -194,7 +194,7 @@ model_priors_plot_UI <- function(id) {
 dataset_import_ui <- function(id) {
   ns <- NS(id) 
   tagList(
-    fileInput(inputId = ns("data_input"), label="Please select a file", buttonLabel="Select", placeholder="No file selected", accept = c(".csv", ".xlsx")),
+    uiOutput(ns("data_input")),
     helpText("Default maximum file size is 5MB"),
     tags$hr(),
     h4(helpText(tags$strong("File options"))),
@@ -290,51 +290,70 @@ data_for_analysis_server <- function(id,
 # Dataset import  ------------------------ ---------------------------------
 dataset_import_server <- function(id,
                                   defaultData) {
-  
+
   moduleServer(
     id,
     function(input, output, session) {
 
-    observeEvent(input$reset_file, {
-      shinyjs::reset("data_input")  # reset is a shinyjs function
-    })
-      
-      # Make the data file that was uploaded reactive 
-      output$data <- reactive({ 
-        
-                  file1 <- input$data_input
-                  
-                  if (is.null(file1)) {
-                    return(defaultData())
-                  } else { 
-                    tryCatch({
-                      a <- rio::import(file1$datapath,
-                        header = input$header,
-                        stringsAsFactors = FALSE
-                      ) 
-                      if (!is_valid(a)){
-                        stop(paste0(
-                          paste(get_missing_cols(a), collapse = ", ")),
-                          " column(s) are Missing from Data"
-                        )
-                      }
-                      a <- a %>% 
-                        dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
-                      a
-                      },
-                      error=function(e) {
-                        shinyalert::shinyalert(
-                          title = "Error",
-                          text = e$message,
-                          type = "error"
-                        )
-                        shinyjs::reset("data_input")
-                        return(defaultData())
-                      }
-                    )
-                  }
+      # Create a definable reactive value to allow reloading of data
+      reload <- reactiveVal(FALSE)
+
+      # Initalise input field
+      output$data_input <- renderUI(DefaultFileInput(id))
+
+      # Reset the data input and load default data when user
+      # clicks the reset button
+      observeEvent(input$reset_file, {
+        output$data_input <- renderUI(DefaultFileInput(id))
+        reload(TRUE)
       })
-      
+
+      # Set the reload value to false when data is uploaded
+      observeEvent(input$data_input, {
+        reload(FALSE)
+      })
+
+      # Make the data file that was uploaded reactive
+      data <- reactive({
+        file1 <- input$data_input
+        if (reload()) {
+          output$data_input <- renderUI(DefaultFileInput(id))
+          return(defaultData())
+        }
+        if (is.null(file1)) {
+          return(defaultData())
+        } else {
+          tryCatch({
+            tmp_df <- rio::import(file1$datapath,
+              header = input$header,
+              stringsAsFactors = FALSE
+            )
+            if (!IsValid(tmp_df)) {
+              stop(
+                paste0(
+                  paste(GetMissingCols(tmp_df), collapse = ", ")
+                ),
+                " column(s) are Missing from Data"
+              )
+            }
+            tmp_df <- tmp_df %>%
+              dplyr::mutate(
+                year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)
+              )
+            return(tmp_df)
+          }, error = function(e) {
+            shinyalert::shinyalert(
+              title = "Error",
+              text = e$message,
+              type = "error"
+            )
+            output$data_input <- renderUI(DefaultFileInput(id))
+            return(defaultData())
+          })
+        }
+      })
+      # Explicitly return the data reactive
+      return(data)
     }
   )
 }
