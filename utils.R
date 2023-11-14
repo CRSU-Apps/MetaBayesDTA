@@ -9,7 +9,7 @@
 #' @param df a dataframe
 #'
 #' @return a character vector of missing columns 
-#' (NULL if none are missinf)
+#' (NULL if none are missing)
 GetMissingCols <- function(df) {
     col_names <- names(df)
     required_cols <- c("author", "year", "TP", "FN", "FP", "TN")
