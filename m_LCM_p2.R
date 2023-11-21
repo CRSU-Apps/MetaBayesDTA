@@ -517,7 +517,7 @@ LCM_run_model <- function( id,
                                               control=list(adapt_delta= adapt_delta, 
                                                            max_treedepth = max_treedepth),
                                               seed= seed,
-                                              init = list(inits, inits)
+                                              init = inits
                                               )
                                           },
                                           args = list(stan_model_p_scale_priors = stan_model_p_scale_priors_model, 
@@ -553,9 +553,9 @@ LCM_run_model <- function( id,
                                                       adapt_delta = sampler_options$MA_adapt_delta, 
                                                       max_treedepth = sampler_options$MA_max_treedepth,
                                                       seed= sampler_options$MA_seed, 
-                                                      inits = rep(list(index_logit_mu = c(LCM_options_indicators$LCM_index_logit_mu_se, 
-                                                                                          LCM_options_indicators$LCM_index_logit_mu_sp)), 
-                                                                                          times = sampler_options$MA_num_chains  )
+                                                      inits = rep(list(list(index_logit_mu = c(LCM_options_indicators$LCM_index_logit_mu_se,
+                                                                                               LCM_options_indicators$LCM_index_logit_mu_sp))),
+                                                                  times = sampler_options$MA_num_chains)
                                           ), 
                                           stdout = tfile,
                                           supervise = TRUE
@@ -672,9 +672,9 @@ LCM_run_model <- function( id,
                                                       adapt_delta = sampler_options$MA_adapt_delta, 
                                                       max_treedepth = sampler_options$MA_max_treedepth,
                                                       seed= sampler_options$MA_seed, 
-                                                      inits = rep(list(index_logit_mu = c(LCM_options_indicators$LCM_index_logit_mu_se, 
-                                                                                          LCM_options_indicators$LCM_index_logit_mu_sp)), 
-                                                                                          times = sampler_options$MA_num_chains  )
+                                                      inits = rep(list(list(index_logit_mu = c(LCM_options_indicators$LCM_index_logit_mu_se,
+                                                                                               LCM_options_indicators$LCM_index_logit_mu_sp))),
+                                                                  times = sampler_options$MA_num_chains)
 
                                                                             
                                           ), 
