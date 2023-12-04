@@ -131,8 +131,8 @@ transformed parameters {
         cv2[s] = 0; 
        }
        else {        // conditional dependence, study-specific: 
-        cv1[s] = LBd[s]  + (UBd[s] -LBd[s])  * vec_d[s] ;      // bounded in (LBd, UBd) = ( (1-s1) * (1-s2), Min(s1,s2) - (s1 * s2) ) 
-        cv2[s] = LBnd[s] + (UBnd[s]-LBnd[s]) * vec_nd[s] ;     // bounded in (LBnd, UBnd) = ( (1-c1) * (1-c2), Min(c1,c2) - (c1 * c2) ) 
+        cv1[s] = LBd[s]  + (UBd[s] -LBd[s])  * vec_d[s] ;      // bounded in (LBd, UBd) given above
+        cv2[s] = LBnd[s] + (UBnd[s]-LBnd[s]) * vec_nd[s] ;     // bounded in (LBnd, UBnd) given above
        }
 
      } 

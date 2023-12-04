@@ -2414,32 +2414,28 @@ LCM_priors_options_inputModule_server <- function(id, data) {
         
         else {   # logit-scale priors ----------------------------------------------------------
 
-          lapply(1:num_refs()  , 
-                 function(i) {
-                   req( input[[paste0("LCM_prior_mean_sens_ref_mu_",i)]])
-                   LCM_priors_ref$vec1[i] <- input[[paste0("LCM_prior_mean_sens_ref_mu_",i)]]
-                 }
+          LCM_priors_ref$vec1 <- sapply(1:num_refs(),
+                                        function(i){
+                                          req(input[[paste0("LCM_prior_mean_sens_ref_mu_",i)]])
+                                          }
           )
           
-          lapply(1:num_refs()  , 
-                 function(i) {
-                   req( input[[paste0("LCM_prior_mean_sens_ref_sd_",i)]])
-                   LCM_priors_ref$vec2[i] <- input[[paste0("LCM_prior_mean_sens_ref_sd_",i)]]
-                 }
+          LCM_priors_ref$vec2 <- sapply(1:num_refs(),
+                                        function(i){
+                                          req(input[[paste0("LCM_prior_mean_sens_ref_sd_",i)]])
+                                        }
           )
           
-          lapply(1:num_refs()  , 
-                 function(i) {
-                   req( input[[paste0("LCM_prior_mean_spec_ref_mu_",i)]])
-                   LCM_priors_ref$vec3[i] <- input[[paste0("LCM_prior_mean_spec_ref_mu_",i)]]
-                 }
+          LCM_priors_ref$vec3 <- sapply(1:num_refs(),
+                                        function(i){
+                                          req(input[[paste0("LCM_prior_mean_spec_ref_mu_",i)]])
+                                        }
           )
           
-          lapply(1:num_refs()  , 
-                 function(i) {
-                   req( input[[paste0("LCM_prior_mean_spec_ref_sd_",i)]])
-                   LCM_priors_ref$vec4[i] <- input[[paste0("LCM_prior_mean_spec_ref_sd_",i)]]
-                 }
+          LCM_priors_ref$vec4 <- sapply(1:num_refs(),
+                                        function(i){
+                                          req(input[[paste0("LCM_prior_mean_spec_ref_sd_",i)]])
+                                        }
           )
           
           
