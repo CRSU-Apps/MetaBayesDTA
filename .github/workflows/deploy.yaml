@@ -2,9 +2,8 @@ name: Deploy to shinyapps.io
 on:
 
   # run on any tagged push 
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
 
   # run on request (via button in actions menu)
   workflow_dispatch:
