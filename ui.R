@@ -29,7 +29,8 @@ menuItem("Perfect gold standard", tabName = "meta_analysis_gs", icon = icon("tab
          menuSubItem("Subgroup analysis", tabName = "SG_bivariate")), 
 menuItem("Imperfect gold standard", tabName = "meta_analysis_igs", icon = icon("table"), 
          menuSubItem("Latent class meta-analysis", tabName = "meta_analysis_latent_class")), 
-menuItem("References", tabName = "refs", icon = icon("table"))
+menuItem("References", tabName = "refs", icon = icon("table")),
+menuItem("Privacy Notice", tabName = "privacy_notice", icon = icon("table"))
 )
 ),
 
@@ -47,7 +48,7 @@ tabItem(
   tabName = "home_tab",
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
-             tabPanel("Home", 
+             tabPanel("Home",
                       h1("MetaBayesDTA (v1.5.0)"),
                       h2("FULL RELEASE - MetaBayesDTA has now left BETA", style="color:blue"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
@@ -74,7 +75,7 @@ tabItem(
                           width=600, 
                           src="roc_curve.png"),
                       br(),
-                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu, Tom Morris, Ryan Field, Janion Nevill"),
+                      h4("Enzo Cerullo, Suzanne Freeman, Clareece Nevill, Amit Patel, Terry Quinn, Alex Sutton, Nicola Cooper, Olivia Wu"),
                       p("For feedback/questions about this app please email the CRSU Team at ", tags$a(href="mailto:apps@crsu.org.uk", "apps@crsu.org.uk"), "."),
                       p("App powered by Rshiny with statistical analyses performed using Stan"),
                       p("(", tags$a(href="https://mc-stan.org/", "https://mc-stan.org/", target="_blank"), ")"),
@@ -90,13 +91,6 @@ tabItem(
                           )
                           )
                         )
-                      ),
-                      wellPanel(
-                        img(src='CRSULogo.png', width = "100%"),
-                        tags$strong("Funding and Support Acknowledgement:"),
-                        tags$p("The Complex Reviews Support Unit is funded by the National Institute for Health Research (NIHR) (project number 14/178/29).
-       Development of this app is also funded by the NIHR Applied Research Collaboration East Midlands (ARC EM) and the Leicester NIHR Biomedical Research Centre (BRC).
-       The views expressed are those of the author(s) and not necessarily those of the NIHR or the Department of Health and Social Care."),
                       ),
                       br(),
                       p("THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
@@ -121,10 +115,6 @@ tabItem(
                br(),
                h4("We also recommend reading the associated paper for this application here:",
                   tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", "https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", target="_blank")),
-               br(),
-               h4("The Cochrane Handbook for Systematic Reviews of Diagnostic Test Accuracy Version 2 (",
-                  tags$a(href="https://training.cochrane.org/handbook-diagnostic-test-accuracy/current", "https://training.cochrane.org/handbook-diagnostic-test-accuracy/current", target="_blank"), ") is an excellent resource for understanding the models utilised in this app. A guide to reproducing some of the examples in the handbook can be found here:",
-                  downloadButton('downloadCochraneGuide', "Download Cochrane Guide")),
                br(),
                h4("In addition to the above, more in-depth tutorials with examples may be coming soon, and will be posted here")
       )
@@ -798,10 +788,20 @@ tabItem(
            p(a("The R code for the app is available on GitHub here", 
                href="https://github.com/CRSU-Apps/MetaBayesDTA", target="_blank")),
            
+  )), 
+
+
+
+
+
+
+# Tab 9: Privacy Notice ------------------------------------------------------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+tabItem(
+  tabName = "privacy_notice", 
+  tabPanel(id="privacy", "Privacy notice",
+           tags$iframe(style="height:700px; width:100%; scrolling=yes", 
+                       src="gdpr.pdf")
   ))
-
-
-
 ) # end of tab items
 ))
 

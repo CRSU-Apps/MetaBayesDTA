@@ -15,7 +15,7 @@
 ###############################################################################
 
 server <- function(input, output, session) {
-  
+
   shinyalert(title = "Message from Authors",
              text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
@@ -30,7 +30,7 @@ server <- function(input, output, session) {
                text =  paste("In accordance with Data Protection legislation, we would like to inform you of the following before you
                         use our website: We collect your usage data within the MetaBayesDTA app to perform analytics of usage and
                         improve our app.  By clicking",   tags$i(tags$u("I consent")), "below, you consent to the use of data
-                        by us through Google Analytics.  For details of policy, please check",
+                        by us through Google Analytics.  For details of policy, please check 'Privacy notice' tab within the app, and",
                         tags$a(href="https://policies.google.com/privacy?hl=en", "Google Privacy & Terms.",target="_blank") 
                         ),
                type = "info",
@@ -69,18 +69,6 @@ output$downloadUG <- downloadHandler(
       }
   
 )
-
-#Download the instructions for reproducing analyses in the Cochrane Handbook
-output$downloadCochraneGuide <- downloadHandler(
-  filename = function(){
-    paste("Cochrane-DTA-in-MetaBayesDTA v1_0.html")
-  },
-  content = function(file){
-    file.copy("https://github.com/CRSU-Apps/MBDTA-Cochrane-guide/blob/main/Cochrane-DTA-in-MetaBayesDTA.html?raw=TRUE", file) 
-  }
-)
-
-
   
 # Load data tab ---------------------------------------------------------------  ---------------------------------------------------------------------------------------------------------------
 data_for_analysis_server(id = "dataset_id", 
