@@ -1,21 +1,5 @@
 # Load / install packages needed for app ----------------------------------
 
-
-# .libPaths()
-#  myPaths <- .libPaths()   # get the path(s)
-#  myPaths
-#  myPaths[1] <- "C:/Users/ec325/Documents" # for work laptop
-# 
-#  #myPaths[1] <- "/home/enzo/R/x86_64-pc-linux-gnu-library/4.1" # for linux comp
-# 
-#  myPaths
-# 
-#  #/usr/local/lib/R/site-library
-#  #/home/enzo/R/x86_64-pc-linux-gnu-library/4.1
-# 
-#  .libPaths(myPaths)  # reassign the path
-#  .libPaths()
-
 # install.packages("shiny")
 # install.packages("shinythemes")
 # install.packages("shinyWidgets")
@@ -96,10 +80,6 @@ require(htmltools)
 require(usethis)
 require(R6)
 require(rio)
-# Set Stan options -------------------------------------------------------------
-#rstan_options(auto_write = TRUE)
-#options(mc.cores = parallel::detectCores())
-
 # Load functions ----------------------------------------------------------
 source('./fn_general.R', local  = TRUE)
 source('./fn_BVM.R', local  = TRUE)
