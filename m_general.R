@@ -317,7 +317,6 @@ dataset_import_server <- function(id,
       data <- reactive({
         file1 <- input$data_input
         if (reload()) {
-          output$data_input <- renderUI(DefaultFileInput(id))
           return(defaultData())
         }
         if (is.null(file1)) {
