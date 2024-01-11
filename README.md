@@ -1,6 +1,6 @@
 # MetaBayesDTA (v1.5.0)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8371998.svg)](https://zenodo.org/doi/10.5281/zenodo.8371997)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8371997.svg)](https://zenodo.org/doi/10.5281/zenodo.8371997)
 
 App link: <https://crsu.shinyapps.io/MetaBayesDTA/>
 
