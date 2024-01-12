@@ -19,7 +19,7 @@ jobs:
       options: --user root
     steps:
       - name: Set Non Interactive (debconf)
-        run: echo 'debconf debconf/frontend select Dialog' | debconf-set-selections
+        run: echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
       - name: Install sudo, dialog and apt-utils packages
         run: apt update && apt install sudo dialog apt-utils -y
       - uses: actions/checkout@v2
