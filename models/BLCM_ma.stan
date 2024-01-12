@@ -103,18 +103,18 @@ transformed parameters {
                    s2[s]  =  inv_logit(index_logit[s,1]);
                    c2[s]  =  inv_logit(index_logit[s,2]);
 
-                   LBd[s]  = -(1-s1[s]) * (1-s2[s]);
-                   LBnd[s] = -(1-c1[s]) * (1-c2[s]);
-                   UBd[s]  = fmin(s1[s],s2[s]) - (s1[s] * s2[s]);
-                   UBnd[s] = fmin(c1[s],c2[s]) - (c1[s] * c2[s]);
+                   LBd[s]  = fmax(-s1[s]*s2[s], -(1-s1[s])*(1-s2[s]));
+                   LBnd[s] = fmax(-c1[s]*c2[s], -(1-c1[s])*(1-c2[s]));
+                   UBd[s]  = fmin(s1[s]*(1-s2[s]), (1-s1[s])*s2[s]);
+                   UBnd[s] = fmin(c1[s]*(1-c2[s]), (1-c1[s])*c2[s]);
        
        if (ci == 1) {      // conditional independence: 
         cv1[s] = 0; 
         cv2[s] = 0; 
        }
        else {        // conditional dependence, study-specific: 
-        cv1[s] = LBd[s]  + (UBd[s] -LBd[s])  * vec_d[s] ;      // bounded in (LBd, UBd) = ( (1-s1) * (1-s2), Min(s1,s2) - (s1 * s2) ) 
-        cv2[s] = LBnd[s] + (UBnd[s]-LBnd[s]) * vec_nd[s] ;     // bounded in (LBnd, UBnd) = ( (1-c1) * (1-c2), Min(c1,c2) - (c1 * c2) ) 
+        cv1[s] = LBd[s]  + (UBd[s] -LBd[s])  * vec_d[s] ;      // bounded in (LBd, UBd) given above
+        cv2[s] = LBnd[s] + (UBnd[s]-LBnd[s]) * vec_nd[s] ;     // bounded in (LBnd, UBnd) given above
        }
 
      } 

@@ -1,6 +1,6 @@
-# MetaBayesDTA (BETA v1.4.1)
+# MetaBayesDTA (v1.5.0)
 
-[![DOI](https://zenodo.org/badge/452713721.svg)](https://zenodo.org/badge/latestdoi/452713721)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8371997.svg)](https://zenodo.org/doi/10.5281/zenodo.8371997)
 
 App link: <https://crsu.shinyapps.io/MetaBayesDTA/>
 

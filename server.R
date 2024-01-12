@@ -15,15 +15,15 @@
 ###############################################################################
 
 server <- function(input, output, session) {
-  
-  shinyalert(title = "Important message",
-             text =  paste0("Note that this is a beta release. If you have time it would be greatly appreciated if you could fill 
+
+  shinyalert(title = "Message from Authors",
+             text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
                             tags$a(href="https://docs.google.com/forms/d/e/1FAIpQLSdBvMFpWma87JV1R0lAkmiVWxcIFf9I0m2BiDS6JV20MrvE9Q/viewform?vc=0&c=0&w=1&flr=0"
                                    , "here.",target="_blank"),
                             " Please report any bugs or suggestions for new features to the CRSU Team at ", tags$a(href="mailto:apps@crsu.org.uk", "apps@crsu.org.uk"), "."),
              type = "info",
-             confirmButtonText = "I consent",
+             confirmButtonText = "Okay",
              html = TRUE)
   
     shinyalert(title = "Important message",
@@ -43,19 +43,18 @@ server <- function(input, output, session) {
   Cov <- read.csv('./Cov.csv') 
   QA_Cov <- read.csv('./QA_Cov.csv')
  
-  
-  
-# Load data 
-data <- dataset_import_server(id = "dataset_id",
-                              QA = QA, Cov = Cov, QA_Cov = QA_Cov, Standard = Standard)
-                              
-
 defaultData <- dataset_default_import_server(id = "dataset_id", 
                                              QA = QA,
                                              Cov = Cov,
                                              QA_Cov = QA_Cov, 
                                              Standard = Standard)
 
+  
+# Load data 
+data <- dataset_import_server(
+  id = "dataset_id",
+  defaultData
+)
 
 # Download User Guide
 # Allow users the option to download the standard example dataset

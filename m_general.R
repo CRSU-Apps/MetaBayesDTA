@@ -194,13 +194,12 @@ model_priors_plot_UI <- function(id) {
 dataset_import_ui <- function(id) {
   ns <- NS(id) 
   tagList(
-    fileInput(inputId = ns("data_input"), label="Please select a file", buttonLabel="Select", placeholder="No file selected"),
+    uiOutput(ns("data_input")),
     helpText("Default maximum file size is 5MB"),
     tags$hr(),
     h4(helpText(tags$strong("File options"))),
     awesomeCheckbox(inputId = ns("header"), label = "First row as column headings", value = TRUE),
-    br(),
-    awesomeRadio(inputId = ns("sep"), label="File Delimiter", choices=c(Comma=",", Semicolon=";", Tab="\t", Space= " "), selected=","),
+    actionButton(ns("reset_file"), "Reset file input"),
     br(),
     awesomeRadio(inputId = ns("default"),
                  label = h4(helpText(tags$strong("Select example dataset"))),
@@ -230,23 +229,27 @@ dataset_default_import_server <- function(id,
     function(input, output, session) {
       
       # Default data
-      output$defaultData <- reactive({
-        
+      default_data <- reactive({
+        df <- NULL
         if ('2' %in% input$default) {
-          return(QA)
+          df <- QA
+        } else if ('3' %in% input$default) {
+          df <- Cov
+        } else if ('4' %in% input$default) {
+          df <- QA_Cov
+        } else {
+          df <- Standard
         }
-        if ('3' %in% input$default) {
-          return(Cov)
-        }
-        if ('4' %in% input$default) {
-          return(QA_Cov)
-        }
-        else {
-          return(Standard) 
-        }
+        df <- df %>%
+          dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
+        
+        return(df)
         
       })
+
+      output$defaultData <- default_data
       
+      return(default_data)
       
     }
   )
@@ -286,43 +289,70 @@ data_for_analysis_server <- function(id,
 
 # Dataset import  ------------------------ ---------------------------------
 dataset_import_server <- function(id,
-                                  QA, Cov, QA_Cov, Standard) {
-  
+                                  defaultData) {
+
   moduleServer(
     id,
     function(input, output, session) {
-      
-      # Make the data file that was uploaded reactive 
-      output$data <- reactive({ 
-        
-                  file1 <- input$data_input
-                  
-                  if (is.null(file1)) {
-                    if ('2' %in% input$default) {
-                      return(QA %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    if ('3' %in% input$default) {
-                      return(Cov %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    if ('4' %in% input$default) {
-                      return(QA_Cov %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)))
-                    }
-                    else {
-                      return(Standard %>% dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)) )
-                    }
-                  }
-                  
-                  else { 
-                    a <- read.table(file = file1$datapath, 
-                                    sep = input$sep,
-                                    header = input$header, 
-                                    stringsAsFactors = FALSE) %>% 
-                      dplyr::mutate(year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3))
-                    a
-                  }
-        
+
+      # Create a definable reactive value to allow reloading of data
+      reload <- reactiveVal(FALSE)
+
+      # Initalise input field
+      output$data_input <- renderUI(DefaultFileInput(id))
+
+      # Reset the data input and load default data when user
+      # clicks the reset button
+      observeEvent(input$reset_file, {
+        output$data_input <- renderUI(DefaultFileInput(id))
+        reload(TRUE)
       })
-      
+
+      # Set the reload value to false when data is uploaded
+      observeEvent(input$data_input, {
+        reload(FALSE)
+      })
+
+      # Make the data file that was uploaded reactive
+      data <- reactive({
+        file1 <- input$data_input
+        if (reload()) {
+          return(defaultData())
+        }
+        if (is.null(file1)) {
+          return(defaultData())
+        } else {
+          tryCatch({
+            tmp_df <- rio::import(file1$datapath,
+              header = input$header,
+              stringsAsFactors = FALSE
+            )
+            if (!IsValid(tmp_df)) {
+              stop(
+                paste0(
+                  paste(GetMissingCols(tmp_df), collapse = ", ")
+                ),
+                " column(s) are Missing from Data"
+              )
+            }
+            tmp_df <- tmp_df %>%
+              dplyr::mutate(
+                year.cts = year, prevalence.cts = round((TP+FN)/(TP+FN+FP+TN), 3)
+              )
+            return(tmp_df)
+          }, error = function(e) {
+            shinyalert::shinyalert(
+              title = "Error",
+              text = e$message,
+              type = "error"
+            )
+            output$data_input <- renderUI(DefaultFileInput(id))
+            return(defaultData())
+          })
+        }
+      })
+      # Explicitly return the data reactive
+      return(data)
     }
   )
 }
