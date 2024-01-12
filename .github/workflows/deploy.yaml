@@ -11,8 +11,6 @@ on:
 jobs:
   deploy:
     name: Deploy to shinyapps
-    env:
-      DEBIAN_FRONTEND: "noninteractive"
     # allow skipping deployment for commits containing '[automated]' or '[no-deploy]' in the commit message
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
     runs-on: ubuntu-latest
@@ -20,6 +18,8 @@ jobs:
       image: ubuntu:18.04
       options: --user root
     steps:
+      - name: Set Non Interactive (debconf)
+        run: echo 'debconf debconf/frontend select Dialog' | debconf-set-selections
       - name: Install sudo, dialog and apt-utils packages
         run: apt update && apt install sudo dialog apt-utils -y
       - uses: actions/checkout@v2
