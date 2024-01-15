@@ -27,12 +27,11 @@ jobs:
       # dialog: for terminal options.
       # apt-utils: for linux packages.
       - name: Install sudo, dialog and apt-utils packages
-        run: apt update && apt install apt-utils sudo dialog
+        run: apt update && apt install apt-utils sudo dialog -y
       # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev required for ragg
       # libfribidi-dev: required for textshaping R package.
       - name: Install package system dependencies
-        run: |
-          apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+        run: apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
       # Checkout the repo
       - uses: actions/checkout@v2
       # Setup R (4.3.0)
