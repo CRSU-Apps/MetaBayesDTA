@@ -43,14 +43,30 @@ jobs:
       # Precompile the stan models
       - name: compile stan models
         run: Rscript compile_models.R
-      # Deploy to Shiny.io
-      - name: deploy
-        uses: BDSI-Utwente/shinyapps-deploy-github-action@v1
-        with:
-          # account and application name (https://<accountName>.shinyapps.io/<appName>)
+      # Deploy using rsconnect
+      - name: Deploy
+        run: |
+          # Install rsconnect
+          install.packages("rsconnect")
+          # Set up account
+          cat("Checking account info...")
+          rsconnect::setAccountInfo(
+            Sys.getenv("accountName),
+            Sys.getenv("accountToken"),
+            Sys.getenv("accountSecret")
+          )
+          cat(" [OK]\n")
+          cat(paste0("Deploying ", Sys.getenv("appName"), "\n")
+          # Deploy application
+          rsconnect::deployApp(
+            appName = Sys.getenv("appName"),
+            account = Sys.getenv("accountName"),
+            forceUpdate = TRUE
+          )
+        shell: Rscript {0}
+        env:
           appName: MetaBayesDTA
           accountName: crsu
-
           # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
           accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
           accountSecret: ${{ secrets.SHINYAPPS_SECRET }}
