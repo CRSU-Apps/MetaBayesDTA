@@ -56,7 +56,7 @@ jobs:
             Sys.getenv("accountSecret")
           )
           cat(" [OK]\n")
-          cat(paste0("Deploying ", Sys.getenv("appName"), "\n")
+          cat(paste0("Deploying ", Sys.getenv("appName"), "\n"))
           # Deploy application
           rsconnect::deployApp(
             appName = Sys.getenv("appName"),
