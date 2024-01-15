@@ -14,21 +14,33 @@ jobs:
     # allow skipping deployment for commits containing '[automated]' or '[no-deploy]' in the commit message
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
     runs-on: ubuntu-latest
+    # Use Ubuntu 18.04 - must be container as version no longer supported but GH actions
     container: 
       image: ubuntu:18.04
       options: --user root
     steps:
+      # Ensure all console commands don't ask for input.
       - name: Set Non Interactive (debconf)
         run: echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+      # Install sudo an other package requirements
+      # sudo: allow actions to be run as sudo.
+      # dialog: for terminal options.
+      # apt-utils: for linux packages.
+      # pulse audio: required for textshaping R package.
       - name: Install sudo, dialog and apt-utils packages
-        run: apt update && apt install sudo dialog apt-utils -y
+        run: apt update && apt install sudo dialog apt-utils pulseaudio -y
+      # Checkout the repo
       - uses: actions/checkout@v2
+      # Setup R (4.3.0)
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3.0'
+      # Setup and install dependencies using renv
       - uses: r-lib/actions/setup-renv@v2
+      # Precompile the stan models
       - name: compile stan models
         run: Rscript compile_models.R
+      # Deploy to Shiny.io
       - name: deploy
         uses: BDSI-Utwente/shinyapps-deploy-github-action@v1
         with:
