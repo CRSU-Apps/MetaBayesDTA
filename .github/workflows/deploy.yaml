@@ -51,7 +51,7 @@ jobs:
           # Set up account
           cat("Checking account info...")
           rsconnect::setAccountInfo(
-            Sys.getenv("accountName),
+            Sys.getenv("accountName"),
             Sys.getenv("accountToken"),
             Sys.getenv("accountSecret")
           )
