@@ -27,9 +27,6 @@ jobs:
         with:
           r-version: '4.3.0'
       - uses: r-lib/actions/setup-renv@v2
-        with:
-          profile: '"shiny"'
-          working-directory: $GITHUB_WORKSPACE
       - name: compile stan models
         run: Rscript compile_models.R
       - name: deploy
