@@ -26,9 +26,9 @@ jobs:
       # sudo: allow actions to be run as sudo.
       # dialog: for terminal options.
       # apt-utils: for linux packages.
-      # pulse audio: required for textshaping R package.
+      # libfribidi-dev: required for textshaping R package.
       - name: Install sudo, dialog and apt-utils packages
-        run: apt update && apt install sudo dialog apt-utils pulseaudio -y
+        run: apt update && apt install apt-utils sudo dialog libfribidi-dev -y
       # Checkout the repo
       - uses: actions/checkout@v2
       # Setup R (4.3.0)
