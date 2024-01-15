@@ -22,13 +22,17 @@ jobs:
       # Ensure all console commands don't ask for input.
       - name: Set Non Interactive (debconf)
         run: echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-      # Install sudo an other package requirements
+      # Install sudo an other package requirements for GH Actions
       # sudo: allow actions to be run as sudo.
       # dialog: for terminal options.
       # apt-utils: for linux packages.
-      # libfribidi-dev: required for textshaping R package.
       - name: Install sudo, dialog and apt-utils packages
-        run: apt update && apt install apt-utils sudo dialog libfribidi-dev -y
+        run: apt update && apt install apt-utils sudo dialog
+      # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev required for ragg
+      # libfribidi-dev: required for textshaping R package.
+      - name: Install package system dependencies
+        run: |
+          apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
       # Checkout the repo
       - uses: actions/checkout@v2
       # Setup R (4.3.0)
