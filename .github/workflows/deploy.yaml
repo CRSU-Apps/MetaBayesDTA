@@ -11,28 +11,62 @@ on:
 jobs:
   deploy:
     name: Deploy to shinyapps
-
     # allow skipping deployment for commits containing '[automated]' or '[no-deploy]' in the commit message
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
     runs-on: ubuntu-latest
+    # Use Ubuntu 18.04 - must be container as version no longer supported but GH actions
     container: 
       image: ubuntu:18.04
       options: --user root
     steps:
+      # Ensure all console commands don't ask for input.
+      - name: Set Non Interactive (debconf)
+        run: echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+      # Install sudo an other package requirements for GH Actions
+      # sudo: allow actions to be run as sudo.
+      # dialog: for terminal options.
+      # apt-utils: for linux packages.
+      - name: Install sudo, dialog and apt-utils packages
+        run: apt update && apt install apt-utils sudo dialog -y
+      # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev required for ragg
+      # libfribidi-dev: required for textshaping R package.
+      - name: Install package system dependencies
+        run: apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+      # Checkout the repo
       - uses: actions/checkout@v2
+      # Setup R (4.3.0)
       - uses: r-lib/actions/setup-r@v2
-      - uses: r-lib/actions/setup-renv@v2
         with:
-          profile: '"shiny"'
+          r-version: '4.3.0'
+      # Setup and install dependencies using renv
+      - uses: r-lib/actions/setup-renv@v2
+      # Precompile the stan models
       - name: compile stan models
         run: Rscript compile_models.R
-      - name: deploy
-        uses: BDSI-Utwente/shinyapps-deploy-github-action@v1
-        with:
-          # account and application name (https://<accountName>.shinyapps.io/<appName>)
+      # Deploy using rsconnect
+      - name: Deploy
+        run: |
+          # Install rsconnect
+          install.packages("rsconnect")
+          # Set up account
+          cat("Checking account info...")
+          rsconnect::setAccountInfo(
+            Sys.getenv("accountName"),
+            Sys.getenv("accountToken"),
+            Sys.getenv("accountSecret")
+          )
+          cat(" [OK]\n")
+          cat(paste0("Deploying ", Sys.getenv("appName"), "\n"))
+          # Deploy application
+          rsconnect::deployApp(
+            appName = Sys.getenv("appName"),
+            account = Sys.getenv("accountName"),
+            forceUpdate = TRUE
+          )
+        shell: Rscript {0}
+        env:
           appName: MetaBayesDTA
           accountName: crsu
-
           # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
           accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
           accountSecret: ${{ secrets.SHINYAPPS_SECRET }}
