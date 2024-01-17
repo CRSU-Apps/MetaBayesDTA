@@ -757,7 +757,7 @@ Prev_input_server <- function(id, data) {  # "mod" is the rstan file which is re
                         tagList(
                           numericInput(inputId = ns("patients"), label = "Number of patients", min = 0, value = 1000),
                           sliderInput(inputId = ns("prevslide"), label = "Prevalence of the disease in the population (as a percentage)",
-                                      min = 0, max =100, value = Prev_input_obj()),
+                                      min = 0, max =100, step = 0.1, width = '100%', value = Prev_input_obj()),
                           p("The default value of the slider is the mean value of the prevalence of the disease from all studies included in the dataset.")
                         )
                  })
