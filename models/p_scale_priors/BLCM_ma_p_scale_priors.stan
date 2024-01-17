@@ -181,6 +181,7 @@ generated quantities {
         vector[4] o[n_studies]; 
         vector[4] dv[n_studies]; 
         vector[4] ot[n_studies]; 
+        vector[4] dt[n_studies]; 
         real dev[n_studies]; 
         real  ec[n_studies]; 
         real  oc[n_studies]; 
@@ -328,10 +329,12 @@ for (s in 1:n_studies) {
     e[s,a] = n[s] * pr[s,a] ;                        // expected cell count (2x2 tables so 4)
     o[s,a] = ot[s,a] / n[s] ;                         //Number observed prob
     dv[s,a] = 2 * ot[s,a] * log(ot[s,a]/e[s,a]) ;
+    dt[s,a] = o[s,a] - pr[s,a];
          }
         if (ot[s,a] == 0) { 
     e[s,a] = n[s] * pr[s,a] ;                        
     o[s,a] = ot[s,a] / n[s] ;   
+    dt[s,a] = o[s,a] - pr[s,a];
              dv[s,a] = 0; 
    }
               }           
