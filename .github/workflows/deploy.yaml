@@ -13,33 +13,28 @@ jobs:
     name: Deploy to shinyapps
     # allow skipping deployment for commits containing '[automated]' or '[no-deploy]' in the commit message
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
-    runs-on: ubuntu-latest
-    # Use Ubuntu 18.04 - must be container as version no longer supported but GH actions
-    container: 
-      image: ubuntu:18.04
-      options: --user root
+    runs-on: ubuntu-22.04
     steps:
-      # Ensure all console commands don't ask for input.
-      - name: Set Non Interactive (debconf)
-        run: echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-      # Install sudo an other package requirements for GH Actions
-      # sudo: allow actions to be run as sudo.
-      # dialog: for terminal options.
-      # apt-utils: for linux packages.
-      - name: Install sudo, dialog and apt-utils packages
-        run: apt update && apt install apt-utils sudo dialog -y
-      # libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev required for ragg
-      # libfribidi-dev: required for textshaping R package.
+      - name: Install gcc 11
+        run: |
+          sudo apt update
+          sudo apt install gcc-11 g++-11 -y
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
       - name: Install package system dependencies
-        run: apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+        run: |
+          sudo apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
       # Checkout the repo
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       # Setup R (4.3.0)
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3.0'
       # Setup and install dependencies using renv
       - uses: r-lib/actions/setup-renv@v2
+      - name: Check GCC Version
+        run: |
+          gcc --version
+          if ! gcc --version | grep -q 11; then exit 1; fi
       # Precompile the stan models
       - name: compile stan models
         run: Rscript compile_models.R
