@@ -77,7 +77,7 @@ output$downloadCochraneGuide <- downloadHandler(
     paste("Cochrane-DTA-in-MetaBayesDTA v1_0.html")
   },
   content = function(file){
-    file.copy("https://github.com/CRSU-Apps/MBDTA-Cochrane-guide/blob/main/Cochrane-DTA-in-MetaBayesDTA.html?raw=TRUE", file) 
+    utils::download.file("https://github.com/CRSU-Apps/MBDTA-Cochrane-guide/blob/main/Cochrane-DTA-in-MetaBayesDTA.html?raw=TRUE", file) 
   }
 )
 
