@@ -10,7 +10,7 @@ tags$head(
   tags$meta(name="description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(name="keywords", content="Meta-Analysis, Diagnostic test accuracy, Application, Imperfect gold standard, Latent class, Bayesian"),
   # Open Graph Tags
-  tags$meta(property="og:title", content="MetaBayesDTA v1.5.0"),
+  tags$meta(property="og:title", content="MetaBayesDTA v1.5.1"),
   tags$meta(property="og:description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaBayesDTA/main/www/roc_curve.png")
   ), 
@@ -48,7 +48,7 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home",
-                      h1("MetaBayesDTA (v1.5.0)"),
+                      h1("MetaBayesDTA (v1.5.1)"),
                       h2("FULL RELEASE - MetaBayesDTA has now left BETA", style="color:blue"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
@@ -92,12 +92,24 @@ tabItem(
                         )
                       ),
                       wellPanel(
-                        img(src='CRSULogo.png', width = "100%"),
-                        tags$strong("Funding and Support Acknowledgement:"),
-                        tags$p("The Complex Reviews Support Unit is funded by the National Institute for Health Research (NIHR) (project number 14/178/29).
-       Development of this app is also funded by the NIHR Applied Research Collaboration East Midlands (ARC EM) and the Leicester NIHR Biomedical Research Centre (BRC).
-       The views expressed are those of the author(s) and not necessarily those of the NIHR or the Department of Health and Social Care."),
-                      ),
+                        div(style = "display: inline;",
+                            img(src = 'funded-by-nihr-logo.png', width = "55%")),
+                        div(style = "display: inline;",
+                            img(src = 'CRSU_logo.png', width = "40%")),
+                        div(tags$strong("Funding and Support Acknowledgement:"),
+                            tags$p("MetaBayesDTA is part of the Complex Reviews Synthesis Unit (CRSU) suite of evidence synthesis apps. The development of these apps is currently funded (majority) and overseen by the Evidence Synthesis Group @ CRSU (NIHR153934). The CRSU Evidence Synthesis Group is one of the groups funded by the National Institute for Health and Care Research ",
+                                   tags$a(href="https://www.nihr.ac.uk/explore-nihr/funding-programmes/evidence-synthesis.htm",
+                                          "(NIHR) Evidence Synthesis Programme."),
+                                   "Further details of other funders and support, current and past, can be found ",
+                                   tags$a(href="https://github.com/CRSU-Apps/.github/wiki/Detailed-Funding-Statement",
+                                          "on our GitHub page"),
+                                   ". The views expressed are those of the author(s) and not necessarily those of the NIHR or the Department of Health and Social Care."),
+                            tags$p("More information about the UK NIHR Complex Reviews Synthesis Unit (CRSU) can be found ",
+                                   tags$a(href="https://www.gla.ac.uk/research/az/evidencesynthesis/apps-materials-guidence/",
+                                          "on our website", target="_blank"),
+                                   )
+                            )
+                        ),
                       br(),
                       p("THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
                       BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
