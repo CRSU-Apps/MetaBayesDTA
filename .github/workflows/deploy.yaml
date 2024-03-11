@@ -7,6 +7,14 @@ on:
 
   # run on request (via button in actions menu)
   workflow_dispatch:
+    inputs:
+      release:
+        description: Deploy to release or test
+        required: true
+        options:
+          - 'test'
+          - 'release'
+        default: 'release'
       
 jobs:
   deploy:
@@ -60,7 +68,8 @@ jobs:
           )
         shell: Rscript {0}
         env:
-          appName: MetaBayesDTA
+          appName: ${{ inputs.release == 'release' && 'MetaBayesDTA' || 'MetaBayesDTA_TEST' }}
+          #ppName: MetaBayesDTA
           accountName: crsu
           # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
           accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
