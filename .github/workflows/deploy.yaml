@@ -23,6 +23,16 @@ jobs:
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
     runs-on: ubuntu-22.04
     steps:
+      - name: Set deployment type
+        run: |
+          if [[ ${{github.event.inputs.release}} = "test" ]]; then
+            echo "appName=MetaBayesDTA_TEST" >> $GITHUB_ENV
+          else
+            echo "appName=MetaBayesDTA" >> $GITHUB_ENV
+          fi
+      - name: Print deployment type
+        run: |
+          echo "Deploying to: $appName"
       - name: Install gcc 11
         run: |
           sudo apt update
@@ -68,8 +78,6 @@ jobs:
           )
         shell: Rscript {0}
         env:
-          appName: ${{ inputs.release == 'release' && 'MetaBayesDTA' || 'MetaBayesDTA_TEST' }}
-          #ppName: MetaBayesDTA
           accountName: crsu
           # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
           accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
