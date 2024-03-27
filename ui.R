@@ -54,7 +54,7 @@ tabItem(
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
                          tags$a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1439", "Patel A, Cooper NJ, Freeman SC, Sutton AJ. 
-                         Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting
+                         Graphical enhancements to summary receiver operating characteristic plots to facilitate the analysis and reporting
                          of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
                            "), 
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma/", "MetaDTA version 2.0")),
