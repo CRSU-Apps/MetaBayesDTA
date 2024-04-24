@@ -503,18 +503,22 @@ SG_model_priors_table_server <- function(id, draws_PO, data) {
                                   between_study_sd <-  rstan::summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("sigma"))$summary
                                   
                                   
-                                  Z = data.frame(estimate = c(Sens[,5][1], Spec[,5][1],
-                                                              1 - Spec[,5][1], 
-                                                              correlation[,5][3], 
-                                                              between_study_sd[,5][1], between_study_sd[,5][2]),
-                                                 lci = c(Sens[,4][1], Spec[,4][1],
-                                                         1 - Spec[,6][1], 
-                                                         correlation[,4][3],
-                                                         between_study_sd[,4][1], between_study_sd[,4][2]),
-                                                 uci = c(Sens[,6][1], Spec[,6][1],
-                                                         1 - Spec[,4][1], 
-                                                         correlation[,6][3],
-                                                         between_study_sd[,6][1], between_study_sd[,6][2]),
+                                  Z = data.frame(estimate = c(Sens[, "50%"][1], Spec[, "50%"][1],
+                                                              1 - Spec[, "50%"][1], 
+                                                              correlation[, "50%"][3], 
+                                                              between_study_sd[, "50%"][1], between_study_sd[, "50%"][2]),
+                                                 sd = c(Sens[, "sd"][1], Spec[, "sd"][1],
+                                                        Spec[, "sd"][1],
+                                                        correlation[, "sd"][3],
+                                                        between_study_sd[, "sd"][1], between_study_sd[, "sd"][2]),
+                                                 lci = c(Sens[, "2.5%"][1], Spec[, "2.5%"][1],
+                                                         1 - Spec[, "97.5%"][1], 
+                                                         correlation[, "2.5%"][3],
+                                                         between_study_sd[, "2.5%"][1], between_study_sd[, "2.5%"][2]),
+                                                 uci = c(Sens[, "97.5%"][1], Spec[, "97.5%"][1],
+                                                         1 - Spec[, "2.5%"][1], 
+                                                         correlation[, "97.5%"][3],
+                                                         between_study_sd[, "97.5%"][1], between_study_sd[, "97.5%"][2]),
                                                  row.names=c("Sensitivity", "Specifcity",
                                                              "FPR", 
                                                              "Correlation",
@@ -523,7 +527,7 @@ SG_model_priors_table_server <- function(id, draws_PO, data) {
                                   
                                   # Create a matrix to store the parameter estimates
                                   nrow <- 7
-                                  s.matrix <- matrix(nrow=nrow, ncol=5)
+                                  s.matrix <- matrix(nrow=nrow, ncol=6)
                                   
                                   
   
@@ -534,18 +538,18 @@ SG_model_priors_table_server <- function(id, draws_PO, data) {
                                   s.matrix[5,1] <-  paste0("Between-study SD for logit(Sensitivity) [same prior across subgroups] ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
                                   s.matrix[6,1] <-  paste0("Between-study SD for logit(Specificity) [same prior across subgroups] ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                                   
-                                  for (i in 1:3) {
+                                  for (i in 1:4) {
                                     for (j in 1:(nrow)-1) { 
                                       s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
                                     }
                                   }
                                   
-                                  s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-                                  s.matrix[nrow, 1:5] <- ""
-                                  s.matrix <- s.matrix[, c(1,2,5)]
+                                  s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+                                  s.matrix[nrow, 1:6] <- ""
+                                  s.matrix <- s.matrix[, c(1, 2, 3, 6)]
                                   
                                   #Name the columns of the matrix
-                                  colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+                                  colnames(s.matrix) <- c("Parameter", "Prior Median", "Standard Deviation", "95% Prior Interval")
                                   
                                   s.matrix
                                   
@@ -945,54 +949,70 @@ SG_parameter_estimates_table_server <- function(id,
                             # make vector which indicates the groups s.t. #(studies in group) > 1
                             
                             for (i in vec) {
-                              Z_group[[i]] <- data.frame(estimate = c(logit_Sens[,5][i], 
-                                                                      logit_Spec[,5][i],
-                                                                      Sens[,5][i],
-                                                                      Spec[,5][i], 
-                                                                      1 - Spec[,5][i],
-                                                                      DOR[,5][i], 
-                                                                      LRp[,5][i], 
-                                                                      LRn[,5][i],
-                                                                      correlation[,5][2+4*(i-1)],
-                                                                      Theta[,5][i],
-                                                                      Lambda[,5][i],
-                                                                      beta[,5][i],
-                                                                      sigma2_theta[,5][i],
-                                                                      sigma2_alpha[,5][i],
-                                                                      between_study_sd[,5][1 + 2*(i-1)], 
-                                                                      between_study_sd[,5][2 + 2*(i-1)]), 
-                                                         lci  = c(logit_Sens[,4][i], 
-                                                                  logit_Spec[,4][i],
-                                                                  Sens[,4][i],
-                                                                  Spec[,4][i], 
-                                                                  1 - Spec[,4][i],
-                                                                  DOR[,4][i], 
-                                                                  LRp[,4][i], 
-                                                                  LRn[,4][i],
-                                                                  correlation[,4][2+4*(i-1)],
-                                                                  Theta[,4][i],
-                                                                  Lambda[,4][i],
-                                                                  beta[,4][i],
-                                                                  sigma2_theta[,4][i],
-                                                                  sigma2_alpha[,4][i],
-                                                                  between_study_sd[,4][1 + 2*(i-1)], 
-                                                                  between_study_sd[,4][2 + 2*(i-1)]), 
-                                                         uci = c(logit_Sens[,6][i], 
-                                                                 logit_Spec[,6][i],
-                                                                 Sens[,6][i],
-                                                                 Spec[,6][i], 
-                                                                 1 - Spec[,6][i],
-                                                                 DOR[,6][i], 
-                                                                 LRp[,6][i], 
-                                                                 LRn[,6][i],
-                                                                 correlation[,6][2+4*(i-1)],
-                                                                 Theta[,6][i],
-                                                                 Lambda[,6][i],
-                                                                 beta[,6][i],
-                                                                 sigma2_theta[,6][i],
-                                                                 sigma2_alpha[,6][i],
-                                                                 between_study_sd[,6][1 + 2*(i-1)], 
-                                                                 between_study_sd[,6][2 + 2*(i-1)]), 
+                              Z_group[[i]] <- data.frame(estimate = c(logit_Sens[, "50%"][i], 
+                                                                      logit_Spec[, "50%"][i],
+                                                                      Sens[, "50%"][i],
+                                                                      Spec[, "50%"][i], 
+                                                                      1 - Spec[, "50%"][i],
+                                                                      DOR[, "50%"][i], 
+                                                                      LRp[, "50%"][i], 
+                                                                      LRn[, "50%"][i],
+                                                                      correlation[, "50%"][2+4*(i-1)],
+                                                                      Theta[, "50%"][i],
+                                                                      Lambda[, "50%"][i],
+                                                                      beta[, "50%"][i],
+                                                                      sigma2_theta[, "50%"][i],
+                                                                      sigma2_alpha[, "50%"][i],
+                                                                      between_study_sd[, "50%"][1 + 2*(i-1)], 
+                                                                      between_study_sd[, "50%"][2 + 2*(i-1)]),
+                                                         sd = c(logit_Sens[, "sd"][i], 
+                                                                logit_Spec[, "sd"][i],
+                                                                Sens[, "sd"][i],
+                                                                Spec[, "sd"][i], 
+                                                                1 - Spec[, "sd"][i],
+                                                                DOR[, "sd"][i], 
+                                                                LRp[, "sd"][i], 
+                                                                LRn[, "sd"][i],
+                                                                correlation[, "sd"][2+4*(i-1)],
+                                                                Theta[, "sd"][i],
+                                                                Lambda[, "sd"][i],
+                                                                beta[, "sd"][i],
+                                                                sigma2_theta[, "sd"][i],
+                                                                sigma2_alpha[, "sd"][i],
+                                                                between_study_sd[, "sd"][1 + 2*(i-1)], 
+                                                                between_study_sd[, "sd"][2 + 2*(i-1)]), 
+                                                         lci  = c(logit_Sens[, "2.5%"][i], 
+                                                                  logit_Spec[, "2.5%"][i],
+                                                                  Sens[, "2.5%"][i],
+                                                                  Spec[, "2.5%"][i], 
+                                                                  1 - Spec[, "2.5%"][i],
+                                                                  DOR[, "2.5%"][i], 
+                                                                  LRp[, "2.5%"][i], 
+                                                                  LRn[, "2.5%"][i],
+                                                                  correlation[, "2.5%"][2+4*(i-1)],
+                                                                  Theta[, "2.5%"][i],
+                                                                  Lambda[, "2.5%"][i],
+                                                                  beta[, "2.5%"][i],
+                                                                  sigma2_theta[, "2.5%"][i],
+                                                                  sigma2_alpha[, "2.5%"][i],
+                                                                  between_study_sd[, "2.5%"][1 + 2*(i-1)], 
+                                                                  between_study_sd[, "2.5%"][2 + 2*(i-1)]), 
+                                                         uci = c(logit_Sens[, "97.5%"][i], 
+                                                                 logit_Spec[, "97.5%"][i],
+                                                                 Sens[, "97.5%"][i],
+                                                                 Spec[, "97.5%"][i], 
+                                                                 1 - Spec[, "97.5%"][i],
+                                                                 DOR[, "97.5%"][i], 
+                                                                 LRp[, "97.5%"][i], 
+                                                                 LRn[, "97.5%"][i],
+                                                                 correlation[, "97.5%"][2+4*(i-1)],
+                                                                 Theta[, "97.5%"][i],
+                                                                 Lambda[, "97.5%"][i],
+                                                                 beta[, "97.5%"][i],
+                                                                 sigma2_theta[, "97.5%"][i],
+                                                                 sigma2_alpha[, "97.5%"][i],
+                                                                 between_study_sd[, "97.5%"][1 + 2*(i-1)], 
+                                                                 between_study_sd[, "97.5%"][2 + 2*(i-1)]), 
                                                          row.names = c("Logit Sens", "Logit Spec", "Sensitivity", "Specificity",
                                                                        "FPR", "DOR", "LR+" , "LR-", "correlation", 
                                                                        "Theta", "Lambda", "beta", "sigma2_theta", "sigma2_alpha",
@@ -1002,7 +1022,7 @@ SG_parameter_estimates_table_server <- function(id,
                             s.matrix.group <- vector("list", num_levels)
                             
                             for (i in 1:num_levels) {
-                              s.matrix.group[[i]] <- matrix(nrow=17, ncol=5)
+                              s.matrix.group[[i]] <- matrix(nrow=17, ncol=6)
                             }
                             
                             for (i in 1:num_levels) {
@@ -1030,7 +1050,7 @@ SG_parameter_estimates_table_server <- function(id,
                             
 
                             for (i in vec) {
-                              for (k in 1:3) {
+                              for (k in 1:4) {
                                 s.matrix.group[[i]][1,k+1] <- sprintf('%4.3f', Z_group[[i]][3,k])
                                 s.matrix.group[[i]][2,k+1] <- sprintf('%4.3f', Z_group[[i]][4,k])
                                 s.matrix.group[[i]][3,k+1] <- sprintf('%4.3f', Z_group[[i]][5,k])
@@ -1056,15 +1076,16 @@ SG_parameter_estimates_table_server <- function(id,
                               
                               s.matrix.group[[i]][17, 1:4] <- ""
                               
-                              s.matrix.group[[i]][ ,5] <- paste0("(", s.matrix.group[[i]][ ,3], ", ", s.matrix.group[[i]][ ,4], ")")
-                              s.matrix.group[[i]][17, 1:5] <- ""
+                              s.matrix.group[[i]][, 6] <- paste0("(", s.matrix.group[[i]][, 4], ", ", s.matrix.group[[i]][, 5], ")")
+                              s.matrix.group[[i]][17, 1:6] <- ""
                               
-                              s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
+                              s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1, 2, 3, 6)]
                               
                               s.matrix.group.dataframes[[i]] <- data.frame(s.matrix.group[[i]])
                               
                               colnames(s.matrix.group.dataframes[[i]]) <- c( paste("Parameters for",((levels(factor(X[, m + cov_index]) )[i]))),
-                                                                             "Posterior Median", 
+                                                                             "Posterior Median",
+                                                                             "Standard Deviation",
                                                                              "95% Posterior Interval")
                               
                             }
@@ -1074,11 +1095,12 @@ SG_parameter_estimates_table_server <- function(id,
                             s.matrix.group.dataframe_allgroups2 <- s.matrix.group.dataframe_allgroups %>% 
                                                                   dplyr::mutate( " "
                                                                                  = (lag(!!as.name(paste("Parameters for", ((levels(factor(X[, m + cov_index]) )[1])))))), 
-                                                                                 `Posterior Median` = lag(`Posterior Median`), 
+                                                                                 `Posterior Median` = lag(`Posterior Median`),
+                                                                                 `Standard Deviation` = lag(`Standard Deviation`), 
                                                                                  `95% Posterior Interval` = lag(`95% Posterior Interval`))
                             
                             s.matrix.group.dataframe_allgroups3 <- s.matrix.group.dataframe_allgroups2 %>%
-                                                                   dplyr::select(" ", `Posterior Median`, `95% Posterior Interval`)
+                                                                   dplyr::select(" ", `Posterior Median`, `Standard Deviation`, `95% Posterior Interval`)
                             
                             
                             s.matrix.group.dataframe_allgroups3[1,2] <- ""
