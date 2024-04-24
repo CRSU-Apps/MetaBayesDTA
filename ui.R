@@ -82,16 +82,6 @@ tabItem(
                       p("An interactive primer on diagnostic test accuracy can be found at:"),
                       tags$a(href="https://crsu.shinyapps.io/diagprimer/", "https://crsu.shinyapps.io/diagprimer/", target="_blank"),
                       wellPanel(
-                        fluidRow( 
-                          column(3, img(src='CRSUlogo.jpg', width=220, height=110)),
-                          column(9, tags$div(class="header", checked=NA,
-                                             tags$p("For more information about the Complex Reviews Support Unit (CRSU)"),
-                                             tags$a(href="https://www.gla.ac.uk/research/az/evidencesynthesis/apps-materials-guidence/", "please click here.", target="_blank")
-                          )
-                          )
-                        )
-                      ),
-                      wellPanel(
                         div(style = "display: inline;",
                             img(src = 'funded-by-nihr-logo.png', width = "55%")),
                         div(style = "display: inline;",
