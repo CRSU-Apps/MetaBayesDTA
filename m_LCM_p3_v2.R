@@ -68,6 +68,7 @@ LCM_sroc_plot_settings_menu_UI <- function(id) {
                    selected = 1)), 
     # Download plot:
     h5("Download plot options:"),
+    radioButtons(inputId = ns("plot_file_type"), label = h5("File type"), choices = c(".png", ".pdf")),
     numericInput(inputId =  ns("plot_width"), label=h5("Plot width"), value = 10),
     numericInput(inputId =  ns("plot_height"), label=h5("Plot height"), value = 10),
     numericInput(inputId =  ns("plot_dpi"), label=h5("Plot DPI"), value = 600),
@@ -1699,7 +1700,7 @@ LCM_sroc_plot_server <- function(id,
       output$plot_download <- downloadHandler(
         
         filename = function(){
-          paste("plot.png")
+          paste0("plot", input$plot_file_type)
         },
         content = function(file) { 
           ggsave(file,
