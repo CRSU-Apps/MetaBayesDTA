@@ -1540,7 +1540,7 @@ MA_sroc_plot_server <- function(id,
       # Download ggplot object 
       output$plot_download <- downloadHandler(
         filename = function() {
-          paste0("plot", input$plot_file_type)
+          paste0("sroc", input$plot_file_type)
         },
         content = function(file) { 
           ggsave(file,

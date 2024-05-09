@@ -358,7 +358,7 @@ MR_plot_2_server <- function(id,
         # Download ggplot object 
         output$plot_download_2 <- downloadHandler(
           filename = function(){
-            paste0("plot", input$plot_file_type_2)
+            paste0("accuracy_vs_covariate_meta_regression", input$plot_file_type_2)
           },
           content = function(file) { 
             ggsave(file,
