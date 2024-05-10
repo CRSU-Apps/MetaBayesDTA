@@ -167,6 +167,7 @@ SG_sroc_plot_settings_menu_UI <- function(id, data) {
             uiOutput(ns("covariate_display_subgroup_ui")), # display another subgroup on plot for info (as text labels)
             # Download plot:
             h5("Download plot options:"),
+            radioButtons(inputId = ns("plot_file_type"), label = h5("File type"), choices = c(".png", ".pdf")),
             numericInput(inputId =  ns("plot_width"), label=h5("Plot width"), value = 5),
             numericInput(inputId =  ns("plot_height"), label=h5("Plot height"), value = 5),
             numericInput(inputId =  ns("plot_dpi"), label=h5("Plot DPI"), value = 600),
@@ -534,7 +535,7 @@ SG_sroc_plot_server <- function(id,
       # Download ggplot object 
       output$plot_download <- downloadHandler(
         filename = function(){
-          paste("plot.png")
+          paste0("sroc_subgroup", input$plot_file_type)
         },
         content = function(file) { 
           ggsave(file,
