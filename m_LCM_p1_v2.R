@@ -620,20 +620,25 @@ LCM_model_priors_table_server <- function(id,
                               
                               prev <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("p"))$summary
                               
-                              Z = data.frame(estimate = c(Sens_index[,5], Spec_index[,5], 
-                                                          1 - Spec_index[,5], 
-                                                          correlation_index[,5][3], 
-                                                          between_study_sd_index[,5][1], between_study_sd_index[,5][2]), 
+                              Z = data.frame(estimate = c(Sens_index[, "50%"], Spec_index[, "50%"], 
+                                                          1 - Spec_index[, "50%"], 
+                                                          correlation_index[, "50%"][3], 
+                                                          between_study_sd_index[, "50%"][1], between_study_sd_index[, "50%"][2]), 
                                              
-                                             lci = c(Sens_index[,4], Spec_index[,4], 
-                                                          1 - Spec_index[,6], 
-                                                          correlation_index[,4][3], 
-                                                          between_study_sd_index[,4][1], between_study_sd_index[,4][2]), 
+                                             sd = c(Sens_index[, "sd"], Spec_index[, "sd"], 
+                                                    Spec_index[, "sd"], 
+                                                    correlation_index[, "sd"][3], 
+                                                    between_study_sd_index[, "sd"][1], between_study_sd_index[, "sd"][2]), 
                                              
-                                             uci = c(Sens_index[,6], Spec_index[,6], 
-                                                     1 - Spec_index[,4], 
-                                                     correlation_index[,6][3], 
-                                                     between_study_sd_index[,6][1], between_study_sd_index[,6][2]), 
+                                             lci = c(Sens_index[, "2.5%"], Spec_index[, "2.5%"], 
+                                                     1 - Spec_index[, "97.5%"], 
+                                                     correlation_index[, "2.5%"][3], 
+                                                     between_study_sd_index[, "2.5%"][1], between_study_sd_index[, "2.5%"][2]), 
+                                             
+                                             uci = c(Sens_index[, "97.5%"], Spec_index[, "97.5%"], 
+                                                     1 - Spec_index[, "2.5%"], 
+                                                     correlation_index[, "97.5%"][3], 
+                                                     between_study_sd_index[, "97.5%"][1], between_study_sd_index[, "97.5%"][2]), 
                                              
                                              row.names=c("Sensitivity_index", "Specifcity_index", "FPR_index", 
                                                          "Correlation_index",
@@ -642,7 +647,7 @@ LCM_model_priors_table_server <- function(id,
                               
                               # Create a matrix to store the parameter estimates
                               nrow <- 6 + 1
-                              s.matrix <- matrix(nrow=nrow, ncol=5)
+                              s.matrix <- matrix(nrow=nrow, ncol=6)
                               
                               
                               s.matrix[1,1] <-   paste0("Sensitivity ", "( ", paste0("logit", HTML("<sup>-1;</sup>")), "(", HTML("&mu;<sub>1</sub>"),"[",input$index_test_name,"]", ")",  ")") 
@@ -653,7 +658,7 @@ LCM_model_priors_table_server <- function(id,
                               s.matrix[6,1] <-   paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"),"[",input$index_test_name,"]", " )")
                               
                               
-                              for (i in 1:3) {
+                              for (i in 1:4) {
                                 for (j in 1:(nrow)-1) { 
                                   s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
                                 }
@@ -677,12 +682,12 @@ LCM_model_priors_table_server <- function(id,
                                 # do nothing 
                               }
                               
-                              s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-                              s.matrix[nrow, 1:5] <- ""
-                              s.matrix <- s.matrix[, c(1,2,5)]
+                              s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+                              s.matrix[nrow, 1:6] <- ""
+                              s.matrix <- s.matrix[, c(1, 2, 3, 6)]
                               
                               #Name the columns of the matrix
-                              colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+                              colnames(s.matrix) <- c("Parameter", "Prior Median", "Standard Deviation", "95% Prior Interval")
                               
                               s.matrix
                               
@@ -721,14 +726,17 @@ LCM_model_priors_table_server <- function(id,
         for (i in 1:num_refs) {
                             Z_group[[i]] <- data.frame(
                                         
-                                        estimate = c(Sens_refs[,5], Spec_refs[,5], 
-                                                     1 - Spec_refs[,5]), 
-                                                                    
-                                        lci = c(Sens_refs[,4], Spec_refs[,4], 
-                                                1 - Spec_refs[,6]), 
+                                        estimate = c(Sens_refs[, "50%"], Spec_refs[, "50%"], 
+                                                     1 - Spec_refs[, "50%"]), 
                                         
-                                        uci = c(Sens_refs[,6], Spec_refs[,6], 
-                                                1 - Spec_refs[,4]), 
+                                        sd = c(Sens_refs[, "sd"], Spec_refs[, "sd"],
+                                               Spec_refs[, "sd"]), 
+                                                                    
+                                        lci = c(Sens_refs[, "2.5%"], Spec_refs[, "2.5%"], 
+                                                1 - Spec_refs[, "97.5%"]), 
+                                        
+                                        uci = c(Sens_refs[, "97.5%"], Spec_refs[, "97.5%"], 
+                                                1 - Spec_refs[, "2.5%"]), 
                                         
                                         row.names=c(paste0("Sensitivity_ref","_",refs_names),
                                                     paste0("Specificity_ref","_",refs_names),
@@ -745,22 +753,22 @@ LCM_model_priors_table_server <- function(id,
         
         for (i in 1:num_refs) {
           nrow <- 3 + 1
-          s.matrix.group[[i]] <- matrix(nrow=nrow, ncol=5)
+          s.matrix.group[[i]] <- matrix(nrow=nrow, ncol=6)
           
           s.matrix.group[[i]][1,1] <-    paste0("Sensitivity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>1</sub>"),"[", refs_names[i],"]", ")",  ")") 
           s.matrix.group[[i]][2,1] <-    paste0("Specificity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"),"[", refs_names[i],"]", ")",  ")") 
           s.matrix.group[[i]][3,1] <-    paste0("False Positive Rate (1 - specificity)")
 
-          for (k in 1:3) {
-            for (j in 1:(nrow)-1) { 
+          for (k in 1:4) {
+            for (j in 1:(nrow)-1) {
               s.matrix.group[[i]][j,k+1] <- sprintf('%4.3f', Z_group[[i]][j,k])
             }
           }
-          s.matrix.group[[i]][nrow, 1:4] <- ""
-          
-          s.matrix.group[[i]][,5] <- paste0("(", s.matrix.group[[i]][,3], ", ", s.matrix.group[[i]][,4], ")")
           s.matrix.group[[i]][nrow, 1:5] <- ""
-          s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
+          
+          s.matrix.group[[i]][, 6] <- paste0("(", s.matrix.group[[i]][, 4], ", ", s.matrix.group[[i]][, 5], ")")
+          s.matrix.group[[i]][nrow, 1:6] <- ""
+          s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1, 2, 3 ,6)]
           
           
           s.matrix.group.dataframes[[i]] <- data.frame(s.matrix.group[[i]])
@@ -768,7 +776,8 @@ LCM_model_priors_table_server <- function(id,
           
           colnames(s.matrix.group.dataframes[[i]]) <- c( paste("Parameters for",
                                                                refs_names[i]), 
-                                                         "Prior Median", 
+                                                         "Prior Median",
+                                                         "Standard Deviation",
                                                          "95% Prior Interval")
           
         }
@@ -781,11 +790,13 @@ LCM_model_priors_table_server <- function(id,
         s.matrix.group.dataframe_allgroups2 <- s.matrix.group.dataframe_allgroups %>% 
           dplyr::mutate( " " = lag(!!as.name(paste("Parameters for", refs_names[1]))),
                          `Prior Median` = lag(`Prior Median`), 
+                         `Standard Deviation` = lag(`Standard Deviation`), 
                          `95% Prior Interval` = lag(`95% Prior Interval`))
         
         s.matrix.group.dataframe_allgroups3 <- s.matrix.group.dataframe_allgroups2 %>%
           dplyr::select(" ",
-                        `Prior Median`, 
+                        `Prior Median`,
+                        `Standard Deviation`,
                         `95% Prior Interval` )
         
         s.matrix.group.dataframe_allgroups3
@@ -826,17 +837,21 @@ LCM_model_priors_table_server <- function(id,
       between_study_sd_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("sigma_ref"))$summary
       
       
-      Z = data.frame(estimate = c(correlation_ref[,5][3], 
-                                  between_study_sd_ref[,5][1],
-                                  between_study_sd_ref[,5][2]), 
+      Z = data.frame(estimate = c(correlation_ref[, "50%"][3], 
+                                  between_study_sd_ref[, "50%"][1],
+                                  between_study_sd_ref[, "50%"][2]), 
                      
-                     lci = c(correlation_ref[,4][3], 
-                             between_study_sd_ref[,4][1],
-                             between_study_sd_ref[,4][2]), 
+                     sd = c(correlation_ref[, "sd"][3], 
+                            between_study_sd_ref[, "sd"][1],
+                            between_study_sd_ref[, "sd"][2]),
                      
-                     uci = c(correlation_ref[,6][3], 
-                             between_study_sd_ref[,6][1], 
-                             between_study_sd_ref[,6][2]), 
+                     lci = c(correlation_ref[, "2.5%"][3], 
+                             between_study_sd_ref[, "2.5%"][1],
+                             between_study_sd_ref[, "2.5%"][2]), 
+                     
+                     uci = c(correlation_ref[, "97.5%"][3], 
+                             between_study_sd_ref[, "97.5%"][1], 
+                             between_study_sd_ref[, "97.5%"][2]), 
                      
                      row.names=c("Correlation_ref",
                                  "sd_sens_ref", 
@@ -846,7 +861,7 @@ LCM_model_priors_table_server <- function(id,
       
       # Create a matrix to store the parameter estimates
       nrow <- 3 + 1
-      s.matrix <- matrix(nrow=nrow, ncol=5)
+      s.matrix <- matrix(nrow=nrow, ncol=6)
       
 
       s.matrix[1,1] <- paste0("Between-study Correlation " , "( ", HTML("&rho;"), "[Refs]", " )")
@@ -854,7 +869,7 @@ LCM_model_priors_table_server <- function(id,
       s.matrix[3,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), "[Refs]", " )")
       
       
-      for (i in 1:3) {
+      for (i in 1:4) {
         for (j in 1:(nrow)-1) { 
           s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
         }
@@ -864,13 +879,13 @@ LCM_model_priors_table_server <- function(id,
       if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
       ) {
         
-        s.matrix[1,2:4] <- "-"
+        s.matrix[1,2:5] <- "-"
         
         if (LCM_options_indicators$LCM_SeR_fixed_indicator == 1) { # if SeR fixed, no between-study SD for SeR
-          s.matrix[2,2:4] <- "-"
+          s.matrix[2,2:5] <- "-"
         }
         if (LCM_options_indicators$LCM_SpR_fixed_indicator == 1) { # if SpR fixed, no between-study SD for SpR
-          s.matrix[3,2:4] <- "-"
+          s.matrix[3,2:5] <- "-"
         }
       }
       else {
@@ -879,12 +894,12 @@ LCM_model_priors_table_server <- function(id,
       
       
       
-      s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-      s.matrix[nrow, 1:5] <- ""
-      s.matrix <- s.matrix[, c(1,2,5)]
+      s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+      s.matrix[nrow, 1:6] <- ""
+      s.matrix <- s.matrix[, c(1, 2, 3, 6)]
       
       #Name the columns of the matrix
-      colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+      colnames(s.matrix) <- c("Parameter", "Prior Median", "Standard Deviation", "95% Prior Interval")
       
       s.matrix
       
@@ -913,31 +928,32 @@ LCM_model_priors_table_server <- function(id,
       
       prev <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("p"))$summary
       
-      Z = data.frame(estimate = c(prev[,5]), 
-                     lci = c(prev[,4]),
-                     uci = c(prev[,6]),
+      Z = data.frame(estimate = c(prev[, "50%"]),
+                     sd = c(prev[, "sd"]),
+                     lci = c(prev[, "2.5%"]),
+                     uci = c(prev[, "97.5%"]),
                      row.names=c("prev")
       )
       
       # Create a matrix to store the parameter estimates
       nrow <- 1 + 1
-      s.matrix <- matrix(nrow=nrow, ncol=5)
+      s.matrix <- matrix(nrow=nrow, ncol=6)
       
       s.matrix[1,1] <- "Disease prevalence"
       
       
-      for (i in 1:3) {
+      for (i in 1:4) {
         for (j in 1:(nrow)-1) { 
           s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
         }
       }
       
-      s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-      s.matrix[nrow, 1:5] <- ""
-      s.matrix <- s.matrix[, c(1,2,5)]
+      s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+      s.matrix[nrow, 1:6] <- ""
+      s.matrix <- s.matrix[, c(1, 2, 3 ,6)]
       
       #Name the columns of the matrix
-      colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+      colnames(s.matrix) <- c("Parameter", "Prior Median", "Standard Deviation", "95% Prior Interval")
       
       s.matrix
       
@@ -1338,7 +1354,6 @@ LCM_parameter_estimates_table_server <- function(id,
           ## for index tests 
           Sens_index <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Se_index"))$summary
           Spec_index <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Sp_index"))$summary
-          fp_index <- 1 - Spec_index
           correlation_index <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Omega_index"))$summary
           DOR_index <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("DOR_index"))$summary
           LRp_index <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("LRp_index"))$summary
@@ -1352,24 +1367,30 @@ LCM_parameter_estimates_table_server <- function(id,
 
             
       Z = data.frame(
-         estimate = c(Sens_index[,5], Spec_index[,5],
-                      fp_index[,5], 
-                      DOR_index[,5], LRp_index[,5] , LRn_index[,5], 
-                      correlation_index[,5][3], 
-                      Theta_index[,5], Lambda_index[,5], beta_index[,5], sigma2_theta_index[,5], sigma2_alpha_index[,5], 
-                      between_study_sd_index[,5][1], between_study_sd_index[,5][2]),
-         lci = c(Sens_index[,4], Spec_index[,4],
-                 fp_index[,6], 
-                 DOR_index[,4], LRp_index[,4] , LRn_index[,4], 
-                 correlation_index[,4][3], 
-                 Theta_index[,4], Lambda_index[,4], beta_index[,4], sigma2_theta_index[,4], sigma2_alpha_index[,4], 
-                 between_study_sd_index[,4][1], between_study_sd_index[,4][2]),
-         uci = c(Sens_index[,6], Spec_index[,6],
-                 fp_index[,4], 
-                 DOR_index[,6], LRp_index[,6] , LRn_index[,6], 
-                 correlation_index[,6][3], 
-                 Theta_index[,6], Lambda_index[,6], beta_index[,6], sigma2_theta_index[,6], sigma2_alpha_index[,6], 
-                 between_study_sd_index[,6][1], between_study_sd_index[,6][2]),
+         estimate = c(Sens_index[, "50%"], Spec_index[, "50%"],
+                      1 - Spec_index[, "50%"], 
+                      DOR_index[, "50%"], LRp_index[, "50%"] , LRn_index[, "50%"], 
+                      correlation_index[, "50%"][3], 
+                      Theta_index[, "50%"], Lambda_index[, "50%"], beta_index[, "50%"], sigma2_theta_index[, "50%"], sigma2_alpha_index[, "50%"], 
+                      between_study_sd_index[, "50%"][1], between_study_sd_index[, "50%"][2]),
+         sd = c(Sens_index[, "sd"], Spec_index[, "sd"],
+                Spec_index[, "sd"], 
+                DOR_index[, "sd"], LRp_index[, "sd"] , LRn_index[, "sd"], 
+                correlation_index[, "sd"][3], 
+                Theta_index[, "sd"], Lambda_index[, "sd"], beta_index[, "sd"], sigma2_theta_index[, "sd"], sigma2_alpha_index[, "sd"], 
+                between_study_sd_index[, "sd"][1], between_study_sd_index[, "sd"][2]),
+         lci = c(Sens_index[, "2.5%"], Spec_index[, "2.5%"],
+                 1 - Spec_index[, "97.5%"], 
+                 DOR_index[, "2.5%"], LRp_index[, "2.5%"] , LRn_index[, "2.5%"], 
+                 correlation_index[, "2.5%"][3], 
+                 Theta_index[, "2.5%"], Lambda_index[, "2.5%"], beta_index[, "2.5%"], sigma2_theta_index[, "2.5%"], sigma2_alpha_index[, "2.5%"], 
+                 between_study_sd_index[, "2.5%"][1], between_study_sd_index[, "2.5%"][2]),
+         uci = c(Sens_index[, "97.5%"], Spec_index[, "97.5%"],
+                 1 - Spec_index[, "2.5%"], 
+                 DOR_index[, "97.5%"], LRp_index[, "97.5%"] , LRn_index[, "97.5%"], 
+                 correlation_index[, "97.5%"][3], 
+                 Theta_index[, "97.5%"], Lambda_index[, "97.5%"], beta_index[, "97.5%"], sigma2_theta_index[, "97.5%"], sigma2_alpha_index[, "97.5%"], 
+                 between_study_sd_index[, "97.5%"][1], between_study_sd_index[, "97.5%"][2]),
          row.names=c(paste("Sensitivity"), 
                      paste("Specificity"), 
                      paste("FPR"), 
@@ -1390,7 +1411,7 @@ LCM_parameter_estimates_table_server <- function(id,
           # Create a matrix to store the parameter estimates
           nrow <- 14 + 1
           
-          s.matrix <- matrix(nrow=nrow, ncol=5)
+          s.matrix <- matrix(nrow=nrow, ncol=6)
           
           # index test params
           s.matrix[1,1] <- paste0("Sensitivity ", "( ", paste0("logit", HTML("<sup>-1;</sup>")), "(", HTML("&mu;<sub>1;</sub>"),"[",input$index_test_name,"]", ")",  ")") 
@@ -1409,7 +1430,7 @@ LCM_parameter_estimates_table_server <- function(id,
           s.matrix[14,1] <- paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0;</sub>"),"[",input$index_test_name,"]", " )")
           
 
-          for (i in 1:3) {
+          for (i in 1:4) {
             for (j in 1:(nrow-1)) {
               s.matrix[j, i+1] <- sprintf('%4.3f', Z[j,i])
             }
@@ -1419,18 +1440,18 @@ LCM_parameter_estimates_table_server <- function(id,
           if (   ((LCM_options_indicators$LCM_SeI_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpI_fixed_indicator == 1))
           ) {
             
-            s.matrix[7,2:4] <- "-"
-            s.matrix[8,2:4] <- "-"
-            s.matrix[9,2:4] <- "-"
-            s.matrix[10,2:4] <- "-"
-            s.matrix[11,2:4] <- "-"
-            s.matrix[12,2:4] <- "-"
+            s.matrix[7,2:5] <- "-"
+            s.matrix[8,2:5] <- "-"
+            s.matrix[9,2:5] <- "-"
+            s.matrix[10,2:5] <- "-"
+            s.matrix[11,2:5] <- "-"
+            s.matrix[12,2:5] <- "-"
             
             if (LCM_options_indicators$LCM_SeI_fixed_indicator == 1) { # if SeI fixed, no between-study SD for SeI
-              s.matrix[13,2:4] <- "-"
+              s.matrix[13,2:5] <- "-"
             }
             if (LCM_options_indicators$LCM_SpI_fixed_indicator == 1) { # if SpI fixed, no between-study SD for SpI
-              s.matrix[14,2:4] <- "-"
+              s.matrix[14,2:5] <- "-"
             }
           }
           else {
@@ -1438,13 +1459,13 @@ LCM_parameter_estimates_table_server <- function(id,
           }
           
           
-          s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-          s.matrix[nrow, 1:5] <- ""
-          s.matrix <- s.matrix[, c(1,2,5)]
+          s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+          s.matrix[nrow, 1:6] <- ""
+          s.matrix <- s.matrix[, c(1, 2, 3, 6)]
           
 
           #Name the columns of the matrix
-          colnames(s.matrix) <- c("Parameter", "Posterior Median", "95% Posterior Interval")
+          colnames(s.matrix) <- c("Parameter", "Posterior Median", "Standard Deviation", "95% Posterior Interval")
           
           s.matrix
           
@@ -1470,7 +1491,6 @@ LCM_parameter_estimates_table_server <- function(id,
           
           Sens_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Se_ref"))$summary
           Spec_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("Sp_ref"))$summary
-          fp_ref <- 1 - Spec_ref
           DOR_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("DOR_ref"))$summary
           LRp_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("LRp_ref"))$summary
           LRn_ref <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("LRn_ref"))$summary
@@ -1481,30 +1501,30 @@ LCM_parameter_estimates_table_server <- function(id,
           
           for (i in 1:num_refs) {
                               Z_group[[i]] <- data.frame(
-                                                  estimate = c(
-                                                                Sens_ref[,5][i], Spec_ref[,5][i],
-                                                                fp_ref[,5][i], 
-                                                                DOR_ref[,5][i], LRp_ref[,5][i] , LRn_ref[,5][i], 
-                                                                Theta_ref[,5][i], Lambda_ref[,5][i]),
-                                                              lci = c(
-                                                                Sens_ref[,4][i], Spec_ref[,4][i],
-                                                                fp_ref[,6][i], 
-                                                                DOR_ref[,4][i], LRp_ref[,4][i] , LRn_ref[,4][i], 
-                                                                Theta_ref[,4][i], Lambda_ref[,4][i]),
-                                                              uci = c(
-                                                                Sens_ref[,6][i], Spec_ref[,6][i],
-                                                                fp_ref[,4][i], 
-                                                                DOR_ref[,6][i], LRp_ref[,6][i] , LRn_ref[,6][i], 
-                                                                Theta_ref[,6][i], Lambda_ref[,6][i]),
-                                                              row.names=c(
-                                                                    paste0("Sensitivity_ref","_",refs_names[i]),
-                                                                    paste0("Specificity_ref","_",refs_names[i]), 
-                                                                    paste0("FPR_ref","_",refs_names[i]),
-                                                                    paste0("DOR_ref","_",refs_names[i]),
-                                                                    paste0("LR+_ref","_",refs_names[i]),
-                                                                    paste0("LR-_ref","_",refs_names[i]),
-                                                                    paste0("Theta","_",refs_names[i]),
-                                                                    paste0("Lambda","_",refs_names[i]))
+                                                  estimate = c(Sens_ref[, "50%"][i], Spec_ref[, "50%"][i],
+                                                               1 - Spec_ref[, "50%"][i], 
+                                                               DOR_ref[, "50%"][i], LRp_ref[, "50%"][i] , LRn_ref[, "50%"][i], 
+                                                               Theta_ref[, "50%"][i], Lambda_ref[, "50%"][i]),
+                                                  sd = c(Sens_ref[, "sd"][i], Spec_ref[, "sd"][i],
+                                                         Spec_ref[, "sd"][i], 
+                                                         DOR_ref[, "sd"][i], LRp_ref[, "sd"][i] , LRn_ref[, "sd"][i], 
+                                                         Theta_ref[, "sd"][i], Lambda_ref[, "sd"][i]),
+                                                  lci = c(Sens_ref[, "2.5%"][i], Spec_ref[, "2.5%"][i],
+                                                          1 - Spec_ref[, "97.5%"][i], 
+                                                          DOR_ref[, "2.5%"][i], LRp_ref[, "2.5%"][i] , LRn_ref[, "2.5%"][i], 
+                                                          Theta_ref[, "2.5%"][i], Lambda_ref[, "2.5%"][i]),
+                                                  uci = c(Sens_ref[, "97.5%"][i], Spec_ref[, "97.5%"][i],
+                                                          1 - Spec_ref[, "2.5%"][i], 
+                                                          DOR_ref[, "97.5%"][i], LRp_ref[, "97.5%"][i] , LRn_ref[, "97.5%"][i], 
+                                                          Theta_ref[, "97.5%"][i], Lambda_ref[, "97.5%"][i]),
+                                                  row.names=c(paste0("Sensitivity_ref","_",refs_names[i]),
+                                                              paste0("Specificity_ref","_",refs_names[i]), 
+                                                              paste0("FPR_ref","_",refs_names[i]),
+                                                              paste0("DOR_ref","_",refs_names[i]),
+                                                              paste0("LR+_ref","_",refs_names[i]),
+                                                              paste0("LR-_ref","_",refs_names[i]),
+                                                              paste0("Theta","_",refs_names[i]),
+                                                              paste0("Lambda","_",refs_names[i]))
                               )
           }
           
@@ -1514,7 +1534,7 @@ LCM_parameter_estimates_table_server <- function(id,
           
           for (i in 1:num_refs) {
             nrow <- 8 + 1
-            s.matrix.group[[i]] <- matrix(nrow=nrow, ncol=5)
+            s.matrix.group[[i]] <- matrix(nrow=nrow, ncol=6)
             
             s.matrix.group[[i]][1,1] <-  paste0("Sensitivity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>1</sub>"),"[", refs_names[i],"]", ")",  ")") 
             s.matrix.group[[i]][2,1] <-  paste0("Specificity", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"),"[", refs_names[i],"]", ")",  ")") 
@@ -1525,28 +1545,28 @@ LCM_parameter_estimates_table_server <- function(id,
             s.matrix.group[[i]][7,1] <-  paste0("Cutpoint parameter ", "( ", HTML("&Theta;"),"[", refs_names[i],"]", " )")  
             s.matrix.group[[i]][8,1] <-  paste0("Accuracy parameter ", "( ", HTML("&Lambda;"),"[", refs_names[i],"]", " )")   
             
-          for (k in 1:3) {
+          for (k in 1:4) {
               for (j in 1:(nrow)-1) { 
                 s.matrix.group[[i]][j,k+1] <- sprintf('%4.3f', Z_group[[i]][j,k])
               }
             }
-            s.matrix.group[[i]][nrow, 1:4] <- ""
+            s.matrix.group[[i]][nrow, 1:5] <- ""
             
             # if either Se or Sp for index test. is fixed, no HSROC params and no between-study SD
              if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
              ) {
             
-              s.matrix.group[[i]][7,2:4] <- "-"
-              s.matrix.group[[i]][8,2:4] <- "-"
+              s.matrix.group[[i]][7,2:5] <- "-"
+              s.matrix.group[[i]][8,2:5] <- "-"
             
               }
               else {
             # do nothing 
                }
             
-            s.matrix.group[[i]][,5] <- paste0("(", s.matrix.group[[i]][,3], ", ", s.matrix.group[[i]][,4], ")")
-            s.matrix.group[[i]][nrow, 1:5] <- ""
-            s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1,2,5)]
+            s.matrix.group[[i]][, 6] <- paste0("(", s.matrix.group[[i]][, 4], ", ", s.matrix.group[[i]][, 5], ")")
+            s.matrix.group[[i]][nrow, 1:6] <- ""
+            s.matrix.group[[i]] <- s.matrix.group[[i]][, c(1, 2, 3, 6)]
             
             
             s.matrix.group.dataframes[[i]] <- data.frame(s.matrix.group[[i]])
@@ -1554,7 +1574,8 @@ LCM_parameter_estimates_table_server <- function(id,
             
             colnames(s.matrix.group.dataframes[[i]]) <- c( paste("Parameters for",
                                                                  refs_names[i]), 
-                                                           "Posterior Median", 
+                                                           "Posterior Median",
+                                                           "Standard Deviation",
                                                            "95% Posterior Interval")
             
           }
@@ -1566,12 +1587,14 @@ LCM_parameter_estimates_table_server <- function(id,
           
           s.matrix.group.dataframe_allgroups2 <- s.matrix.group.dataframe_allgroups %>% 
                                                   dplyr::mutate( " " = lag(!!as.name(paste("Parameters for", refs_names[1]))),
-                                                                 `Posterior Median` = lag(`Posterior Median`), 
+                                                                 `Posterior Median` = lag(`Posterior Median`),
+                                                                 `Standard Deviation` = lag(`Standard Deviation`),
                                                                  `95% Posterior Interval` = lag(`95% Posterior Interval`))
           
           s.matrix.group.dataframe_allgroups3 <- s.matrix.group.dataframe_allgroups2 %>%
                                                   dplyr::select(" ",
                                                                 `Posterior Median`, 
+                                                                `Standard Deviation`,
                                                                 `95% Posterior Interval` )
                                                 
           s.matrix.group.dataframe_allgroups3
@@ -1611,18 +1634,22 @@ LCM_parameter_estimates_table_server <- function(id,
 
           
           Z = data.frame(
-            estimate = c(correlation_ref[,5][3], 
-                         beta_ref[,5], sigma2_theta_ref[,5], sigma2_alpha_ref[,5], 
-                         between_study_sd_ref[,5][1], between_study_sd_ref[,5][2]),
+            estimate = c(correlation_ref[, "50%"][3], 
+                         beta_ref[, "50%"], sigma2_theta_ref[, "50%"], sigma2_alpha_ref[, "50%"], 
+                         between_study_sd_ref[, "50%"][1], between_study_sd_ref[, "50%"][2]),
             
-            lci = c(correlation_ref[,4][3], 
-                         beta_ref[,4], sigma2_theta_ref [,4], sigma2_alpha_ref[,4], 
-                         between_study_sd_ref[,4][1], between_study_sd_ref[,4][2]),
+            sd = c(correlation_ref[, "sd"][3], 
+                   beta_ref[, "sd"], sigma2_theta_ref[, "sd"], sigma2_alpha_ref[, "sd"], 
+                   between_study_sd_ref[, "sd"][1], between_study_sd_ref[, "sd"][2]),
+            
+            lci = c(correlation_ref[, "2.5%"][3], 
+                         beta_ref[, "2.5%"], sigma2_theta_ref [, "2.5%"], sigma2_alpha_ref[, "2.5%"], 
+                         between_study_sd_ref[, "2.5%"][1], between_study_sd_ref[, "2.5%"][2]),
             
             
-            uci = c(correlation_ref[,6][3], 
-                         beta_ref[,6], sigma2_theta_ref[,6], sigma2_alpha_ref[,6], 
-                         between_study_sd_ref[,6][1], between_study_sd_ref[,6][2]),
+            uci = c(correlation_ref[, "97.5%"][3], 
+                         beta_ref[, "97.5%"], sigma2_theta_ref[, "97.5%"], sigma2_alpha_ref[, "97.5%"], 
+                         between_study_sd_ref[, "97.5%"][1], between_study_sd_ref[, "97.5%"][2]),
             
             row.names=c(
                         "Correlation, ref",
@@ -1636,7 +1663,7 @@ LCM_parameter_estimates_table_server <- function(id,
           # Create a matrix to store the parameter estimates
           nrow <-  6 + 1
           
-          s.matrix <- matrix(nrow=nrow, ncol=5)
+          s.matrix <- matrix(nrow=nrow, ncol=6)
 
           s.matrix[1,1] <-  paste0("Between-study Correlation " , "( ", HTML("&rho;"), "[Refs]", " )")
           s.matrix[2,1] <-  paste0("Shape parameter ", "( ", HTML("&beta;"), "[Refs]", " )")
@@ -1646,7 +1673,7 @@ LCM_parameter_estimates_table_server <- function(id,
           s.matrix[6,1] <-  paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0;</sub>"), "[Refs]", " )")
           
           
-          for (i in 1:3) {
+          for (i in 1:4) {
             for (j in 1:(nrow-1)) {
               s.matrix[j, i+1] <- sprintf('%4.3f', Z[j,i])
             }
@@ -1656,16 +1683,16 @@ LCM_parameter_estimates_table_server <- function(id,
           if (   ((LCM_options_indicators$LCM_SeR_fixed_indicator == 1) || (LCM_options_indicators$LCM_SpR_fixed_indicator == 1))
           ) {
             
-            s.matrix[1,2:4] <- "-"
-            s.matrix[2,2:4] <- "-"
-            s.matrix[3,2:4] <- "-"
-            s.matrix[4,2:4] <- "-"
+            s.matrix[1,2:5] <- "-"
+            s.matrix[2,2:5] <- "-"
+            s.matrix[3,2:5] <- "-"
+            s.matrix[4,2:5] <- "-"
             
             if (LCM_options_indicators$LCM_SeR_fixed_indicator == 1) { # if SeI fixed, no between-study SD for SeI
-              s.matrix[5,2:4] <- "-"
+              s.matrix[5,2:5] <- "-"
             }
             if (LCM_options_indicators$LCM_SpR_fixed_indicator == 1) { # if SpI fixed, no between-study SD for SpI
-              s.matrix[6,2:4] <- "-"
+              s.matrix[6,2:5] <- "-"
             }
           }
           else {
@@ -1673,13 +1700,13 @@ LCM_parameter_estimates_table_server <- function(id,
           }
           
           
-          s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-          s.matrix[nrow, 1:5] <- ""
-          s.matrix <- s.matrix[, c(1,2,5)]
+          s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+          s.matrix[nrow, 1:6] <- ""
+          s.matrix <- s.matrix[, c(1, 2, 3, 6)]
           
           
           #Name the columns of the matrix
-          colnames(s.matrix) <- c("Parameter", "Posterior Median", "95% Posterior Interval")
+          colnames(s.matrix) <- c("Parameter", "Posterior Median", "Standard Deviation", "95% Posterior Interval")
           
           s.matrix
           

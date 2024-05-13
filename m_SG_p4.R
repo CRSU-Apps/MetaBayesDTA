@@ -81,6 +81,7 @@ SG_plot_2_settings_menu_UI <- function(id)   {
    
    # Download plot options:
    h5("Download plot options:"),
+   radioButtons(inputId = ns("plot_file_type_2"), label = h5("File type"), choices = c(".png", ".pdf")),
    numericInput(inputId =  ns("plot_width_2"), label=h5("Plot width"), value = 5),
    numericInput(inputId =  ns("plot_height_2"), label=h5("Plot height"), value = 5),
    numericInput(inputId =  ns("plot_dpi_2"), label=h5("Plot DPI"), value = 600),
@@ -248,7 +249,7 @@ SG_plot_2_server <- function(id,
         # Download ggplot object 
         output$plot_download_2 <- downloadHandler(
           filename = function(){
-            paste("plot.png")
+            paste0("accuracy_vs_covariate_subgroup", input$plot_file_type_2)
           },
           content = function(file) { 
             ggsave(file,

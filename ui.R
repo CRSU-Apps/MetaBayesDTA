@@ -10,7 +10,7 @@ tags$head(
   tags$meta(name="description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(name="keywords", content="Meta-Analysis, Diagnostic test accuracy, Application, Imperfect gold standard, Latent class, Bayesian"),
   # Open Graph Tags
-  tags$meta(property="og:title", content="MetaBayesDTA v1.5.1"),
+  tags$meta(property="og:title", content="MetaBayesDTA v1.5.2"),
   tags$meta(property="og:description", content="Codeless Bayesian meta-analysis of test accuracy, with or without a gold standard"),
   tags$meta(property="og:image", content="https://raw.githubusercontent.com/CRSU-Apps/MetaBayesDTA/main/www/roc_curve.png")
   ), 
@@ -48,13 +48,13 @@ tabItem(
     # navbarPage("", id = "home_tab_navbar",
          box(width = 12,
              tabPanel("Home",
-                      h1("MetaBayesDTA (v1.5.1)"),
+                      h1("MetaBayesDTA (v1.5.2)"),
                       h2("FULL RELEASE - MetaBayesDTA has now left BETA", style="color:blue"),
                       h2("Bayesian meta-analysis of diagnostic test accuracy data, with or without a gold standard"),
                       br(),
                       h4("This is an extension of the frequentist version of the app, MetaDTA, which is described in this paper:",
                          tags$a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1439", "Patel A, Cooper NJ, Freeman SC, Sutton AJ. 
-                         Graphical enhancements to summary receiver operating charcateristic plots to facilitate the analysis and reporting
+                         Graphical enhancements to summary receiver operating characteristic plots to facilitate the analysis and reporting
                          of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
                            "), 
                          "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma/", "MetaDTA version 2.0")),
@@ -81,16 +81,6 @@ tabItem(
                       br(),
                       p("An interactive primer on diagnostic test accuracy can be found at:"),
                       tags$a(href="https://crsu.shinyapps.io/diagprimer/", "https://crsu.shinyapps.io/diagprimer/", target="_blank"),
-                      wellPanel(
-                        fluidRow( 
-                          column(3, img(src='CRSUlogo.jpg', width=220, height=110)),
-                          column(9, tags$div(class="header", checked=NA,
-                                             tags$p("For more information about the Complex Reviews Support Unit (CRSU)"),
-                                             tags$a(href="https://www.gla.ac.uk/research/az/evidencesynthesis/apps-materials-guidence/", "please click here.", target="_blank")
-                          )
-                          )
-                        )
-                      ),
                       wellPanel(
                         div(style = "display: inline;",
                             img(src = 'funded-by-nihr-logo.png', width = "55%")),

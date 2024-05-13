@@ -489,18 +489,22 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 correlation <-  rstan::summary(model, probs = c(0.025,  0.5, 0.975), pars = c("Omega"))$summary
                 between_study_sd <-  rstan::summary(model, probs = c(0.025,  0.5, 0.975), pars = c("sigma"))$summary
                 
-                Z = data.frame(estimate = c(Sens[,5], Spec[,5],
-                                            1 - Spec[,5], 
-                                            correlation[,5][3], 
-                                            between_study_sd[,5][1], between_study_sd[,5][2]),
-                               lci = c(Sens[,4], Spec[,4],
-                                       1 - Spec[,6], 
-                                       correlation[,4][3],
-                                       between_study_sd[,4][1], between_study_sd[,4][2]),
-                               uci = c(Sens[,6], Spec[,6],
-                                       1 - Spec[,4], 
-                                       correlation[,6][3],
-                                       between_study_sd[,6][1], between_study_sd[,6][2]),
+                Z = data.frame(estimate = c(Sens[, "50%"], Spec[, "50%"],
+                                            1 - Spec[, "50%"], 
+                                            correlation[, "50%"][3], 
+                                            between_study_sd[, "50%"][1], between_study_sd[, "50%"][2]),
+                               sd = c(Sens[, "sd"], Spec[, "sd"],
+                                      Spec[, "sd"], 
+                                      correlation[, "sd"][3], 
+                                      between_study_sd[, "sd"][1], between_study_sd[, "sd"][2]),
+                               lci = c(Sens[, "2.5%"], Spec[, "2.5%"],
+                                       1 - Spec[, "97.5%"], 
+                                       correlation[, "2.5%"][3],
+                                       between_study_sd[, "2.5%"][1], between_study_sd[, "2.5%"][2]),
+                               uci = c(Sens[, "97.5%"], Spec[, "97.5%"],
+                                       1 - Spec[, "2.5%"], 
+                                       correlation[, "97.5%"][3],
+                                       between_study_sd[, "97.5%"][1], between_study_sd[, "97.5%"][2]),
                                row.names=c("Sensitivity", "Specifcity", "FPR", 
                                            "Correlation",
                                            "sd_sens", "sd_spec")
@@ -508,7 +512,7 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 
                 # Create a matrix to store the parameter estimates
                 nrow <- 7
-                s.matrix <- matrix(nrow=nrow, ncol=5)
+                s.matrix <- matrix(nrow=nrow, ncol=6)
                 
                 s.matrix[1,1] <-  paste0("Sensitivity ", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>1</sub>"), ")",  ")")
                 s.matrix[2,1] <-  paste0("Specificity ", "( ", paste0("logit", HTML("<sup>-1</sup>")), "(", HTML("&mu;<sub>0</sub>"), ")",  ")")
@@ -517,18 +521,18 @@ MA_model_priors_table_server <- function(id, draws_PO) {
                 s.matrix[5,1] <-  paste0("Between-study SD for logit(Sensitivity) ", "( ", HTML("&sigma;<sub>1</sub>"), " )")
                 s.matrix[6,1] <-  paste0("Between-study SD for logit(Specificity) ", "( ", HTML("&sigma;<sub>0</sub>"), " )")
                 
-                for (i in 1:3) {
+                for (i in 1:4) {
                   for (j in 1:(nrow)-1) { 
                     s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
                   }
                 }
                 
-                s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-                s.matrix[nrow, 1:5] <- ""
-                s.matrix <- s.matrix[, c(1,2,5)]
+                s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+                s.matrix[nrow, 1:6] <- ""
+                s.matrix <- s.matrix[, c(1, 2, 3, 6)]
                 
                 #Name the columns of the matrix
-                colnames(s.matrix) <- c("Parameter", "Prior Median", "95% Prior Interval")
+                colnames(s.matrix) <- c("Parameter", "Prior Median", "Standard Deviation", "95% Prior Interval")
                 # Run the Garabage Collector to Ensure any excess memory used by stan is freed
                 gc()
                 return(s.matrix)
@@ -880,24 +884,30 @@ MA_parameter_estimates_table_server <- function(id,
         sigma2_alpha <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("sigma_sq_alpha"))$summary
         between_study_sd <- summary(mod, probs = c(0.025,  0.5, 0.975), pars = c("sigma"))$summary
         
-        Z = data.frame(estimate = c(logit_Sens[,5], logit_Spec[,5], 
-                                    Sens[,5], Spec[,5],
-                                    1 - Spec[,5], 
-                                    DOR[,5], LRp[,5] , LRn[,5],
-                                    correlation[,5][3], between_study_sd[,5][1], between_study_sd[,5][2], 
-                                    Theta[,5], Lambda[,5], beta[,5], sigma2_theta[,5], sigma2_alpha[,5]),
-                       lci = c(logit_Sens[,4], logit_Spec[,4], 
-                               Sens[,4], Spec[,4],
-                               1 - Spec[,6], 
-                               DOR[,4], LRp[,4] , LRn[,4], 
-                               correlation[,4][3], between_study_sd[,4][1], between_study_sd[,4][2],
-                               Theta[,4], Lambda[,4], beta[,4], sigma2_theta[,4], sigma2_alpha[,4]),
-                       uci = c(logit_Sens[,6], logit_Spec[,6], 
-                               Sens[,6], Spec[,6],
-                               1 - Spec[,4], 
-                               DOR[,6], LRp[,6] , LRn[,6], 
-                               correlation[,6][3], between_study_sd[,6][1], between_study_sd[,6][2],
-                               Theta[,6], Lambda[,6], beta[,6], sigma2_theta[,6], sigma2_alpha[,6]),
+        Z = data.frame(estimate = c(logit_Sens[, "50%"], logit_Spec[, "50%"], 
+                                    Sens[, "50%"], Spec[, "50%"],
+                                    1 - Spec[, "50%"], 
+                                    DOR[, "50%"], LRp[, "50%"] , LRn[, "50%"],
+                                    correlation[, "50%"][3], between_study_sd[, "50%"][1], between_study_sd[, "50%"][2], 
+                                    Theta[, "50%"], Lambda[, "50%"], beta[, "50%"], sigma2_theta[, "50%"], sigma2_alpha[, "50%"]),
+                       sd = c(logit_Sens[, "sd"], logit_Spec[, "sd"], 
+                              Sens[, "sd"], Spec[, "sd"],
+                              Spec[, "sd"], 
+                              DOR[, "sd"], LRp[, "sd"] , LRn[, "sd"],
+                              correlation[, "sd"][3], between_study_sd[, "sd"][1], between_study_sd[, "sd"][2], 
+                              Theta[, "sd"], Lambda[, "sd"], beta[, "sd"], sigma2_theta[, "sd"], sigma2_alpha[, "sd"]),
+                       lci = c(logit_Sens[, "2.5%"], logit_Spec[, "2.5%"], 
+                               Sens[, "2.5%"], Spec[, "2.5%"],
+                               1 - Spec[, "97.5%"], 
+                               DOR[, "2.5%"], LRp[, "2.5%"] , LRn[, "2.5%"], 
+                               correlation[, "2.5%"][3], between_study_sd[, "2.5%"][1], between_study_sd[, "2.5%"][2],
+                               Theta[, "2.5%"], Lambda[, "2.5%"], beta[, "2.5%"], sigma2_theta[, "2.5%"], sigma2_alpha[, "2.5%"]),
+                       uci = c(logit_Sens[, "97.5%"], logit_Spec[, "97.5%"], 
+                               Sens[, "97.5%"], Spec[, "97.5%"],
+                               1 - Spec[, "2.5%"], 
+                               DOR[, "97.5%"], LRp[, "97.5%"] , LRn[, "97.5%"], 
+                               correlation[, "97.5%"][3], between_study_sd[, "97.5%"][1], between_study_sd[, "97.5%"][2],
+                               Theta[, "97.5%"], Lambda[, "97.5%"], beta[, "97.5%"], sigma2_theta[, "97.5%"], sigma2_alpha[, "97.5%"]),
                        row.names=c("Logit Sens", "Logit Spec", 
                                    "Sensitivity", "Specifcity",
                                    "FPR", 
@@ -908,7 +918,7 @@ MA_parameter_estimates_table_server <- function(id,
         
         # Create a matrix to store the parameter estimates
         nrow <- 17
-        s.matrix <- matrix(nrow=nrow, ncol=5)
+        s.matrix <- matrix(nrow=nrow, ncol=6)
         
         s.matrix[1,1] <-  paste0("logit(sensitivity) ", "( ", HTML("&mu;<sub>1</sub>"), " )")
         s.matrix[2,1] <-  paste0("logit(specificity) ", "( ", HTML("&mu;<sub>0</sub>"), " )")
@@ -929,18 +939,19 @@ MA_parameter_estimates_table_server <- function(id,
         s.matrix[16,1] <- paste0("SD of accuracy parameter ", "( ", HTML("&sigma;<sub>&alpha;</sub>"), " )")
         
         
-        for (i in 1:3) {
+        for (i in 1:4) {
           for (j in 1:(nrow)-1) { 
             s.matrix[j,i+1] <- sprintf('%4.3f', Z[j,i])
           }
         }
         
-        s.matrix[,5] <- paste0("(", s.matrix[,3], ", ", s.matrix[,4], ")")
-        s.matrix[nrow, 1:5] <- ""
-        s.matrix <- s.matrix[, c(1,2,5)]
+        
+        s.matrix[, 6] <- paste0("(", s.matrix[, 4], ", ", s.matrix[, 5], ")")
+        s.matrix[nrow, 1:6] <- ""
+        s.matrix <- s.matrix[, c(1, 2, 3, 6)]
         
         #Name the columns of the matrix
-        colnames(s.matrix) <- c("Parameter", "Posterior Median", "95% Posterior Interval")
+        colnames(s.matrix) <- c("Parameter", "Posterior Median", "Standard Deviation", "95% Posterior Interval")
         
         #Conditions to display which statistics are shown in the table
         #Start with a logical vector of false and replace ths with true if the corresponding box is ticked
