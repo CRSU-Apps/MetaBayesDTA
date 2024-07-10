@@ -16,6 +16,17 @@
 
 server <- function(input, output, session) {
 
+  # Current tab as a reactive
+  tab <- reactive(input$tabs)
+
+  # GDPR Module Server (R/module_analytics.R)
+  gdpr_server(
+    id = "cookies",
+    cookies = reactive(input$cookies),
+    google_analytics_id = "G-PZNQ39CJ15",
+    tab = tab
+  )
+
   shinyalert(title = "Message from Authors",
              text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
@@ -25,18 +36,6 @@ server <- function(input, output, session) {
              type = "info",
              confirmButtonText = "Okay",
              html = TRUE)
-  
-    shinyalert(title = "Important message",
-               text =  paste("In accordance with Data Protection legislation, we would like to inform you of the following before you
-                        use our website: We collect your usage data within the MetaBayesDTA app to perform analytics of usage and
-                        improve our app.  By clicking",   tags$i(tags$u("I consent")), "below, you consent to the use of data
-                        by us through Google Analytics.  For details of policy, please check",
-                        tags$a(href="https://policies.google.com/privacy?hl=en", "Google Privacy & Terms.",target="_blank") 
-                        ),
-               type = "info",
-               confirmButtonText = "I consent",
-               html = TRUE)
-  
   
   Standard <- read.csv('./Standard.csv') 
   QA <- read.csv('./QA.csv') 
