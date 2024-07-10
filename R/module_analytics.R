@@ -266,6 +266,8 @@ gdpr_server <- function(
           is_analytics(),
           cancelOutput = TRUE
         )
+        # Debug Message
+        print(paste0("Recording ", tab()))
         # Send the tab to Google Analytics through a js event
         session$sendCustomMessage(
           "add-event",
