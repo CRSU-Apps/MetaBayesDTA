@@ -1,10 +1,10 @@
 #' @title Get GDPR Message
-#' @description Returns GDPR message to be desplayed in HTML
+#' @description Returns GDPR message to be displayed in HTML
 
 #' @return A character vector containing html to be displayed
 #' in the GDPR message box
 #' @details HTML content of the GDPR message with link to
-#' goofle privacy policy
+#' google privacy policy
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -87,7 +87,7 @@ add_analytics <- function(google_analytics_id) {
   return(
     # Return a head tag
     shiny::tags$head(
-      # Singlton for only including it once
+      # Singleton for only including it once
       shiny::singleton(
         # Use script tags
         tags$script(
@@ -128,7 +128,7 @@ gdpr_ui <- function(id) {
     shiny::tags$script(src = "js/js.cookie.min.js"),
     # Application JS for custom cookie messages
     shiny::tags$script(src = "js/app.js"),
-    # Analysis script output
+    # Analytics script output
     shiny::uiOutput(outputId = ns("analytics_script"))
   )
 }
