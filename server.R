@@ -19,8 +19,8 @@ server <- function(input, output, session) {
   # Current tab as a reactive
   tab <- reactive(input$sidebarID)
 
-  # GDPR Module Server (R/module_analytics.R)
-  gdpr_server(
+  # GDPR Module Server (R/analytics_header.R)
+  GdprServer(
     id = "cookies",
     cookies = reactive(input$cookies),
     google_analytics_id = "G-PZNQ39CJ15",

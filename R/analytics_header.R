@@ -8,11 +8,11 @@
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  get_gdpr_message()
+#'  GetGdprMessage()
 #'  }
 #' }
-#' @rdname get_gdpr_message
-get_gdpr_message <- function() {
+#' @rdname GetGdprMessage
+GetGdprMessage <- function() {
   "
   <b>
   In accordance with Data Protection legislation,
@@ -37,27 +37,27 @@ get_gdpr_message <- function() {
 
 #' @return a \code{shinyalert} with Accept and Decline buttons
 #' @details Displays a \code{shinyalert} for the GDPR notice
-#' from \code{get_gdpr_message}
+#' from \code{GetGdprMessage}
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  gdpr_alert()
+#'  GdprAlert()
 #'  }
 #' }
 #' @seealso
 #'  \code{\link[shinyalert]{shinyalert}}
-#' @rdname gdpr_alert
+#' @rdname GdprAlert
 #' @importFrom shinyalert shinyalert
-gdpr_alert <- function() {
+GdprAlert <- function() {
   shinyalert::shinyalert(
     title = "GDPR Notice",
-    text = get_gdpr_message(),
+    text = GetGdprMessage(),
     type = "info",
     html = TRUE,
     confirmButtonText = "Accept",
     showCancelButton = TRUE,
     cancelButtonText = "Decline",
-    inputId = "cookieAccept"
+    inputId = "cookie_accept"
   )
 }
 
@@ -72,18 +72,18 @@ gdpr_alert <- function() {
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  add_analytics("G-XXXXXX")
+#'  AddAnalytics("G-XXXXXX")
 #'  }
 #' }
 #' @seealso
 #'  \code{\link[shiny]{renderUI}}, \code{\link[shiny]{reexports}}
 #'  \code{\link[stringr]{str_replace}}
 #'  \code{\link[readr]{read_file}}
-#' @rdname add_analytics
+#' @rdname AddAnalytics
 #' @importFrom shiny renderUI tags singleton
 #' @importFrom stringr str_replace_all
 #' @importFrom readr read_file
-add_analytics <- function(google_analytics_id) {
+AddAnalytics <- function(google_analytics_id) {
   return(
     # Return a head tag
     shiny::tags$head(
@@ -111,22 +111,22 @@ add_analytics <- function(google_analytics_id) {
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  gdpr_ui("GDPR")
+#'  GdprUi("GDPR")
 #'  }
 #' }
 #' @seealso
 #'  \code{\link[shiny]{NS}},
 #'  \code{\link[shiny]{reexports}},
 #'  \code{\link[shiny]{htmlOutput}}
-#' @rdname gdpr_ui
+#' @rdname GdprUi
 #' @importFrom shiny NS tags uiOutput
-gdpr_ui <- function(id) {
+GdprUi <- function(id) {
   # Get Namespace
   ns <- shiny::NS(id)
   shiny::tags$head(
-    # JS library for managing cookies (GDPR)
+    # JS library for managing cookies
     shiny::tags$script(src = "js/js.cookie.min.js"),
-    # Application JS for custom cookie messages
+    # Application JS for custom cookie messages to Shiny
     shiny::tags$script(src = "js/app.js"),
     # Analytics script output
     shiny::uiOutput(outputId = ns("analytics_script"))
@@ -144,7 +144,7 @@ gdpr_ui <- function(id) {
 #' @examples
 #' \dontrun{
 #' if(interactive()){
-#'  gdpr_server("gdpr")
+#'  GdprServer("gdpr")
 #'  }
 #' }
 #' @seealso
@@ -157,7 +157,7 @@ gdpr_ui <- function(id) {
 #'  \code{\link[shiny]{isolate}},
 #'  \code{\link[shiny]{req}}
 #'  \code{\link[magrittr]{character(0)}}
-#' @rdname gdpr_server
+#' @rdname GdprServer
 #' @importFrom shiny
 #'  moduleServer
 #'  getDefaultReactiveDomain
@@ -168,7 +168,7 @@ gdpr_ui <- function(id) {
 #'  isolate
 #'  req
 #' @importFrom magrittr `%>%`
-gdpr_server <- function(
+GdprServer <- function(
   id,
   cookies,
   google_analytics_id,
@@ -194,14 +194,14 @@ gdpr_server <- function(
       shiny::observe({
         # If the accept cookie is null show the GDPR notice
         if (is.null(cookies()$accept)) {
-          gdpr_alert()
+          GdprAlert()
           # Else if the user has previously accepted the GDPR notice
         } else if (as.logical(cookies()$accept)) {
           # Debug Message
           print("Previously Accepted")
           # Include the analytics sctipt
           output$analytics_script <- shiny::renderUI(
-            add_analytics(google_analytics_id)
+            AddAnalytics(google_analytics_id)
           )
           # Set the Reacive Val to True (GDPR notice accepted)
           is_analytics(TRUE)
@@ -216,7 +216,7 @@ gdpr_server <- function(
       # Observe the GDPR notice response
       shiny::observe({
         # Debug Message
-        print(input$cookieAccept)
+        print(input$cookie_accept)
         # List for 'accept cookie' either
         # TRUE if GDPR notice accepted or
         # FALSE if GDPR notice declined
@@ -224,7 +224,7 @@ gdpr_server <- function(
         # so exempt from a seperate cookie notice
         msg <- list(
           name = "accept",
-          value = input$cookieAccept
+          value = input$cookie_accept
         )
         # Check if running in HTTPS or HTTP
         if (
@@ -243,20 +243,20 @@ gdpr_server <- function(
           session$sendCustomMessage("cookie-set", msg)
         }
         # If the GDPR notice was accepted
-        if (as.logical(input$cookieAccept)) {
+        if (as.logical(input$cookie_accept)) {
           # Debug Message
           print("Adding Analytics")
           # Add the analytics script
           output$analytics_script <- shiny::renderUI({
-            add_analytics(google_analytics_id)
+            AddAnalytics(google_analytics_id)
           })
         }
         # Set the Reactive Val to the response
-        is_analytics(as.logical(input$cookieAccept))
+        is_analytics(as.logical(input$cookie_accept))
         # Debug Message
         print("Storing Cookie")
         # Bind to GDPR response
-      }) %>% shiny::bindEvent(input$cookieAccept)
+      }) %>% shiny::bindEvent(input$cookie_accept)
 
       # Analytic 4 records events
       # Therefore observe the tab changes
