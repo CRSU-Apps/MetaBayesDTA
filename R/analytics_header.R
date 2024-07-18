@@ -254,7 +254,7 @@ GdprServer <- function(
         # Set the Reactive Val to the response
         is_analytics(as.logical(input$cookie_accept))
         # Debug Message
-        print("Storing Cookie")
+        print("Stored Cookie")
         # Bind to GDPR response
       }) %>% shiny::bindEvent(input$cookie_accept)
 
