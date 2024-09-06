@@ -8,6 +8,10 @@ on:
         description: How many deployments
         required: true
         default: '1'
+      deploy_start:
+        description: What number should deployments start from?
+        required: true
+        default: '1'
       
 jobs:
   deploy:
@@ -50,8 +54,9 @@ jobs:
             Sys.getenv("accountSecret")
           )
           cat(" [OK]\n")
+          deploy_start <- as.numeric(${{ github.event.inputs.deploy_start }})
           app_count <- as.numeric(${{ github.event.inputs.deploy_count }})
-          for(i in 1:app_count){
+          for(i in deploy_start:(deploy_start + app_count)){
             appName <- paste0("MetaBayesDTA_", i)
             cat(paste0("Deploying ", appName, "\n"))
             # Deploy application
