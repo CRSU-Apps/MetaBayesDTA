@@ -56,20 +56,20 @@ tabItem(
                          tags$a(href="https://onlinelibrary.wiley.com/doi/full/10.1002/jrsm.1439", "Patel A, Cooper NJ, Freeman SC, Sutton AJ. 
                          Graphical enhancements to summary receiver operating characteristic plots to facilitate the analysis and reporting
                          of meta-analysis of diagnostic test accuracy data. Research Synthesis Methods 2020, https://doi.org/10.1002/jrsm.1439.
-                           "), 
-                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma/", "MetaDTA version 2.0")),
+                           ", target="_blank"), 
+                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/MetaDTA/", "MetaDTA version 2.1.3", target="_blank")),
                       br(),
                       h4("Which builds on the previous version as described in the paper:",
                          tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-019-0724-x", "Freeman SC, Kerby CR, 
                          Patel A, Cooper NJ, Quinn T, Sutton AJ. Development of an interactive web-based tool to conduct and interrogate 
                          meta-analysis of diagnostic test accuracy studies: MetaDTA. BMC Medical Research Methodology 2019; 19: 81
-                           "),
-                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.")), 
+                           ", target="_blank"),
+                         "which can be accessed at", tags$a(href="https://crsu.shinyapps.io/dta_ma_v1/", "MetaDTA version 1.27.", target="_blank")), 
                       h4("If you use outputs or screenshots generated from MetaBayesDTA, please cite these papers, as well as the following paper for 
                          MetaBayesDTA itself: ",
                          tags$a(href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-023-01910-y", "Cerullo E, Sutton AJ, 
                          Jones HE, Wu O, Quinn T, Cooper NJ. MetaBayesDTA: codeless Bayesian meta-analysis of test accuracy, with or without a gold standard
-                           ")),
+                           ", target="_blank")),
                       img(height=400,
                           width=600, 
                           src="roc_curve.png"),
@@ -89,13 +89,13 @@ tabItem(
                         div(tags$strong("Funding and Support Acknowledgement:"),
                             tags$p("MetaBayesDTA is part of the Complex Reviews Synthesis Unit (CRSU) suite of evidence synthesis apps. The development of these apps is currently funded (majority) and overseen by the Evidence Synthesis Group @ CRSU (NIHR153934). The CRSU Evidence Synthesis Group is one of the groups funded by the National Institute for Health and Care Research ",
                                    tags$a(href="https://www.nihr.ac.uk/explore-nihr/funding-programmes/evidence-synthesis.htm",
-                                          "(NIHR) Evidence Synthesis Programme."),
+                                          "(NIHR) Evidence Synthesis Programme.", target="_blank"),
                                    "Further details of other funders and support, current and past, can be found ",
                                    tags$a(href="https://github.com/CRSU-Apps/.github/wiki/Detailed-Funding-Statement",
-                                          "on our GitHub page"),
+                                          "on our GitHub page", target="_blank"),
                                    ". The views expressed are those of the author(s) and not necessarily those of the NIHR or the Department of Health and Social Care."),
                             tags$p("More information about the UK NIHR Complex Reviews Synthesis Unit (CRSU) can be found ",
-                                   tags$a(href="https://www.gla.ac.uk/research/az/evidencesynthesis/apps-materials-guidence/",
+                                   tags$a(href="https://www.crsu.org.uk/apps",
                                           "on our website", target="_blank"),
                                    )
                             )
