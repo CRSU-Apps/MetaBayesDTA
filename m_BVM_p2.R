@@ -114,6 +114,7 @@ MA_run_model_priors_only <- function(id,
                         MA_prior_SD_sens_sd = input$MA_prior_SD_sens_sd,
                         MA_prior_SD_spec_sd = input$MA_prior_SD_spec_sd), 
             stdout = tfile,
+            stderr = tfile,
             supervise = TRUE
           )
           
@@ -151,8 +152,9 @@ MA_run_model_priors_only <- function(id,
                         MA_prior_mean_spec_mu = input$MA_prior_mean_spec_mu,
                         MA_prior_mean_spec_sd = input$MA_prior_mean_spec_sd,
                         MA_prior_SD_sens_sd = input$MA_prior_SD_sens_sd,
-                        MA_prior_SD_spec_sd = input$MA_prior_SD_spec_sd), 
-            stdout = tfile,
+                        MA_prior_SD_spec_sd = input$MA_prior_SD_spec_sd),
+            stderr = tfile,
+            stderr = tfile,
             supervise = TRUE
           )
           
@@ -170,9 +172,23 @@ MA_run_model_priors_only <- function(id,
             r$progress_mtime <- mtime
           }
           if (!r$bg_process$is_alive()) {
-            r$draws <- r$bg_process$get_result() 
-            remove_modal_spinner()
-            r$poll <- FALSE 
+            if(r$bg_process$get_exit_status() !=0) {
+              r$draws = NULL
+              shinyalert(
+                title = "Error",
+                type = "error",
+                text = paste(
+                  "An Error Occurred, Please contact the authors for help quoting",
+                  r$bg_process$get_exit_status()
+                )
+              )
+              remove_modal_spinner()
+              r$poll <- FALSE 
+            } else {
+              r$draws <- r$bg_process$get_result() 
+              remove_modal_spinner()
+              r$poll <- FALSE
+            }
           }
         })
         
@@ -348,6 +364,7 @@ MA_run_model <- function(id,
                         seed= sampler_options$MA_seed
             ), 
             stdout = tfile,
+            stderr = tfile,
             supervise = TRUE
           )
           
@@ -408,6 +425,7 @@ MA_run_model <- function(id,
                         seed= sampler_options$MA_seed
             ), 
             stdout = tfile,
+            stderr = tfile,
             supervise = TRUE
           )
           
@@ -427,11 +445,26 @@ MA_run_model <- function(id,
             r$progress_mtime <- mtime
           }
           if (!r$bg_process$is_alive()) {
-            r$draws <- r$bg_process$get_result() 
-            remove_modal_spinner()
-            r$poll <- FALSE 
+            if(r$bg_process$get_exit_status() !=0) {
+              r$draws = NULL
+              shinyalert(
+                title = "Error",
+                type = "error",
+                text = paste(
+                  "An Error Occurred, Please contact the authors for help quoting",
+                  r$bg_process$get_exit_status()
+                )
+              )
+              remove_modal_spinner()
+              r$poll <- FALSE 
+            } else {
+              r$draws <- r$bg_process$get_result() 
+              remove_modal_spinner()
+              r$poll <- FALSE
+            }
           }
         })
+        
         
         ## print progress
         output$progress_main_model <- renderText({
