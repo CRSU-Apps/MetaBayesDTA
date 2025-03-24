@@ -117,22 +117,15 @@ generated quantities {
      real sigma_sq_alpha_at_cov_input;
      vector[101] Se; 
      vector[101] Sp;  
-     vector[101] lSe; 
-     vector[101] lSp; 
      corr_matrix[2] Omega; 
      matrix[2,2] Sigma; 
-     real beta; 
-     real sigma_sq_theta;
-     real sigma_sq_alpha;
      vector[n_studies] se;
      vector[n_studies] sp;
      vector[2] var_pw[n_studies];
      vector[2*n_studies] var_pw2;
-     vector[2*n_studies] inv_n;
      matrix[2*n_studies, 2*n_studies] B;
      matrix[2*n_studies, 2*n_studies] BI;
      matrix[2*n_studies, 2*n_studies] Z;
-     matrix[2*n_studies, 2*n_studies] A;
      matrix[2, 2] G_one;
      int d[n_studies];
      int nd[n_studies];
@@ -181,7 +174,7 @@ generated quantities {
  sigma_sq_alpha_at_cov_input = 2*(sigma[1]*sigma[2] - Sigma[1,2]);
 
  // Points for HSROC curve  (at covariate value inputted)
-  for (i in 1:100) { 
+  for (i in 1:101) { 
    logit_se_points[i] = lambda_at_cov_input*exp(-beta_at_cov_input/2) - exp(-beta_at_cov_input)*logit(roc_points_sp[i]);
    roc_points_tpr[i] = inv_logit(logit_se_points[i]);
    roc_points_fpr[i] = 1 - roc_points_sp[i];
@@ -208,7 +201,6 @@ generated quantities {
      Z = diag_matrix(rep_vector(1, 2*n_studies));
      B = diag_matrix(var_pw2);
      BI = inverse(B);
-     A = diag_matrix(inv_n);
      G_one = Sigma;
 
 }
