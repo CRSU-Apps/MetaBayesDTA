@@ -1,0 +1,74 @@
+name: Deploy to shinyapps.io
+on:
+
+  # run on request (via button in actions menu)
+  workflow_dispatch:
+    inputs:
+      deploy_count:
+        description: How many deployments
+        required: true
+        default: '1'
+      deploy_start:
+        description: What number should deployments start from?
+        required: true
+        default: '1'
+      
+jobs:
+  deploy:
+    name: Deploy to shinyapps
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install gcc 11
+        run: |
+          sudo apt update
+          sudo apt install gcc-11 g++-11 -y
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
+      - name: Install package system dependencies
+        run: |
+          sudo apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev -y
+      # Checkout the repo
+      - uses: actions/checkout@v4
+      # Setup R (4.3.0)
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3.0'
+      # Setup and install dependencies using renv
+      - uses: r-lib/actions/setup-renv@v2
+      - name: Check GCC Version
+        run: |
+          gcc --version
+          if ! gcc --version | grep -q 11; then exit 1; fi
+      # Precompile the stan models
+      - name: compile stan models
+        run: Rscript compile_models.R
+      # Deploy using rsconnect
+      - name: Deploy
+        run: |
+          # Install rsconnect
+          install.packages("rsconnect")
+          # Set up account
+          cat("Checking account info...")
+          rsconnect::setAccountInfo(
+            Sys.getenv("accountName"),
+            Sys.getenv("accountToken"),
+            Sys.getenv("accountSecret")
+          )
+          cat(" [OK]\n")
+          deploy_start <- as.numeric(${{ github.event.inputs.deploy_start }})
+          app_count <- as.numeric(${{ github.event.inputs.deploy_count }})
+          for(i in deploy_start:(deploy_start + app_count)){
+            appName <- paste0("MetaBayesDTA_", i)
+            cat(paste0("Deploying ", appName, "\n"))
+            # Deploy application
+            rsconnect::deployApp(
+              appName = appName,
+              account = Sys.getenv("accountName"),
+              forceUpdate = TRUE
+            )
+          }
+        shell: Rscript {0}
+        env:
+          accountName: crsu
+          # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
+          accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
+          accountSecret: ${{ secrets.SHINYAPPS_SECRET }}

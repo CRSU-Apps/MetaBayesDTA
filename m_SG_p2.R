@@ -156,6 +156,7 @@ SG_run_model_priors_only <- function(id,
                                                   SG_prior_SD_sens_sd = input$SG_prior_SD_sens_sd,
                                                   SG_prior_SD_spec_sd = input$SG_prior_SD_spec_sd), 
                                       stdout = tfile,
+            stderr = tfile,
                                       supervise = TRUE
                                     )
                       
@@ -213,6 +214,7 @@ SG_run_model_priors_only <- function(id,
                                                      SG_prior_SD_sens_sd = input$SG_prior_SD_sens_sd,
                                                      SG_prior_SD_spec_sd = input$SG_prior_SD_spec_sd), 
                                          stdout = tfile,
+            stderr = tfile,
                                          supervise = TRUE
                                        )
                          
@@ -232,9 +234,23 @@ SG_run_model_priors_only <- function(id,
                 r$progress_mtime <- mtime
               }
               if (!r$bg_process$is_alive()) {
-                r$draws <- r$bg_process$get_result() 
-                remove_modal_spinner()
-                r$poll <- FALSE 
+                if(r$bg_process$get_exit_status() !=0) {
+                  r$draws = NULL
+                  shinyalert(
+                    title = "Error",
+                    type = "error",
+                    text = paste(
+                      "An Error Occurred, Please contact the authors for help quoting",
+                      r$bg_process$get_exit_status()
+                    )
+                  )
+                  remove_modal_spinner()
+                  r$poll <- FALSE 
+                } else {
+                  r$draws <- r$bg_process$get_result() 
+                  remove_modal_spinner()
+                  r$poll <- FALSE
+                }
               }
       })
       
@@ -393,6 +409,7 @@ SG_run_model <- function(id,
                                   max_treedepth = input$MA_max_treedepth,
                                   seed= input$MA_seed), 
                       stdout = tfile,
+            stderr = tfile,
                       supervise = TRUE
                     )
                     
@@ -462,6 +479,7 @@ SG_run_model <- function(id,
                         max_treedepth = input$MA_max_treedepth,
                         seed= input$MA_seed), 
             stdout = tfile,
+            stderr = tfile,
             supervise = TRUE
           )
           
@@ -483,10 +501,24 @@ SG_run_model <- function(id,
           r$progress_mtime <- mtime
         }
         if (!r$bg_process$is_alive()) {
-          r$draws <- r$bg_process$get_result() 
-          remove_modal_spinner()
-          r$poll <- FALSE 
-        }
+            if(r$bg_process$get_exit_status() !=0) {
+              r$draws = NULL
+              shinyalert(
+                title = "Error",
+                type = "error",
+                text = paste(
+                  "An Error Occurred, Please contact the authors for help quoting",
+                  r$bg_process$get_exit_status()
+                )
+              )
+              remove_modal_spinner()
+              r$poll <- FALSE 
+            } else {
+              r$draws <- r$bg_process$get_result() 
+              remove_modal_spinner()
+              r$poll <- FALSE
+            }
+          }
       })
       
       ## print progress

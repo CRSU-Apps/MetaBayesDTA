@@ -189,6 +189,7 @@ LCM_run_model_priors_only <- function(id,
                                          LCM_prior_prev_b = priors$LCM_prior_prev_b 
                              ), 
                              stdout = tfile,
+            stderr = tfile,
                              supervise = TRUE
                            )
         
@@ -269,6 +270,7 @@ LCM_run_model_priors_only <- function(id,
                                      LCM_prior_prev_b = priors$LCM_prior_prev_b 
                          ), 
                          stdout = tfile,
+            stderr = tfile,
                          supervise = TRUE
                        )
        
@@ -287,9 +289,23 @@ LCM_run_model_priors_only <- function(id,
             r$progress_mtime <- mtime
           }
           if (!r$bg_process$is_alive()) {
-            r$draws <- r$bg_process$get_result() 
-            remove_modal_spinner()
-            r$poll <- FALSE 
+            if(r$bg_process$get_exit_status() !=0) {
+              r$draws = NULL
+              shinyalert(
+                title = "Error",
+                type = "error",
+                text = paste(
+                  "An Error Occurred, Please contact the authors for help quoting",
+                  r$bg_process$get_exit_status()
+                )
+              )
+              remove_modal_spinner()
+              r$poll <- FALSE 
+            } else {
+              r$draws <- r$bg_process$get_result() 
+              remove_modal_spinner()
+              r$poll <- FALSE
+            }
           }
         })
         
@@ -558,6 +574,7 @@ LCM_run_model <- function( id,
                                                                                           times = sampler_options$MA_num_chains  )
                                           ), 
                                           stdout = tfile,
+            stderr = tfile,
                                           supervise = TRUE
                                         )
                                 
@@ -679,6 +696,7 @@ LCM_run_model <- function( id,
                                                                             
                                           ), 
                                           stdout = tfile,
+            stderr = tfile,
                                           supervise = TRUE
                                         )
                       
@@ -697,9 +715,23 @@ LCM_run_model <- function( id,
                             r$progress_mtime <- mtime
                           }
                           if (!r$bg_process$is_alive()) {
-                            r$draws <- r$bg_process$get_result()
-                            remove_modal_spinner()
-                            r$poll <- FALSE 
+                            if(r$bg_process$get_exit_status() !=0) {
+                              r$draws = NULL
+                              shinyalert(
+                                title = "Error",
+                                type = "error",
+                                text = paste(
+                                  "An Error Occurred, Please contact the authors for help quoting",
+                                  r$bg_process$get_exit_status()
+                                )
+                              )
+                              remove_modal_spinner()
+                              r$poll <- FALSE 
+                            } else {
+                              r$draws <- r$bg_process$get_result() 
+                              remove_modal_spinner()
+                              r$poll <- FALSE
+                            }
                           }
                     })
                     
