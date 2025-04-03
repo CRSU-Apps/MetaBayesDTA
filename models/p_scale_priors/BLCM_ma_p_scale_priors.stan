@@ -280,7 +280,7 @@ for (s in 1:n_studies) {
  sigma_sq_alpha_ref = 2*(sigma_ref[1]*sigma_ref[2] - Sigma_ref[1,2]);
 
  // Points for HSROC curve 
-  for (i in 1:100) { 
+  for (i in 1:101) { 
    logit_se_points_ref[Ref[s], i] = lambda_ref[Ref[s]] *exp(-beta_ref/2) - exp(-beta_ref)*logit(roc_points_sp[i]);
    roc_points_tpr_ref[Ref[s], i] = inv_logit(logit_se_points_ref[Ref[s], i]);
    roc_points_fpr_ref[Ref[s], i] = 1 - roc_points_sp[i];
@@ -306,7 +306,7 @@ for (s in 1:n_studies) {
  sigma_sq_alpha_index = 2*(sigma_index[1]*sigma_index[2] - Sigma_index[1,2]);
 
  // Points for HSROC curve 
-  for (i in 1:100) { 
+  for (i in 1:101) { 
    logit_se_points_index[i] = lambda_index  *exp(-beta_index/2) - exp(-beta_index)*logit(roc_points_sp[i]);
    roc_points_tpr_index[i] = inv_logit(logit_se_points_index[i]);
    roc_points_fpr_index[i] = 1 - roc_points_sp[i];

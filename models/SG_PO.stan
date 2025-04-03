@@ -62,8 +62,6 @@ generated quantities {
      vector[num_levels] lSp; 
      corr_matrix[2] Omega[num_levels]; 
      matrix[2,2] Sigma[num_levels]; 
-     vector[n_studies] se;
-     vector[n_studies] sp;
 
   for (n in 1:n_studies) {
    Omega[Cov[n], ] = multiply_lower_tri_self_transpose(L_Omega[Cov[n], ]); // between-study correlation matrix

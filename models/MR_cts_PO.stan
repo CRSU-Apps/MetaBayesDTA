@@ -54,8 +54,6 @@ generated quantities {
      real LRn_at_cov_input;
      vector[101] Se; 
      vector[101] Sp;  
-     vector[101] lSe; 
-     vector[101] lSp; 
      corr_matrix[2] Omega; 
      matrix[2,2] Sigma; 
 
