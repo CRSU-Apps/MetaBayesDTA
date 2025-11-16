@@ -45,3 +45,12 @@ vignettes/*.pdf
 .DS_Store
 
 app.R
+
+# renv library folder
+renv
+
+# .Rprofile user settings
+.Rprofile
+
+# RStudio project files
+MetaBayesDTA.Rproj
