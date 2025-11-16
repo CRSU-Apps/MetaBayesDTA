@@ -91,3 +91,39 @@ jobs:
           # token and secret obtained from https://www.shinyapps.io/admin/#/tokens
           accountToken: ${{ secrets.SHINYAPPS_TOKEN }}
           accountSecret: ${{ secrets.SHINYAPPS_SECRET }}
+  docker:
+    name: Create and Push Docker Container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set dockerTag
+        run: |
+          # Check if not triggered from worflow-dispatch (event input variable is empty)
+          if [ -z "${{github.event.inputs.deploy_type}}" ]; then
+            # Set deployment type to release as was not triggered by workflow_dispatch
+            DEPLOY_TYPE="release"
+          else
+            # Set deployment type to workflow_dispatch event input variable
+            DEPLOY_TYPE=${{github.event.inputs.deploy_type}}
+          fi
+          # Store the appName in environment variables based on deployment type
+          if [[ $DEPLOY_TYPE = "test" ]]; then
+            echo "dockerTag=testing" >> $GITHUB_ENV
+          else
+            echo "dockerTag=latest" >> $GITHUB_ENV
+          fi
+      - name: Print docker tag
+        run: |
+          echo "Using dockerTag: $dockerTag"
+      - uses: actions/checkout@v5
+      - name: setup-docker
+        uses: docker-practice/actions-setup-docker@master
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Publish Docker Image
+        run: |
+          docker build -t ghcr.io/crsu-apps/metabayesdta:$dockerTag .
+          docker push ghcr.io/crsu-apps/metabayesdta:$dockerTag
