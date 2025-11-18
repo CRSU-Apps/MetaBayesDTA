@@ -3,4 +3,4 @@ renv
 .Rproject.user
 .Rhistory
 .Rprofile
-MetaBayesDTA.Rproj
+*.Rproj
