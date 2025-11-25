@@ -177,7 +177,7 @@ generated quantities {
  sigma_sq_alpha = 2*(sigma[1]*sigma[2] - Sigma[1,2]);
 
  // Points for HSROC curve 
-  for (i in 1:100) { 
+  for (i in 1:101) { 
    logit_se_points[i] = lambda*exp(-beta/2) - exp(-beta)*logit(roc_points_sp[i]);
    roc_points_tpr[i] = inv_logit(logit_se_points[i]);
    roc_points_fpr[i] = 1 - roc_points_sp[i];

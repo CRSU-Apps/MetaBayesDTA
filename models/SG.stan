@@ -111,11 +111,9 @@ generated quantities {
      vector[n_studies] sp;
      vector[2] var_pw[n_studies];
      vector[2*n_studies] var_pw2;
-     vector[2*n_studies] inv_n;
      matrix[2*n_studies, 2*n_studies] B;
      matrix[2*n_studies, 2*n_studies] BI;
      matrix[2*n_studies, 2*n_studies] Z;
-     matrix[2*n_studies, 2*n_studies] A;
      matrix[2,2] G_one[num_levels]; 
      int d[n_studies];
      int nd[n_studies];
@@ -148,7 +146,6 @@ generated quantities {
      Z = diag_matrix(rep_vector(1, 2*n_studies));
      B = diag_matrix(var_pw2);
      BI = inverse(B);
-     A = diag_matrix(inv_n);
 
   for (n in 1:n_studies) 
      G_one[Cov[n], ] = Sigma[Cov[n], ];
@@ -181,7 +178,7 @@ generated quantities {
 
  // Points for HSROC curve 
  for (j in 1:num_levels) { 
-  for (i in 1:100) { 
+  for (i in 1:101) { 
    logit_se_points[j,i] = lambda[j]*exp(-beta[j]/2) - exp(-beta[j])*logit(roc_points_sp[i]);
    roc_points_tpr[j,i] = inv_logit(logit_se_points[j,i]);
    roc_points_fpr[j,i] = 1 - roc_points_sp[i];

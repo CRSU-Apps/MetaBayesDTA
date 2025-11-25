@@ -16,6 +16,17 @@
 
 server <- function(input, output, session) {
 
+  # Current tab as a reactive
+  tab <- reactive(input$sidebarID)
+
+  # GDPR Module Server (R/analytics_header.R)
+  GdprServer(
+    id = "cookies",
+    cookies = reactive(input$cookies),
+    google_analytics_id = "G-PZNQ39CJ15",
+    tab = tab
+  )
+
   shinyalert(title = "Message from Authors",
              text =  paste0("If you have time it would be greatly appreciated if you could fill 
                             out the user feedback questionnaire ",
@@ -25,18 +36,6 @@ server <- function(input, output, session) {
              type = "info",
              confirmButtonText = "Okay",
              html = TRUE)
-  
-    shinyalert(title = "Important message",
-               text =  paste("In accordance with Data Protection legislation, we would like to inform you of the following before you
-                        use our website: We collect your usage data within the MetaBayesDTA app to perform analytics of usage and
-                        improve our app.  By clicking",   tags$i(tags$u("I consent")), "below, you consent to the use of data
-                        by us through Google Analytics.  For details of policy, please check",
-                        tags$a(href="https://policies.google.com/privacy?hl=en", "Google Privacy & Terms.",target="_blank") 
-                        ),
-               type = "info",
-               confirmButtonText = "I consent",
-               html = TRUE)
-  
   
   Standard <- read.csv('./Standard.csv') 
   QA <- read.csv('./QA.csv') 
@@ -123,7 +122,7 @@ priors <- MA_priors_options_inputModule_server(id = "MA_model_id")
 
 # BVM- server-side module for Stan sampler options UI (to be used w/ shinydashboard)
 sampler_options_server(id = "MA_model_id")
-sampler_options <- sampler_options_inputModule_server(id = "MA_model_id")
+MA_sampler_options <- sampler_options_inputModule_server(id = "MA_model_id")
 
 
 # BVM- server functions for progress indicators / loading bars ----------------  ----------------------------------
@@ -168,7 +167,7 @@ draws <-  MA_run_model(id = "MA_model_id",
                        stan_model_p_scale_priors = MA_model_p_scale_priors,
                        dataset = data,
                        priors = priors,
-                       sampler_options = sampler_options, 
+                       sampler_options = MA_sampler_options, 
                        SA_indicator = SA_indicator,
                        SA_indicator_local = 0,
                        p_scale_priors_indicator = MA_p_scale_priors_indicator)$draws
@@ -179,7 +178,7 @@ SA_draws <-  MA_run_model(id = "SA_MA_model_id",
                           stan_model_p_scale_priors = MA_model_p_scale_priors,
                           dataset = data,
                           priors = priors,
-                          sampler_options = sampler_options, 
+                          sampler_options = MA_sampler_options, 
                           SA_indicator = SA_indicator,
                           SA_indicator_local = 1,
                           p_scale_priors_indicator = MA_p_scale_priors_indicator)$draws
@@ -202,13 +201,13 @@ MA_model_diagnostics_tab_renderUI_server(id = "MA_model_id",
 
 sampler_diagnostics_table_server(id = "MA_model_id",
                                  draws = draws,
-                                 sampler_options = sampler_options)
+                                 sampler_options = MA_sampler_options)
 
 
 #  SA
 sampler_diagnostics_table_server(id = "SA_MA_model_id",
                                  draws = SA_draws,
-                                 sampler_options = sampler_options)
+                                 sampler_options = MA_sampler_options)
 
 #  BVM-  Table of r-hat statistics  --------------------------------------------  ------------------------------------
 MA_rhat_table_server(id = "MA_model_id",
@@ -407,7 +406,7 @@ MR_priors_options_server(id = "MR_model_id",
 
 #  MR - server-side module for Stan sampler options UI (to be used w/ shinydashboard)
 sampler_options_server(id = "MR_model_id")
-sampler_options <- sampler_options_inputModule_server(id = "MR_model_id")
+MR_sampler_options <- sampler_options_inputModule_server(id = "MR_model_id")
 
 # MR - server functions for progress indicators / loading bars 
 progress_prior_model_server(id = "MR_model_id")
@@ -485,7 +484,7 @@ MR_model_priors_table_server(id = "MR_model_id",
 #  MR -  Table of model diagnostics  -----------------------------
 sampler_diagnostics_table_server(id = "MR_model_id",
                                  draws = MR_draws, 
-                                 sampler_options = sampler_options)
+                                 sampler_options = MR_sampler_options)
 
 #  MR - Table of r-hat statistics  ---------------------------------------------------------------------------------------------------
 MR_rhat_table_server(id = "MR_model_id",
@@ -654,7 +653,7 @@ SG_priors_options_server(id = "SG_model_id",
 
 # SG - server-side module for Stan sampler options UI (to be used w/ shinydashboard)
 sampler_options_server(id = "SG_model_id")
-sampler_options <- sampler_options_inputModule_server(id = "SG_model_id")
+SG_sampler_options <- sampler_options_inputModule_server(id = "SG_model_id")
 
 
 # SG - server functions for progress indicators / loading bars ----------------------------------------------------------------------
@@ -717,7 +716,7 @@ SG_model_priors_table_server(id = "SG_model_id",
 #  Subgroup analysis - Table of model diagnostics  --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 sampler_diagnostics_table_server(id = "SG_model_id",
                                  draws = SG_draws, 
-                                 sampler_options = sampler_options)
+                                 sampler_options = SG_sampler_options)
 
 #  Subgroup analysis -  Table of r-hat statistics  ---------------------------------------------------------------------------------------------------
 SG_rhat_table_server(id = "SG_model_id",
