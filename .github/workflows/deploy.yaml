@@ -21,7 +21,7 @@ jobs:
     name: Deploy to shinyapps
     # allow skipping deployment for commits containing '[automated]' or '[no-deploy]' in the commit message
     if: "!contains(github.event.head_commit.message, '[automated]') && !contains(github.event.head_commit.message, '[no-deploy]')"
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Set deployment type
         run: |
@@ -42,14 +42,14 @@ jobs:
       - name: Print deployment type
         run: |
           echo "Deploying to: $appName"
-      - name: Install gcc 11
-        run: |
-          sudo apt update
-          sudo apt install gcc-11 g++-11 -y
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
+      # - name: Install gcc 11
+      #   run: |
+      #     sudo apt update
+      #     sudo apt install gcc-11 g++-11 -y
+      #     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
       - name: Install package system dependencies
         run: |
-          sudo apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libgit2-dev -y
+          sudo apt install libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libgit2-dev libglpk-dev libxml2-dev libudunits2-dev -y
       # Checkout the repo
       - uses: actions/checkout@v6
       # Setup R (4.4)
@@ -58,10 +58,10 @@ jobs:
           r-version: '4.4'
       # Setup and install dependencies using renv
       - uses: r-lib/actions/setup-renv@v2
-      - name: Check GCC Version
-        run: |
-          gcc --version
-          if ! gcc --version | grep -q 11; then exit 1; fi
+      # - name: Check GCC Version
+      #   run: |
+      #     gcc --version
+      #     if ! gcc --version | grep -q 11; then exit 1; fi
       # Precompile the stan models
       - name: compile stan models
         run: Rscript compile_models.R
