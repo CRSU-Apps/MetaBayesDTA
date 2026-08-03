@@ -8,7 +8,11 @@ RUN apt update && \
         libfreetype6-dev \
         libpng-dev \
         libtiff5-dev \
-        libjpeg-dev
+        libjpeg-dev \
+        libgit2-dev \
+        libglpk-dev \
+        libxml2-dev \
+        libudunits2-dev
 # Remove examples
 RUN rm -rf /srv/shiny-server/*
 # Copy the source code
