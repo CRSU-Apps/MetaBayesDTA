@@ -68,8 +68,8 @@ jobs:
       # Deploy using rsconnect
       - name: Deploy
         run: |
-          # Install rsconnect
-          install.packages("rsconnect")
+          # rsconnect is installed by renv::restore() from renv.lock; installing it
+          # separately pulls a newer version and puts the library out of sync with the lockfile
           # Set up account
           cat("Checking account info...")
           rsconnect::setAccountInfo(
