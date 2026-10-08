@@ -1,4 +1,4 @@
-# MetaBayesDTA (v1.5.3)
+# MetaBayesDTA (v1.5.5)
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8371997.svg)](https://zenodo.org/doi/10.5281/zenodo.8371997)
 
