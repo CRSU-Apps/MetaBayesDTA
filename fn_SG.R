@@ -132,14 +132,14 @@ SG_weights <- function(X, mod, cov_index) {
       # make cat. variable factor again
       pctse2 <- pctse
       for (i in 1:num_levels) {
-        pctse2[, 1] = case_when(pctse[, 1] == i 
+        pctse2[, 1] = case_when(c(pctse[, 1])[[1]] == i 
                                 ~ levels(factor(X[, j + cov_index]))[i] , 
                                 TRUE ~ as.character(c(pctse2[, 1])[[1]])  )
       }
       
       pctsp2 <- pctsp
       for (i in 1:num_levels) {
-        pctsp2[, 1] = case_when(pctsp[, 1] == i 
+        pctsp2[, 1] = case_when(c(pctsp[, 1])[[1]] == i 
                                 ~ levels(factor(X[, j + cov_index]))[i] , 
                                 TRUE ~ as.character(c(pctsp2[, 1])[[1]])  )
       }

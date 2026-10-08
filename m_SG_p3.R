@@ -276,12 +276,12 @@ SG_sroc_plot_server <- function(id,
                           pred_region2 <- pred_region
                           
                           for (i in 1:num_levels) {
-                            pred_region2[, 3] = case_when(pred_region[, 3] == i ~ levels(factor(X[, j + cov_index]))[i] , 
+                            pred_region2[, 3] = case_when(c(pred_region[, 3])[[1]] == i ~ levels(factor(X[, j + cov_index]))[i] , 
                                                           TRUE ~ as.character(c(pred_region2[, 3])[[1]])  )
                           }
                           credible_region2 <- credible_region
                           for (i in 1:num_levels) {
-                            credible_region2[, 3] = case_when(credible_region[, 3] == i ~ levels(factor(X[, j + cov_index]))[i] ,
+                            credible_region2[, 3] = case_when(c(credible_region[, 3])[[1]] == i ~ levels(factor(X[, j + cov_index]))[i] ,
                                                               TRUE ~ as.character(c(credible_region2[, 3])[[1]])  )
                           }
                           
