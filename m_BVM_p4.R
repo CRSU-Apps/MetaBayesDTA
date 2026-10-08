@@ -426,7 +426,7 @@ MA_sroc_plot_server <- function(id,
                             v.names = "score", timevar = "rob", times = c("rob_PS", "rob_IT", "rob_RS", "rob_FT", "ac_PS", "ac_IT", "ac_RS"))
           
           # Coloured study level estimates based on 1 of the 7 outcomes of QA
-          if (i != 1) { # i.e. if the user selects a QA item to display
+          if (input$QAcheck != 1) { # i.e. if the user selects a QA item to display
             for (i in 1:7) { # i.e. if the QA item is rob_PS, rob_IT, rob_RS, rob_FT, ac_PS, ac_IT, ac_RS
               if ( {input$QAcheck} == (i+1) ) { # the selected quality assessment item
                 if (input$weightcheck == FALSE) {

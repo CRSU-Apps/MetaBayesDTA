@@ -45,3 +45,9 @@ vignettes/*.pdf
 .DS_Store
 
 app.R
+
+# renv library folder
+renv
+
+# RStudio project files
+MetaBayesDTA.Rproj
